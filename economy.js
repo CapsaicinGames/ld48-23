@@ -1,17 +1,36 @@
 var economy_setup = function() {
+    
+    Crafty.c("Economy", {
+        _resources: {},
+        
+        init: function() {
+            for(var rKey in resourcetypes) {
+                this._resources[resourcetypes[rKey].name] = resourcetypes[rKey].initialValue;
+            }
+        },
+        
+        getResourceValue: function(resourceType) {
+            return this._resources[resourceType.name];
+        },
+
+        updateResources: function() {
+            var currentResources = this._resources;
+            Crafty("Building").each(function() {
+                for(var rKey in this.resourceDeltas) {
+                    currentResources[rKey] += this.resourceDeltas[rKey];
+                }
+            });
+            this._resources = currentResources;
+        }
+    });
+
     return Crafty.e("Economy")
             .attr({
-            food: 10,
-            ice: 0,
-            water: 10,
-            oxygen: 10,
-            plastic: 50,
-            metal: 100,
-            powerGeneration: 0,
             days: 0,
             speed: 1,
             timePerStep: 2000,
             newStep: function() {
+                this.updateResources();
                 this.updateStatus();
                 switch(this.speed)
                 {
@@ -32,8 +51,13 @@ var economy_setup = function() {
                 this.timeout(function() {this.newStep();}, this.timePerStep);
             },
             updateStatus : function() {
-                var newstatus = "<b>Food</b>: " + this.food + "<br>";
-                newstatus += "<b>Plastic</b>: " + this.metal + "<br>";
+
+                var newstatus = "";
+
+                for(var rKey in this._resources) {
+                    newstatus += "<b>" + rKey + "</b>: " + this._resources[rKey] + "<br/>";
+                }
+                
                 newstatus += "<b>Day</b>: " + this.days + "<br>";
                 Crafty("Status").each(function() {
                         this.text(newstatus);

@@ -5,29 +5,46 @@ var buildingBlueprints = {};
 function buildings_setup() {
     Crafty.c("Building", {
         _colonists: 1,
-        Building: function(resourceDeltas) {
-            this._resourceDeltas = resourceDeltas;
+        _resourceDeltas: {},
+        
+        init: function() {
+            this._resourceDeltas = {};
+        },
+
+        resourceDelta: function(resource, delta) {
+            this._resourceDeltas[resource.name] = delta;
             return this;
         },
         isActive: function() {
             return this._colonists > 0; 
         },
-        getBuildingName: function() {
-            return this._name;
+        onBuild: function(tileResource) {
+            // intentionally blank
         },
     });
 
     buildingBlueprints = {
-        "Ice Mine": Crafty.e("Building")
-            .Building(new ResourceDeltas()
-                      .add(resourcetypes.energy, -1)
-                      .add(resourcetypes.ice, 1)
-                     ),
-        "Solar Panel": Crafty.e("Building")
-            .Building(new ResourceDeltas()
-                      .add(resourcetypes.energy, 2)
-                     ),
-    };
+        "Mine": {
+            factory: function() { return createMine(-1, 1); }
+        },
+        "Super Mine": { 
+            factory: function() { return createMine(-2, 2); }
+        },
+        "Solar Panel": {
+            factory: function() {
+                return Crafty.e("Building")
+                    .resourceDelta(resourcetypes.energy, 3);
+            },
+        },
+    }
 
+}
+
+function createMine(powerDrain, resourceProduction) {
+    return Crafty.e("Building")
+        .resourceDelta(resourcetypes.energy, powerDrain)
+        .attr("onBuild", function(tileResource) {
+            this.resourceDelta(tileResource, resourceProduction);
+        });
 }
 
