@@ -12,6 +12,16 @@ var economy_setup = function() {
         getResourceValue: function(resourceType) {
             return this._resources[resourceType.name];
         },
+
+        updateResources: function() {
+            var currentResources = this._resources;
+            Crafty("Building").each(function() {
+                for(var rKey in this.resourceDeltas) {
+                    currentResources[rKey] += this.resourceDeltas[rKey];
+                }
+            });
+            this._resources = currentResources;
+        }
     });
 
     return Crafty.e("Economy")
@@ -20,6 +30,7 @@ var economy_setup = function() {
             speed: 1,
             timePerStep: 2000,
             newStep: function() {
+                this.updateResources();
                 this.updateStatus();
                 switch(this.speed)
                 {
