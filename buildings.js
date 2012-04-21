@@ -5,14 +5,14 @@ var buildingBlueprints = {};
 function initBuildings() {
     Crafty.c("Building", {
         _colonists: 1,
-        _resourceDeltas: {},
+        resourceDeltas: {},
         
         init: function() {
-            this._resourceDeltas = {};
+            this.resourceDeltas = {};
         },
 
         resourceDelta: function(resource, delta) {
-            this._resourceDeltas[resource.name] = delta;
+            this.resourceDeltas[resource.name] = delta;
             return this;
         },
         isActive: function() {
@@ -23,14 +23,29 @@ function initBuildings() {
         },
     });
 
+    var newCtorCost = function(resource, cost) {
+        return { r: resource.name, cost: cost };
+    }
+
     buildingBlueprints = {
         "Mine": {
+            constructionCost: [ 
+                newCtorCost(resourcetypes.steel, 3),
+                newCtorCost(resourcetypes.plastic, 1),
+            ],
             factory: function() { return createMine(-1, 1); }
         },
         "Super Mine": { 
+            constructionCost: [
+                newCtorCost(resourcetypes.steel, 7),
+                newCtorCost(resourcetypes.plastic, 2),
+            ],
             factory: function() { return createMine(-2, 2); }
         },
         "Solar Panel": {
+            constructionCost: [
+                newCtorCost(resourcetypes.plastic, 2),
+            ],
             factory: function() {
                 return Crafty.e("Building")
                     .resourceDelta(resourcetypes.energy, 3);
