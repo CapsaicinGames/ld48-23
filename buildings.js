@@ -2,13 +2,14 @@
 
 var buildingBlueprints = {};
 
-function initBuildings() {
+function buildings_setup() {
     Crafty.c("Building", {
         _colonists: 1,
         resourceDeltas: {},
         
         init: function() {
             this.resourceDeltas = {};
+            this.requires("WorldEntity");
         },
 
         resourceDelta: function(resource, delta) {
@@ -56,7 +57,7 @@ function initBuildings() {
 }
 
 function createMine(powerDrain, resourceProduction) {
-    return Crafty.e("Building")
+    return Crafty.e("Building, grass")
         .resourceDelta(resourcetypes.energy, powerDrain)
         .attr("onBuild", function(tileResource) {
             this.resourceDelta(tileResource, resourceProduction);

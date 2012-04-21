@@ -1,4 +1,32 @@
 
+var createBuildMenu = function() {
+    var cur_x = Crafty.viewport.width - 200;
+    var menu_width = 75;
+    for (var name in buildingBlueprints)
+    {
+        Crafty.e("BuildMenu")
+            .text(name)
+            .attr({x : cur_x, w: menu_width-1})
+            .bind("Click", function() {
+                    hud_state.mode = hudModes.build;
+                    hud_state.modeArg = this._text;
+                });
+        cur_x -= menu_width;
+
+    }
+};
+
+var hudModes = Object.freeze({
+    nothing: {},
+    build: {},
+    manage: {}
+});
+
+var hud_state = {
+    mode: hudModes.nothing,
+    modeArg: ""
+};
+
 var hud_setup = function() {
     Crafty.c("HUD", {
         init: function () {
@@ -64,6 +92,7 @@ var hud_setup = function() {
     Crafty.c("MenuTopLevel", {
             label : "Blank",
             submenu : null,
+            menuCtor : null,
             onClick : function() {
                 // Ensure all other menus are closed
                 Crafty("MenuTopLevel").each(function() {
@@ -74,9 +103,11 @@ var hud_setup = function() {
                                 });
                         }
                     });
+                // Clear current hud mode
+                hud_state.mode = hudModes.nothing;
                 if (this.submenu != null)
                 {
-                    Crafty.e(this.submenu);
+                    this.menuCtor();
                 }
             },
             init : function () {
@@ -89,16 +120,13 @@ var hud_setup = function() {
     Crafty.c("BuildMenu", {
             init : function() {
                 this.requires("HUD, Mouse");
-                this.attr({ x: Crafty.viewport.width - 180,
-                            y: 10,
-                            w: 50,
+                this.attr({ y: 10,
                             h: 15});
-                this.text("Mine");
                 }
             });
 
     Crafty.e("MenuTopLevel")
-        .attr({y: 10, h:15, label: "Build", submenu: "BuildMenu"})
+        .attr({y: 10, h:15, menuCtor: createBuildMenu, submenu: "BuildMenu"})
         .text("Build");
     Crafty.e("MenuTopLevel")
         .attr({ y: 25, h:15, label: "Something"})
