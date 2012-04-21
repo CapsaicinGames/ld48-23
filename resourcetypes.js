@@ -9,15 +9,7 @@ var resourcetypes = Object.freeze({
     plastic: { name: "Plastic", initialValue: 0 },
     steel: { name: "Steel", initialValue: 0 },
     preciousore: { name: "Precious metal ore", initialValue: 0 },
+    widgets: { name: "Widgets", initialValue: 0 },
 
 });
 
-function ResourceDeltas() {
-    this.resources = [];
-    return this;
-}
-
-ResourceDeltas.prototype.add = function(resource, delta) {
-    this.resources.push({r: resource, d: delta});
-    return this;
-}
