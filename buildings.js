@@ -57,7 +57,7 @@ function buildings_setup() {
 }
 
 function createMine(powerDrain, resourceProduction) {
-    return Crafty.e("Building, grass")
+    return Crafty.e("Building, minesprite")
         .resourceDelta(resourcetypes.energy, powerDrain)
         .attr("onBuild", function(tileResource) {
             this.resourceDelta(tileResource, resourceProduction);
