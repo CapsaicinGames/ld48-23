@@ -66,4 +66,4 @@ var asteroid = {
 
 asteroid.init(20, 20);
 console.log(asteroid);
-asteroid.getTileType(20, 4);
+
