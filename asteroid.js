@@ -22,12 +22,12 @@ var asteroid = {
     height:0,
 
     getTileType: function(x, y) {
-        assert(x >= 0 && x < width && y >= 0 && y < height);
+        assert(x >= 0 && x < this.width && y >= 0 && y < this.height);
         return this._tiles[x][y].type;
     },
 
     getResource: function(x, y) {
-        assert(x >= 0 && x < width && y >= 0 && y < height);
+        assert(x >= 0 && x < this.width && y >= 0 && y < this.height);
         return this._tiles[x][y].resource;
     },
 
