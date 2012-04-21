@@ -2,7 +2,7 @@
 
 var buildingBlueprints = {};
 
-function initBuildings() {
+function buildings_setup() {
     Crafty.c("Building", {
         _colonists: 1,
         Building: function(resourceDeltas) {

@@ -33,40 +33,69 @@ function mapToIsometricTile(x, y, mapWidth, mapHeight) {
 window.onload = function() {
     Crafty.init();
     hud_setup();
+    buildings_setup();
     economy = economy_setup();
     economy.newStep();
     var tilesize = 32;
+    var terrainTypes = {
+        grass: [0,0],
+        iceground: [1,0],
+        preciousground: [2,0],
+        flatground: [3,0],
+    };
 
-    Crafty.sprite(tilesize, "image/ground3.png", {
-        grass: [0,0,1,1],
-        iceground: [1,0,1,1],
-        preciousground: [2,0,1,1],
-        flatground: [3,0,1,1],
+    Crafty.sprite(tilesize, "image/ground3.png", terrainTypes);
+    Crafty.c("WorldEntity", {
+        _tileSize: 32,
+        _canBuild: true,
+        init : function() {
+            this.requires("2D, DOM, Mouse");
+            this.bind("MouseOver", function() {
+                for (var type in terrainTypes) {
+                    if (this.has(type)) {
+                        var sm = terrainTypes[type];
+                        this.sprite(sm[0], 1);
+                    }
+                }
+            });
+            this.bind("MouseOut", function() {
+                for (var type in terrainTypes) {
+                    if (this.has(type)) {
+                        var sm = terrainTypes[type];
+                        this.sprite(sm[0], 0);
+                    }
+                }
+            });
+        },
+        tileSize: function(size) { 
+            this._tileSize = size;
+            /* Putting this code here and not in the
+             * main code doesn't work
+             *
+             * this.areaMap([this._tileSize/2,0],
+                        [this.tileSize,this._tileSize/4],
+                        [this._tileSize,3*this._tileSize/4],
+                        [this._tileSize/2,this._tileSize],
+                        [0,3*this._tileSize/4],
+                        [0,this._tileSize/4]);*/
+
+            return this; // really crucial for chainin ctors
+        }
     });
     Crafty.c("Terrain", {
-            _tileSize: 32,
-            _canBuild: true,
-            init : function() {
-                this.addComponent("2D, DOM, Mouse");
-                this.bind("MouseDown", function(e) {
-                    if (this._canBuild === true) {
+        init : function() {
+            this.requires("WorldEntity");
+            this.bind("MouseDown", function(e) {
+                if (this._canBuild === true) {
+                    if (hud_state.mode === hudModes.build) {
                         bldg = Crafty.e("2D, DOM, grass")
                         .attr({x: this.x,y: this.y - 16,z: this.z+1});
                         this._canBuild = false;
                     }
-                });
-            },
-            tileSize: function(size) { 
-                this._tileSize = size;
-                /*this.areaMap([this._tileSize/2,0],
-                            [this.tileSize,this._tileSize/4],
-                            [this._tileSize,3*this._tileSize/4],
-                            [this._tileSize/2,this._tileSize],
-                            [0,3*this._tileSize/4],
-                            [0,this._tileSize/4]);*/
-                return this; // really crucial for chainin ctors
                 }
             });
+        }
+    });
     Crafty.background("#000");
     iso = Crafty.isometric.size(tilesize);
 
@@ -87,29 +116,7 @@ window.onload = function() {
                             [tilesize,3*tilesize/4],
                             [tilesize/2,tilesize],
                             [0,3*tilesize/4],
-                            [0,tilesize/4])
-                .bind("MouseOver", function() {
-                    if(this.has("grass")) {
-                        this.sprite(0,1,1,1);
-                    } else if (this.has("iceground")) {
-                        this.sprite(1,1,1,1);
-                    } else if (this.has("preciousground")) {
-                        this.sprite(2,1,1,1);
-                    } else {
-                        this.sprite(3,1,1,1);
-                    }
-                })
-                .bind("MouseOut", function() {
-                    if(this.has("grass")) {
-                        this.sprite(0,0,1,1);
-                    } else if (this.has("iceground")) {
-                        this.sprite(1,0,1,1);
-                    } else if (this.has("preciousground")) {
-                        this.sprite(2,0,1,1);
-                    } else {
-                        this.sprite(3,0,1,1);
-                    }
-                });
+                            [0,tilesize/4]);
             
             var isometricTileCoord = mapToIsometricTile(x, y, asteroid.width, asteroid.height);
             newIsometricTiles.push({ coord: isometricTileCoord, e: tile});

@@ -69,7 +69,6 @@ var asteroid = {
     _makeAsteroid: function() {
         var asteroidCenter = [this.width/2, this.height/2];
         var asteroidRadius = this.width*0.5;
-        console.log(asteroidRadius);
         var asteroidRadiusSqd = asteroidRadius*asteroidRadius;
 
         for(var columnIndex = 0; columnIndex < this.width; ++columnIndex) {
