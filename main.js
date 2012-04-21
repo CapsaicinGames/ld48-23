@@ -32,46 +32,8 @@ function mapToIsometricTile(x, y, mapWidth, mapHeight) {
 
 window.onload = function() {
     Crafty.init();
-var economy = Crafty.e("Economy")
-            .attr({
-            food: 10,
-            ice: 0,
-            water: 10,
-            oxygen: 10,
-            plastic: 50,
-            metal: 100,
-            powerGeneration: 0,
-            days: 0,
-            speed: 1,
-            timePerStep: 2000,
-            newStep: function() {
-                this.updateStatus();
-                switch(this.speed)
-                {
-                case 5:
-                    this.timePerStep = 400;
-                    break;
-                case 2:
-                    this.timePerStep = 1000;
-                    break;
-                case 0:
-                    return;
-                    break;
-                case 1:
-                default:
-                    this.timePerStep = 2000;
-                }
-                this.days++;
-                this.timeout(function() {this.newStep();}, this.timePerStep);
-            },
-            updateStatus : function() {
-                var newstatus = "<b>Food</b>: " + this.food + "<br>";
-                newstatus += "<b>Plastic</b>: " + this.metal + "<br>";
-                newstatus += "<b>Day</b>: " + this.days + "<br>";
-                Crafty("Status").each(function() {
-                        this.text(newstatus);
-                });
-            }})
+    hud_setup();
+    economy = economy_setup();
     economy.newStep();
     var tilesize = 32;
 
@@ -187,56 +149,5 @@ var economy = Crafty.e("Economy")
         });
     });
 
-    Crafty.c("HUD", {
-            
-                init: function () {
-                    this.addComponent("2D, DOM, Text"); 
-                    this.textColor("#0000ff")
-                    this.textFont({size:"10px", family:"sans"})
-                    this.css({
-                        "background-color":"white",
-                        "opacity": "0.5",
-                        });
-                    this.z = 1000;
-                    }
-                });
-
-    Crafty.e("Status, HUD")
-        .attr({ x : 20, y : 30, w : 100, h : 100} )
-        .text("No colony");
-    Crafty.e("Time, HUD, Mouse")
-        .attr({ x: 20, y: 10, h: 15, w: 50})
-        .text("x1")
-        .bind("Click", function() {
-                switch (economy.speed)
-                {
-                    case 1:
-                        economy.speed = 2;
-                        this.text("x2");
-                        break;
-                    case 2:
-                        economy.speed = 5;
-                        this.text("x5");
-                        break;
-                    case 5:
-                    default:
-                        economy.speed = 1;
-                        this.text("x1");
-                        }
-                });
-    Crafty.e("Pause, HUD, Mouse")
-        .attr({x:70, y:10, h:15, w:50})
-        .text("Pause")
-        .bind("Click", function() {
-                if (economy.speed > 0)
-                {
-                    economy.speed = 0;
-                    this.text("Play");
-                } else {
-                    economy.speed = 1;
-                    economy.newStep();
-                    this.text("Pause");
-                }
-                });
     economy.updateStatus();
 }
