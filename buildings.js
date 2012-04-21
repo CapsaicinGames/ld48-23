@@ -8,6 +8,7 @@ function buildings_setup() {
         _resourceDeltas: {},
         
         init: function() {
+            this.requires("WorldEntity");
             this._resourceDeltas = {};
         },
 
@@ -41,7 +42,7 @@ function buildings_setup() {
 }
 
 function createMine(powerDrain, resourceProduction) {
-    return Crafty.e("Building")
+    return Crafty.e("Building, grass")
         .resourceDelta(resourcetypes.energy, powerDrain)
         .attr("onBuild", function(tileResource) {
             this.resourceDelta(tileResource, resourceProduction);

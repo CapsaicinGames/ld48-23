@@ -88,7 +88,7 @@ window.onload = function() {
             this.bind("MouseDown", function(e) {
                 if (this._canBuild === true) {
                     if (hud_state.mode === hudModes.build) {
-                        bldg = Crafty.e("2D, DOM, grass")
+                        bldg = buildingBlueprints[hud_state.modeArg].factory()
                         .attr({x: this.x,y: this.y - 16,z: this.z+1});
                         this._canBuild = false;
                     }
