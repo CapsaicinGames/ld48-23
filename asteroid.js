@@ -94,7 +94,7 @@ var asteroid = {
                     : noise > 0.55 ? resourcetypes.preciousore
                     : noise > 0.45 ? resourcetypes.ice
                     : resourcetypes.regolith;
-                console.log("tile (" + columnIndex + "," + rowIndex + "): " + resource.name + " with noise " + noise);
+                //console.log("tile (" + columnIndex + "," + rowIndex + "): " + resource.name + " with noise " + noise);
                 this._tiles[columnIndex][rowIndex].resource = resource;
             }
         }
