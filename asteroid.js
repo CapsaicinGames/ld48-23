@@ -10,7 +10,7 @@ function assert(exp, message) {
     }
 }
 
-function calculateIsometricSqDelta(p1, p2) {
+function calculateMapSqDelta(p1, p2) {
     var xDelta = p1[0] - p2[0];
 
     var yDelta = p1[1] - p2[1];
@@ -68,7 +68,7 @@ var asteroid = {
 
     _makeAsteroid: function() {
         var asteroidCenter = [this.width/2, this.height/2];
-        var asteroidRadius = this.width*0.4;
+        var asteroidRadius = this.width*0.5;
         console.log(asteroidRadius);
         var asteroidRadiusSqd = asteroidRadius*asteroidRadius;
 
@@ -76,7 +76,7 @@ var asteroid = {
             for(var rowIndex = 0; rowIndex < this.height; ++rowIndex) {
 
 
-                var distSqdToCenter = calculateIsometricSqDelta(
+                var distSqdToCenter = calculateMapSqDelta(
                     [columnIndex, rowIndex], asteroidCenter);
 
                     
@@ -85,12 +85,10 @@ var asteroid = {
                 }
             }
         }
-        this._tiles[asteroidCenter[0]][asteroidCenter[1]].type = tiletype.emptyspace;
 
-        this._tiles[0][0].type = tiletype.flatground;
     }
 };
 
 asteroid.init(20, 20);
-console.log(asteroid);
+
 
