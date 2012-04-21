@@ -63,6 +63,7 @@ window.onload = function() {
                 continue; // don't draw tiles where there should be space
             var tile = Crafty.e("Terrain, " + which)
                 .attr('z',x+1 * y+1)
+                //.tileSize(tilesize)
                 .areaMap([tilesize/2,0],
                             [tilesize,tilesize/4],
                             [tilesize,3*tilesize/4],
