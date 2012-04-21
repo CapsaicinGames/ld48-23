@@ -77,7 +77,7 @@ var asteroid = {
                 }
             }
         }
-        this._tiles[asteroidCenter.x][asteroidCenter.y] = tiletype.emptyspace;
+        this._tiles[asteroidCenter.x][asteroidCenter.y].type = tiletype.emptyspace;
     }
 };
 
