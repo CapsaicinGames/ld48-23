@@ -13,8 +13,8 @@ window.onload = function() {
         .color('rgb(250,250,250)')
         .text("Click to play...");
 
-    var tilesize = 128;
-    Crafty.sprite(tilesize, "image/sprite.png", {
+    var tilesize = 32;
+    Crafty.sprite(tilesize, "image/sprite-32.png", {
             //grass: [0,0,1,1],
             flatground: [1,0,1,1]
     });
