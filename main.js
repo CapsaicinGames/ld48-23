@@ -44,27 +44,37 @@ window.onload = function() {
         flatground: [3,0],
     };
 
+    var buildingTypes = {
+        minesprite: [0,0],
+    };
+
     Crafty.sprite(tilesize, "image/ground3.png", terrainTypes);
+    Crafty.sprite(tilesize, "image/buildings.png", buildingTypes);
+
+    // returns success
+    var switchSprite = function(entity, sprites, option) {
+        for (var type in sprites) {
+            if (entity.has(type)) {
+                var sm = sprites[type];
+                entity.sprite(sm[0], option);
+                return true;
+            }
+        }
+        return false;
+    };
+
     Crafty.c("WorldEntity", {
         _tileSize: 32,
         _canBuild: true,
         init : function() {
             this.requires("2D, DOM, Mouse");
             this.bind("MouseOver", function() {
-                for (var type in terrainTypes) {
-                    if (this.has(type)) {
-                        var sm = terrainTypes[type];
-                        this.sprite(sm[0], 1);
-                    }
-                }
+                switchSprite(this, terrainTypes, 1);
+                switchSprite(this, buildingTypes, 1);
             });
             this.bind("MouseOut", function() {
-                for (var type in terrainTypes) {
-                    if (this.has(type)) {
-                        var sm = terrainTypes[type];
-                        this.sprite(sm[0], 0);
-                    }
-                }
+                switchSprite(this, terrainTypes, 0);
+                switchSprite(this, buildingTypes, 0);
             });
         },
         tileSize: function(size) { 
