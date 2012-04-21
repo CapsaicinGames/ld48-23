@@ -75,14 +75,27 @@ var asteroid = {
         for(var columnIndex = 0; columnIndex < this.width; ++columnIndex) {
             for(var rowIndex = 0; rowIndex < this.height; ++rowIndex) {
 
-
                 var distSqdToCenter = calculateMapSqDelta(
                     [columnIndex, rowIndex], asteroidCenter);
-
                     
-                if (distSqdToCenter <= asteroidRadiusSqd) {
-                    this._tiles[columnIndex][rowIndex].type = tiletype.flatground;
+                if (distSqdToCenter > asteroidRadiusSqd) {
+                    continue;
                 }
+                
+                this._tiles[columnIndex][rowIndex].type = tiletype.flatground;
+                
+                var scalingFactor = 10.0;
+                var noise = PerlinNoise.noise(scalingFactor * columnIndex/this.width, 
+                                              scalingFactor * rowIndex/this.height, 
+                                              0.0);
+
+                var resource
+                    = noise > 0.65 ? resourcetypes.steelore
+                    : noise > 0.55 ? resourcetypes.preciousore
+                    : noise > 0.45 ? resourcetypes.ice
+                    : resourcetypes.regolith;
+                console.log("tile (" + columnIndex + "," + rowIndex + "): " + resource.name + " with noise " + noise);
+                this._tiles[columnIndex][rowIndex].resource = resource;
             }
         }
 
