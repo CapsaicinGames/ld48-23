@@ -13,6 +13,31 @@ var economy_setup = function() {
             return this._resources[resourceType.name];
         },
 
+        /** Attempt to debit an array of resources
+         *  @param resourceList array of map{r, cost)
+         *  @returns true iff debit was successful
+         */
+        debit: function (resourceList) {
+            var success = true;
+            for (var i = 0; i < resourceList.length; i++)
+            {
+                var res = resourceList[i];
+                if (this._resources[res.r] < res.cost)
+                    success = false;
+            }
+
+            if (success === true)
+            {
+                for (var i = 0; i < resourceList.length; i++)
+                {
+                    var res = resourceList[i];
+                    this._resources[res.r] -= res.cost;
+                }
+            }
+
+            return success;
+        },
+
         updateResources: function() {
             var currentResources = this._resources;
             Crafty("Building").each(function() {
