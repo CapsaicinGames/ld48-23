@@ -53,7 +53,7 @@ function buildings_setup() {
                 newCtorCost(resourcetypes.plastic, 2),
             ],
             factory: function() {
-                return Crafty.e("Building, grass")
+                return Crafty.e("Building, solarpanelsprite")
                     .resourceDelta(resourcetypes.energy, 3);
             },
         },
