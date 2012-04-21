@@ -2,13 +2,16 @@
 convertTileType = function(type) {
     switch (type) {
         case tiletype.flatground:
-            return "flatground"
+            return "grass"
     }
 }
 
 function mapToIsometricTile(x, y, mapWidth, mapHeight) {
     
-    return [x,y];
+    var isometricRow = mapHeight - y + x;
+    var isometricCol = Math.floor((x+y) / 2);
+    
+    return [isometricCol,isometricRow];
 }
 
 window.onload = function() {
@@ -20,11 +23,13 @@ window.onload = function() {
 
     var tilesize = 32;
     Crafty.sprite(tilesize, "image/sprite-32.png", {
-            //grass: [0,0,1,1],
+            grass: [0,0,1,1],
             flatground: [1,0,1,1]
     });
 
     iso = Crafty.isometric.size(tilesize);
+
+    var newIsometricTiles = new Array();
 
     var z = 0;
     for(var x = asteroid.width-1; x >= 0; x--) {
@@ -33,7 +38,7 @@ window.onload = function() {
             if (which === tiletype.emptyspace)
                 continue; // don't draw tiles where there should be space
             var tile = Crafty.e("2D, DOM, Mouse, " + convertTileType(which))
-                .attr('z',x+1 * y+1)
+                .attr('z',1)
                 .areaMap([tilesize/2,0],
                             [tilesize,tilesize/4],
                             [tilesize,3*tilesize/4],
@@ -61,9 +66,24 @@ window.onload = function() {
                 });
             
             var isometricTileCoord = mapToIsometricTile(x, y, asteroid.width, asteroid.height);
-            iso.place(isometricTileCoord[0], isometricTileCoord[1], 0, tile);
+            newIsometricTiles.push({ coord: isometricTileCoord, e: tile});
         }
     }
+
+    newIsometricTiles.sort(function(tileA, tileB) {
+        return tileA.coord[1] < tileB.coord[1] ? -1
+            : tileA.coord[1] > tileB.coord[1] ? 1
+            : (tileA.coord[0] > tileB.coord[0] ? -1 
+               : tileA.coord[0] < tileB.coord[0] ? 1
+               : 0)
+    });
+
+    for(var tileIndex = 0; tileIndex < newIsometricTiles.length; ++tileIndex) {
+        var newTile = newIsometricTiles[tileIndex];
+        newTile.e.attr('z', tileIndex);
+        iso.place(newTile.coord[0], newTile.coord[1], 0, newTile.e);
+    }
+
     Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
         if(e.button > 1) return;
         var base = {x: e.clientX, y: e.clientY};
