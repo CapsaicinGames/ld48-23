@@ -1,5 +1,6 @@
 var resourcetypes = Object.freeze({
 
+    energy: { name: "Energy" },
     colonists: { name: "Colonists" },
     food: { name: "Food" },
     ice: { name: "Ice" },
@@ -10,3 +11,13 @@ var resourcetypes = Object.freeze({
     preciousore: { name: "Precious metal ore"},
 
 });
+
+function ResourceDeltas() {
+    this.resources = [];
+    return this;
+}
+
+ResourceDeltas.prototype.add = function(resource, delta) {
+    this.resources.push({r: resource, d: delta});
+    return this;
+}
