@@ -2,7 +2,9 @@
 convertTileType = function(type) {
     switch (type) {
         case tiletype.flatground:
-            return "flatground"
+            return "flatground";
+        default:
+            return null;
     }
 }
 
@@ -15,31 +17,49 @@ window.onload = function() {
 
     var tilesize = 32;
     Crafty.sprite(tilesize, "image/sprite-32.png", {
-            //grass: [0,0,1,1],
+            grass: [0,0,1,1],
             flatground: [1,0,1,1]
     });
+
+    Crafty.c("Terrain", {
+            _tileSize: 32,
+            _canBuild: true,
+            init : function() {
+                this.addComponent("2D, DOM, Mouse");
+                /*this.areaMap([this._tileSize/2,0],
+                            [this.tileSize,this._tileSize/4],
+                            [this._tileSize,3*this._tileSize/4],
+                            [this._tileSize/2,this._tileSize],
+                            [0,3*this._tileSize/4],
+                            [0,this._tileSize/4]);*/
+                this.bind("MouseDown", function(e) {
+                    if (this._canBuild === true) {
+                        bldg = Crafty.e("2D, DOM, grass")
+                        .attr({x: this.x,y: this.y - 16,z: this.z+1});
+                        this._canBuild = false;
+                    }
+                });
+            },
+            tileSize: function(size) { this._tileSize = size;}
+            });
 
     iso = Crafty.isometric.size(tilesize);
 
     var z = 0;
     for(var x = asteroid.width-1; x >= 0; x--) {
         for(var y = 0; y < asteroid.height; y++) {
-            var which = asteroid.getTileType(x, y);
-            if (which === tiletype.emptyspace)
+            var which = convertTileType(asteroid.getTileType(x, y));
+            if (which === null)
                 continue; // don't draw tiles where there should be space
-            var tile = Crafty.e("2D, DOM, Mouse, " + convertTileType(which))
+            var tile = Crafty.e("Terrain, " + which)
                 .attr('z',x+1 * y+1)
+                //.tileSize(tilesize)
                 .areaMap([tilesize/2,0],
                             [tilesize,tilesize/4],
                             [tilesize,3*tilesize/4],
                             [tilesize/2,tilesize],
                             [0,3*tilesize/4],
                             [0,tilesize/4])
-                .bind("MouseDown", function(e) {
-                    //destroy on right click
-                    if(e.mouseButton === Crafty.mouseButtons.RIGHT)
-                        this.destroy();
-                })
                 .bind("MouseOver", function() {
                     if(this.has("grass")) {
                         this.sprite(0,1,1,1);
@@ -58,6 +78,7 @@ window.onload = function() {
             iso.place(x,y,0, tile);
         }
     }
+
     Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
         if(e.button > 1) return;
         var base = {x: e.clientX, y: e.clientY};
