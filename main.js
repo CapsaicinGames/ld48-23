@@ -6,6 +6,11 @@ convertTileType = function(type) {
     }
 }
 
+function mapToIsometricTile(x, y, mapWidth, mapHeight) {
+    
+    return [x,y];
+}
+
 window.onload = function() {
     Crafty.init();
     Crafty.e("2D, DOM, Text, Color")
@@ -55,7 +60,8 @@ window.onload = function() {
                     }
                 });
             
-            iso.place(x,y,0, tile);
+            var isometricTileCoord = mapToIsometricTile(x, y, asteroid.width, asteroid.height);
+            iso.place(isometricTileCoord[0], isometricTileCoord[1], 0, tile);
         }
     }
     Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
