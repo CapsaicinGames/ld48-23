@@ -100,6 +100,7 @@ window.onload = function() {
                     if (hud_state.mode === hudModes.build) {
                         bldg = buildingBlueprints[hud_state.modeArg].factory()
                         .attr({x: this.x,y: this.y - 16,z: this.z+1});
+                        bldg.onBuild(asteroid.getResource(this.map_x, this.map_y));
                         this._canBuild = false;
                     }
                 }
@@ -119,7 +120,7 @@ window.onload = function() {
             if (which === null)
                 continue; // don't draw tiles where there should be space
             var tile = Crafty.e("Terrain, " + which)
-                .attr('z',x+1 * y+1)
+                .attr({z:x+1 * y+1, map_x: x, map_y: y})
                 .tileSize(tilesize)
                 .areaMap([tilesize/2,0],
                             [tilesize,tilesize/4],

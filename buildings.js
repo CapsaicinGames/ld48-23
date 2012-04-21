@@ -10,6 +10,11 @@ function buildings_setup() {
         init: function() {
             this.resourceDeltas = {};
             this.requires("WorldEntity");
+            this.bind("Click", function() {
+                if (hud_state.mode === hudModes.destroy) {
+                    this.destroy();
+                }
+            });
         },
 
         resourceDelta: function(resource, delta) {

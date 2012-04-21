@@ -19,6 +19,7 @@ var createBuildMenu = function() {
 var hudModes = Object.freeze({
     nothing: {},
     build: {},
+    destroy: {},
     manage: {}
 });
 
@@ -129,7 +130,11 @@ var hud_setup = function() {
         .attr({y: 10, h:15, menuCtor: createBuildMenu, submenu: "BuildMenu"})
         .text("Build");
     Crafty.e("MenuTopLevel")
-        .attr({ y: 25, h:15, label: "Something"})
-        .text("Research");
+        .attr({ y: 25, h:15})
+        .text("Destroy")
+        .bind("Click", function() {
+            hud_state.mode = hudModes.destroy;
+            hud_state.modeArg = "";
+        });
 
 };
