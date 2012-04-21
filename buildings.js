@@ -24,11 +24,19 @@ function initBuildings() {
     });
 
     buildingBlueprints = {
-        "Mine": createMine(-1, 1),
-        "Super Mine": createMine(-2, 2),
-        "Solar Panel": Crafty.e("Building")
-            .resourceDelta(resourcetypes.energy, 3),
-    };
+        "Mine": {
+            factory: function() { return createMine(-1, 1); }
+        },
+        "Super Mine": { 
+            factory: function() { return createMine(-2, 2); }
+        },
+        "Solar Panel": {
+            factory: function() {
+                return Crafty.e("Building")
+                    .resourceDelta(resourcetypes.energy, 3);
+            },
+        },
+    }
 
 }
 
