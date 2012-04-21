@@ -12,8 +12,8 @@ function assert(exp, message) {
 
 
 var tiletype = Object.freeze({
-    emptyspace: { },
-    flatground: { },
+    emptyspace: { name: "emptyspace" },
+    flatground: { name: "flatground" },
 });
 
 var asteroid = {
@@ -48,19 +48,36 @@ var asteroid = {
             for(var rowIndex = 0; rowIndex < this.height; ++rowIndex) {
 
                 this._tiles[columnIndex][rowIndex] = { 
-                    type: columnIndex > 5 && columnIndex < 15 
-                        ? tiletype.flatground 
-                        : tiletype.emptyspace, 
+                    type: tiletype.emptyspace, 
                     resource: null 
                 };
             }
         }
+
+        this._makeAsteroid();
     },
 
     ////////////////// "private" ///////////////////
 
     _makeAsteroid: function() {
-        
+        var asteroidCenter = {x: this.width/2, y: this.height/2};
+        var asteroidRadius = this.width*0.4;
+        var asteroidRadiusSqd = asteroidRadius*asteroidRadius;
+
+        for(var columnIndex = 0; columnIndex < this.width; ++columnIndex) {
+            for(var rowIndex = 0; rowIndex < this.height; ++rowIndex) {
+
+                var xDelta = (columnIndex - asteroidCenter.x) * 2;
+                xDelta += xDelta > 0 ? -1 : 0; 
+
+                var distSqdToCenter = Math.pow(xDelta, 2)
+                    + Math.pow(rowIndex - asteroidCenter.y, 2);
+                if (distSqdToCenter < asteroidRadiusSqd) {
+                    this._tiles[columnIndex][rowIndex].type = tiletype.flatground;
+                }
+            }
+        }
+        this._tiles[asteroidCenter.x][asteroidCenter.y] = tiletype.emptyspace;
     }
 };
 
