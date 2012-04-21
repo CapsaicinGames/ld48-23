@@ -13,30 +13,61 @@ function mapToIsometricTile(x, y, mapWidth, mapHeight) {
     return [x,y];
 }
 
+
+
 window.onload = function() {
     Crafty.init();
-    Crafty.e("2D, DOM, Text, Color")
-        .attr({x:250, y:130, w: 300 })
-        .color('rgb(250,250,250)')
-        .text("Click to play...");
-
+var economy = Crafty.e("Economy")
+            .attr({
+            food: 10,
+            ice: 0,
+            water: 10,
+            oxygen: 10,
+            plastic: 50,
+            metal: 100,
+            powerGeneration: 0,
+            days: 0,
+            speed: 1,
+            timePerStep: 2000,
+            newStep: function() {
+                this.updateStatus();
+                switch(this.speed)
+                {
+                case 5:
+                    this.timePerStep = 400;
+                    break;
+                case 2:
+                    this.timePerStep = 1000;
+                    break;
+                case 0:
+                    return;
+                    break;
+                case 1:
+                default:
+                    this.timePerStep = 2000;
+                }
+                this.days++;
+                this.timeout(function() {this.newStep();}, this.timePerStep);
+            },
+            updateStatus : function() {
+                var newstatus = "<b>Food</b>: " + this.food + "<br>";
+                newstatus += "<b>Plastic</b>: " + this.metal + "<br>";
+                newstatus += "<b>Day</b>: " + this.days + "<br>";
+                Crafty("Status").each(function() {
+                        this.text(newstatus);
+                });
+            }})
+    economy.newStep();
     var tilesize = 32;
     Crafty.sprite(tilesize, "image/sprite-32.png", {
             grass: [0,0,1,1],
             flatground: [1,0,1,1]
     });
-
     Crafty.c("Terrain", {
             _tileSize: 32,
             _canBuild: true,
             init : function() {
                 this.addComponent("2D, DOM, Mouse");
-                /*this.areaMap([this._tileSize/2,0],
-                            [this.tileSize,this._tileSize/4],
-                            [this._tileSize,3*this._tileSize/4],
-                            [this._tileSize/2,this._tileSize],
-                            [0,3*this._tileSize/4],
-                            [0,this._tileSize/4]);*/
                 this.bind("MouseDown", function(e) {
                     if (this._canBuild === true) {
                         bldg = Crafty.e("2D, DOM, grass")
@@ -45,9 +76,18 @@ window.onload = function() {
                     }
                 });
             },
-            tileSize: function(size) { this._tileSize = size;}
+            tileSize: function(size) { 
+                this._tileSize = size;
+                /*this.areaMap([this._tileSize/2,0],
+                            [this.tileSize,this._tileSize/4],
+                            [this._tileSize,3*this._tileSize/4],
+                            [this._tileSize/2,this._tileSize],
+                            [0,3*this._tileSize/4],
+                            [0,this._tileSize/4]);*/
+                return this; // really crucial for chainin ctors
+                }
             });
-
+    Crafty.background("#000");
     iso = Crafty.isometric.size(tilesize);
 
     var z = 0;
@@ -58,7 +98,7 @@ window.onload = function() {
                 continue; // don't draw tiles where there should be space
             var tile = Crafty.e("Terrain, " + which)
                 .attr('z',x+1 * y+1)
-                //.tileSize(tilesize)
+                .tileSize(tilesize)
                 .areaMap([tilesize/2,0],
                             [tilesize,tilesize/4],
                             [tilesize,3*tilesize/4],
@@ -95,6 +135,7 @@ window.onload = function() {
                 base = {x: e.clientX, y: e.clientY};
             Crafty.viewport.x -= dx;
             Crafty.viewport.y -= dy;
+            Crafty("HUD").each(function() {this.shift(dx, dy)});
         };
 
         Crafty.addEvent(this, Crafty.stage.elem, "mousemove", scroll);
@@ -102,4 +143,57 @@ window.onload = function() {
             Crafty.removeEvent(this, Crafty.stage.elem, "mousemove", scroll);
         });
     });
+
+    Crafty.c("HUD", {
+            
+                init: function () {
+                    this.addComponent("2D, DOM, Text"); 
+                    this.textColor("#0000ff")
+                    this.textFont({size:"10px", family:"sans"})
+                    this.css({
+                        "background-color":"white",
+                        "opacity": "0.5",
+                        });
+                    this.z = 1000;
+                    }
+                });
+
+    Crafty.e("Status, HUD")
+        .attr({ x : 20, y : 30, w : 100, h : 100} )
+        .text("No colony");
+    Crafty.e("Time, HUD, Mouse")
+        .attr({ x: 20, y: 10, h: 15, w: 50})
+        .text("x1")
+        .bind("Click", function() {
+                switch (economy.speed)
+                {
+                    case 1:
+                        economy.speed = 2;
+                        this.text("x2");
+                        break;
+                    case 2:
+                        economy.speed = 5;
+                        this.text("x5");
+                        break;
+                    case 5:
+                    default:
+                        economy.speed = 1;
+                        this.text("x1");
+                        }
+                });
+    Crafty.e("Pause, HUD, Mouse")
+        .attr({x:70, y:10, h:15, w:50})
+        .text("Pause")
+        .bind("Click", function() {
+                if (economy.speed > 0)
+                {
+                    economy.speed = 0;
+                    this.text("Play");
+                } else {
+                    economy.speed = 1;
+                    economy.newStep();
+                    this.text("Pause");
+                }
+                });
+    economy.updateStatus();
 }
