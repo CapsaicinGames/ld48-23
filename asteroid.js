@@ -10,6 +10,13 @@ function assert(exp, message) {
     }
 }
 
+function calculateIsometricSqDelta(p1, p2) {
+    var xDelta = p1[0] - p2[0];
+
+    var yDelta = p1[1] - p2[1];
+
+    return xDelta*xDelta + yDelta*yDelta;
+}
 
 var tiletype = Object.freeze({
     emptyspace: { name: "emptyspace" },
@@ -60,24 +67,27 @@ var asteroid = {
     ////////////////// "private" ///////////////////
 
     _makeAsteroid: function() {
-        var asteroidCenter = {x: this.width/2, y: this.height/2};
+        var asteroidCenter = [this.width/2, this.height/2];
         var asteroidRadius = this.width*0.4;
+        console.log(asteroidRadius);
         var asteroidRadiusSqd = asteroidRadius*asteroidRadius;
 
         for(var columnIndex = 0; columnIndex < this.width; ++columnIndex) {
             for(var rowIndex = 0; rowIndex < this.height; ++rowIndex) {
 
-                var xDelta = (columnIndex - asteroidCenter.x) * 2;
-                xDelta += xDelta > 0 ? -1 : 0; 
 
-                var distSqdToCenter = Math.pow(xDelta, 2)
-                    + Math.pow(rowIndex - asteroidCenter.y, 2);
-                if (distSqdToCenter < asteroidRadiusSqd) {
+                var distSqdToCenter = calculateIsometricSqDelta(
+                    [columnIndex, rowIndex], asteroidCenter);
+
+                    
+                if (distSqdToCenter <= asteroidRadiusSqd) {
                     this._tiles[columnIndex][rowIndex].type = tiletype.flatground;
                 }
             }
         }
-        this._tiles[asteroidCenter.x][asteroidCenter.y].type = tiletype.emptyspace;
+        this._tiles[asteroidCenter[0]][asteroidCenter[1]].type = tiletype.emptyspace;
+
+        this._tiles[0][0].type = tiletype.flatground;
     }
 };
 
