@@ -8,6 +8,18 @@ convertTileType = function(type) {
     }
 }
 
+convertResourceToTileType = function(type) {
+
+    switch(type) {
+    case resourcetypes.ice: return "iceground";
+    case resourcetypes.regolith: return "grass";
+    case resourcetypes.steelore: return "flatground";
+    case resourcetypes.preciousore: return "preciousground";
+    default: return null;
+    }
+
+}
+
 function mapToIsometricTile(x, y, mapWidth, mapHeight) {
     
     var isometricRow = mapHeight - y + x;
@@ -24,9 +36,12 @@ window.onload = function() {
         .text("Click to play...");
 
     var tilesize = 32;
-    Crafty.sprite(tilesize, "image/sprite-32.png", {
-            grass: [0,0,1,1],
-            flatground: [1,0,1,1]
+
+    Crafty.sprite(tilesize, "image/ground3.png", {
+        grass: [0,0,1,1],
+        iceground: [1,0,1,1],
+        preciousground: [2,0,1,1],
+        flatground: [3,0,1,1],
     });
 
     Crafty.c("Terrain", {
@@ -58,7 +73,8 @@ window.onload = function() {
     var z = 0;
     for(var x = asteroid.width-1; x >= 0; x--) {
         for(var y = 0; y < asteroid.height; y++) {
-            var which = convertTileType(asteroid.getTileType(x, y));
+            //var which = convertTileType(asteroid.getTileType(x, y));
+            var which = convertResourceToTileType(asteroid.getResource(x, y));
             if (which === null)
                 continue; // don't draw tiles where there should be space
             var tile = Crafty.e("Terrain, " + which)
@@ -73,15 +89,23 @@ window.onload = function() {
                 .bind("MouseOver", function() {
                     if(this.has("grass")) {
                         this.sprite(0,1,1,1);
-                    } else {
+                    } else if (this.has("iceground")) {
                         this.sprite(1,1,1,1);
+                    } else if (this.has("preciousground")) {
+                        this.sprite(2,1,1,1);
+                    } else {
+                        this.sprite(3,1,1,1);
                     }
                 })
                 .bind("MouseOut", function() {
                     if(this.has("grass")) {
                         this.sprite(0,0,1,1);
-                    } else {
+                    } else if (this.has("iceground")) {
                         this.sprite(1,0,1,1);
+                    } else if (this.has("preciousground")) {
+                        this.sprite(2,0,1,1);
+                    } else {
+                        this.sprite(3,0,1,1);
                     }
                 });
             
