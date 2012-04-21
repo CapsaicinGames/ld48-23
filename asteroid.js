@@ -54,6 +54,10 @@ var asteroid = {
     }
 
     ////////////////// "private" ///////////////////
+
+    _makeAsteroid: function() {
+        
+    }
 };
 
 asteroid.init(20, 20);
