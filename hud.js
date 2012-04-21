@@ -17,7 +17,7 @@ Crafty.c("HUD", {
 
 
 Crafty.e("Status, HUD")
-    .attr({ x : 20, y : 30, w : 100, h : 100} )
+    .attr({ x : 20, y : 30, w : 100, h : 150} )
     .text("No colony");
 Crafty.e("Time, HUD, Mouse")
     .attr({ x: 20, y: 10, h: 15, w: 50})
