@@ -12,9 +12,6 @@ function initBuildings() {
         isActive: function() {
             return this._colonists > 0; 
         },
-        getBuildingName: function() {
-            return this._name;
-        },
     });
 
     buildingBlueprints = {
