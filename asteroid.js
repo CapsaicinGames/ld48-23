@@ -10,6 +10,13 @@ function assert(exp, message) {
     }
 }
 
+function calculateMapSqDelta(p1, p2) {
+    var xDelta = p1[0] - p2[0];
+
+    var yDelta = p1[1] - p2[1];
+
+    return xDelta*xDelta + yDelta*yDelta;
+}
 
 var tiletype = Object.freeze({
     emptyspace: { name: "emptyspace" },
@@ -60,27 +67,41 @@ var asteroid = {
     ////////////////// "private" ///////////////////
 
     _makeAsteroid: function() {
-        var asteroidCenter = {x: this.width/2, y: this.height/2};
-        var asteroidRadius = this.width*0.4;
+        var asteroidCenter = [this.width/2, this.height/2];
+        var asteroidRadius = this.width*0.5;
+        console.log(asteroidRadius);
         var asteroidRadiusSqd = asteroidRadius*asteroidRadius;
 
         for(var columnIndex = 0; columnIndex < this.width; ++columnIndex) {
             for(var rowIndex = 0; rowIndex < this.height; ++rowIndex) {
 
-                var xDelta = (columnIndex - asteroidCenter.x) * 2;
-                xDelta += xDelta > 0 ? -1 : 0; 
-
-                var distSqdToCenter = Math.pow(xDelta, 2)
-                    + Math.pow(rowIndex - asteroidCenter.y, 2);
-                if (distSqdToCenter < asteroidRadiusSqd) {
-                    this._tiles[columnIndex][rowIndex].type = tiletype.flatground;
+                var distSqdToCenter = calculateMapSqDelta(
+                    [columnIndex, rowIndex], asteroidCenter);
+                    
+                if (distSqdToCenter > asteroidRadiusSqd) {
+                    continue;
                 }
+                
+                this._tiles[columnIndex][rowIndex].type = tiletype.flatground;
+                
+                var scalingFactor = 10.0;
+                var noise = PerlinNoise.noise(scalingFactor * columnIndex/this.width, 
+                                              scalingFactor * rowIndex/this.height, 
+                                              0.0);
+
+                var resource
+                    = noise > 0.65 ? resourcetypes.steelore
+                    : noise > 0.55 ? resourcetypes.preciousore
+                    : noise > 0.45 ? resourcetypes.ice
+                    : resourcetypes.regolith;
+                console.log("tile (" + columnIndex + "," + rowIndex + "): " + resource.name + " with noise " + noise);
+                this._tiles[columnIndex][rowIndex].resource = resource;
             }
         }
-        this._tiles[asteroidCenter.x][asteroidCenter.y].type = tiletype.emptyspace;
+
     }
 };
 
 asteroid.init(20, 20);
-console.log(asteroid);
+
 

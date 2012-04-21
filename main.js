@@ -2,15 +2,30 @@
 convertTileType = function(type) {
     switch (type) {
         case tiletype.flatground:
-            return "flatground";
+            return "grass"
         default:
             return null;
     }
 }
 
+convertResourceToTileType = function(type) {
+
+    switch(type) {
+    case resourcetypes.ice: return "iceground";
+    case resourcetypes.regolith: return "grass";
+    case resourcetypes.steelore: return "flatground";
+    case resourcetypes.preciousore: return "preciousground";
+    default: return null;
+    }
+
+}
+
 function mapToIsometricTile(x, y, mapWidth, mapHeight) {
     
-    return [x,y];
+    var isometricRow = mapHeight - y + x;
+    var isometricCol = Math.floor((x+y) / 2);
+    
+    return [isometricCol,isometricRow];
 }
 
 
@@ -59,9 +74,12 @@ var economy = Crafty.e("Economy")
             }})
     economy.newStep();
     var tilesize = 32;
-    Crafty.sprite(tilesize, "image/sprite-32.png", {
-            grass: [0,0,1,1],
-            flatground: [1,0,1,1]
+
+    Crafty.sprite(tilesize, "image/ground3.png", {
+        grass: [0,0,1,1],
+        iceground: [1,0,1,1],
+        preciousground: [2,0,1,1],
+        flatground: [3,0,1,1],
     });
     Crafty.c("Terrain", {
             _tileSize: 32,
@@ -90,10 +108,13 @@ var economy = Crafty.e("Economy")
     Crafty.background("#000");
     iso = Crafty.isometric.size(tilesize);
 
+    var newIsometricTiles = new Array();
+
     var z = 0;
     for(var x = asteroid.width-1; x >= 0; x--) {
         for(var y = 0; y < asteroid.height; y++) {
-            var which = convertTileType(asteroid.getTileType(x, y));
+            //var which = convertTileType(asteroid.getTileType(x, y));
+            var which = convertResourceToTileType(asteroid.getResource(x, y));
             if (which === null)
                 continue; // don't draw tiles where there should be space
             var tile = Crafty.e("Terrain, " + which)
@@ -108,21 +129,43 @@ var economy = Crafty.e("Economy")
                 .bind("MouseOver", function() {
                     if(this.has("grass")) {
                         this.sprite(0,1,1,1);
-                    } else {
+                    } else if (this.has("iceground")) {
                         this.sprite(1,1,1,1);
+                    } else if (this.has("preciousground")) {
+                        this.sprite(2,1,1,1);
+                    } else {
+                        this.sprite(3,1,1,1);
                     }
                 })
                 .bind("MouseOut", function() {
                     if(this.has("grass")) {
                         this.sprite(0,0,1,1);
-                    } else {
+                    } else if (this.has("iceground")) {
                         this.sprite(1,0,1,1);
+                    } else if (this.has("preciousground")) {
+                        this.sprite(2,0,1,1);
+                    } else {
+                        this.sprite(3,0,1,1);
                     }
                 });
             
             var isometricTileCoord = mapToIsometricTile(x, y, asteroid.width, asteroid.height);
-            iso.place(isometricTileCoord[0], isometricTileCoord[1], 0, tile);
+            newIsometricTiles.push({ coord: isometricTileCoord, e: tile});
         }
+    }
+
+    newIsometricTiles.sort(function(tileA, tileB) {
+        return tileA.coord[1] < tileB.coord[1] ? -1
+            : tileA.coord[1] > tileB.coord[1] ? 1
+            : (tileA.coord[0] > tileB.coord[0] ? -1 
+               : tileA.coord[0] < tileB.coord[0] ? 1
+               : 0)
+    });
+
+    for(var tileIndex = 0; tileIndex < newIsometricTiles.length; ++tileIndex) {
+        var newTile = newIsometricTiles[tileIndex];
+        newTile.e.attr('z', tileIndex);
+        iso.place(newTile.coord[0], newTile.coord[1], 0, newTile.e);
     }
 
     Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
