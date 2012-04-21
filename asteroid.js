@@ -22,12 +22,16 @@ var asteroid = {
     height:0,
 
     getTileType: function(x, y) {
-        assert(x >= 0 && x < this.width && y >= 0 && y < this.height);
+        assert(x >= 0 && x < this.width && y >= 0 && y < this.height, 
+               "getTileType() x: 0 <= " + x + " < " + this.width + " y: 0 <= " 
+               + y + " < " + this.height);
         return this._tiles[x][y].type;
     },
 
     getResource: function(x, y) {
-        assert(x >= 0 && x < this.width && y >= 0 && y < this.height);
+        assert(x >= 0 && x < this.width && y >= 0 && y < this.height, 
+               "getResource() x: 0 <= " + x + " < " + this.width 
+               + " y: 0 <= " + y + " < " + this.height);
         return this._tiles[x][y].resource;
     },
 
@@ -51,7 +55,7 @@ var asteroid = {
                 };
             }
         }
-    }
+    },
 
     ////////////////// "private" ///////////////////
 
@@ -62,3 +66,4 @@ var asteroid = {
 
 asteroid.init(20, 20);
 console.log(asteroid);
+asteroid.getTileType(20, 4);
