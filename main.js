@@ -37,12 +37,22 @@ function mapToIsometricTile(x, y, mapWidth, mapHeight) {
 
 
 window.onload = function() {
+    Crafty.scene("GameOver", function() {
+        Crafty.background('#000');
+        Crafty.e("2D, DOM,Text")
+            .attr({x:50, y:50, w:100, h:100})
+            .textColor("#0000ff")
+            .textFont({size:"20px", family:"sans"})
+            .text("Your colonists are dead, GAME OVER");
+        Crafty.stop();
+    });
     Math.seedrandom("seed");
     Crafty.init();
-    hud_setup();
     buildings_setup();
     economy = economy_setup();
-    //economy.newStep();
+
+    Crafty.scene("main", function() {
+    hud_setup();
     var tilesize = 32;
     var terrainTypes = {
         groundVarient1: [0,0],
@@ -70,6 +80,8 @@ window.onload = function() {
         steelOverlay: [2,0],
         preciousOverlay: [3,0],
     };
+
+
 
     Crafty.sprite(tilesize, "image/ground3.png", terrainTypes);
     Crafty.sprite(tilesize, "image/buildings.png", buildingTypes);
@@ -239,5 +251,8 @@ window.onload = function() {
             Crafty.removeEvent(this, Crafty.stage.elem, "mousemove", scroll);
         });
     });*/
+    });
+
+    Crafty.scene("main");
 
 }

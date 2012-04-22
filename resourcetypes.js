@@ -19,10 +19,18 @@ var newResourceDelta = function(resource, cost) {
 }
 
 var colonistNeeds = Object.freeze({
-    per: 10,
-    every: 2,
+    per: 1,
+    every: 1,
     uses: [
-        newResourceDelta(resourcetypes.food, -1),
-        newResourceDelta(resourcetypes.water, -1),
+        newResourceDelta(resourcetypes.food, -0.05),
+        newResourceDelta(resourcetypes.water, -0.05),
+        ]
+});
+
+var colonistBreeding = Object.freeze({
+    everyNeed: 1,
+    neededDelta: [
+        newResourceDelta(resourcetypes.food, 0.1),
+        newResourceDelta(resourcetypes.water, 0.1),
         ]
 });
