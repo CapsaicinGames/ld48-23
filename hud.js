@@ -236,12 +236,15 @@ var hud_show = function() {
         .attr({ y: cur_y, h: menu_height -2, isOverlayEnabled: false})
         .text("Resources")
         .bind("Click", function() {
-            var isOverlayEnabledNow = !this.isOverlayEnabled;
-            console.log("setting visibility " + isOverlayEnabledNow);
-            Crafty("ResourceOverlay").each(function() {
-                this.setVisibility(isOverlayEnabledNow);
-            });
-            this.isOverlayEnabled = isOverlayEnabledNow;
+            this.isOverlayEnabled = !this.isOverlayEnabled;
+            showResources(this.isOverlayEnabled);
         });
 
 };
+
+var showResources = function(isShown) {
+    Crafty("ResourceOverlay").each(function() {
+        this.setVisibility(isShown);
+    });
+    
+}
