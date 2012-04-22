@@ -65,7 +65,7 @@ function buildings_setup() {
                 
             case "inactive":
                 this.overlay.visible = true;
-                this.overlay.sprite(0,0);
+                this.overlay.sprite(2,1);
                 break;
             }
             this.overlayType = overType;
