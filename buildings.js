@@ -203,7 +203,7 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steel, -1)
                     .resourceDelta(resourcetypes.plastic, -2)
-                    .resourceDelta(resourcetypes.widget, 2);
+                    .resourceDelta(resourcetypes.widgets, 2);
             },
         },
          "Smelter": {
