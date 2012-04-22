@@ -190,13 +190,13 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.preciousmetal, 1);
             },
         },
-        "Blast furnace": {
+        "Steel Refinery": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
                 return Crafty.e("Building, blastfurnacesprite")
-                    .attr({name: "Blast furnace"})
+                    .attr({name: "Steel Refinery"})
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steelore, -2)
                     .resourceDelta(resourcetypes.steel, 2);
