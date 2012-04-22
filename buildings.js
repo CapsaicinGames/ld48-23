@@ -102,7 +102,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2),
             ],
             factory: function() {
-                return Crafty.e("Storage, placeholderSprite")
+                return Crafty.e("Storage, capacitorbanksprite")
                     .attr({name: "Capacitor Bank"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.energy, 100);
@@ -113,7 +113,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2),
             ],
             factory: function() {
-                return Crafty.e("Storage, placeholderSprite")
+                return Crafty.e("Storage, orelockersprite")
                     .attr({name: "Ore locker"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.steelore, 100)
@@ -131,7 +131,7 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.energy, 3);
             },
        },
-         "Hydroponics": {
+        "Hydroponics": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
@@ -143,7 +143,7 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.food, 1);
             },
         },
-         "Ice melter": {
+        "Ice melter": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
@@ -155,7 +155,7 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.water, 1);
             },
         },
-         "Widget factory": {
+        "Widget factory": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
                 newResourceDelta(resourcetypes.steel, -2),
@@ -169,7 +169,7 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.widgets, 2);
             },
         },
-         "Smelter": {
+        "Smelter": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
                 newResourceDelta(resourcetypes.steel, -3),
@@ -182,7 +182,7 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.preciousmetal, 1);
             },
         },
-         "Blast furnace": {
+        "Blast furnace": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
@@ -194,7 +194,7 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.steel, 2);
             },
         },
-         "RegoPlasticiser": {
+        "RegoPlasticiser": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
