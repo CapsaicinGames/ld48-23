@@ -222,7 +222,7 @@ function buildings_setup() {
                     .attr({
                         name: "Astro Analyser", 
                         maxColonists: 9999,
-                        onTick: analyseAsteroid,
+                        onTick: function() { analyseAsteroid(this._colonists); },
                     })
                     .resourceDelta(resourcetypes.energy, -1);
             },
@@ -255,13 +255,24 @@ function createMine(powerDrain, resourceProduction, mineName) {
               });
 }
 
-function analyseAsteroid() {
-    var unanalysedTiles = Crafty("UnanalysedResource");
-    var tileIndexToAnalyse = Crafty.math.randomInt(0, unanalysedTiles.length-1);
-    var overlayToAnalyseID = unanalysedTiles[tileIndexToAnalyse];
-    var overlayEntityToAnalyse = Crafty(overlayToAnalyseID);
-    overlayEntityToAnalyse.removeComponent("UnanalysedResource");
-    refreshResources();
+function analyseAsteroid(loops) {
+
+    while(loops > 0) {
+
+        var unanalysedTiles = Crafty("UnanalysedResource");
+
+        if (unanalysedTiles.length === 0) {
+            return; // nothing to analyse
+        }
+
+        var tileIndexToAnalyse = Crafty.math.randomInt(0, unanalysedTiles.length-1);
+        var overlayToAnalyseID = unanalysedTiles[tileIndexToAnalyse];
+        var overlayEntityToAnalyse = Crafty(overlayToAnalyseID);
+        overlayEntityToAnalyse.removeComponent("UnanalysedResource");
+
+        --loops;
+    }
+   refreshResources();
 }
 
 function onLanderBuild(tileResource, mapX, mapY) {
