@@ -27,6 +27,19 @@ function buildings_setup() {
                     hud_select_building();
                 } else if (hud_state.mode === hudModes.destroy 
                            && this.destroyable === true) {
+                    
+                    var refundRatio = 0.5;
+                    var ctorCosts = buildingBlueprints[this.name].constructionCost;
+                    var refund = [];
+                    for(var costIndex = 0; costIndex < ctorCosts.length; ++costIndex) {
+                        refund.push(newResourceDelta(
+                            ctorCosts[costIndex].r,
+                            ctorCosts[costIndex].delta * -1.0 * refundRatio
+                        ));
+                    }
+                    console.log(refund);
+                    economy.debit(refund);
+
                     this.tileEntity._canBuild = true;
                     this.destroy();
                     economy.populate(this, -this._colonists);
