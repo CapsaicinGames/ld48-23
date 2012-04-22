@@ -6,6 +6,7 @@ function buildings_setup() {
     Crafty.c("Building", {
         _colonists: 0,
         maxColonists: 1,
+        minActive: 1,
         resourceDeltas: [],
         destroyable: true,
         name: "Unknown",
@@ -31,7 +32,7 @@ function buildings_setup() {
             return this;
         },
         isActive: function() {
-            return this._colonists > 0; 
+            return this._colonists >= this.minActive; 
         },
         onBuild: function(tileResource, atX, atY) {
             // intentionally blank
@@ -63,6 +64,7 @@ function buildings_setup() {
             factory: function() {
                 return Crafty.e("Storage, landersprite")
                     .attr({
+                        minActive: 0,
                         destroyable: false, 
                         name: "Colony Ship",
                         onBuild: onLanderBuild,
@@ -76,8 +78,11 @@ function buildings_setup() {
                     .storageDelta(resourcetypes.steelore, 50)
                     .storageDelta(resourcetypes.plastic, 50)
                     .storageDelta(resourcetypes.steel, 50)
-                    .storageDelta(resourcetypes.preciousore, 10)
-                    .storageDelta(resourcetypes.preciousmetal, 10);
+                    //.storageDelta(resourcetypes.preciousore, 10)
+                    //.storageDelta(resourcetypes.preciousmetal, 10)
+                    .resourceDelta(resourcetypes.food, 0.5)
+                    .resourceDelta(resourcetypes.water, 0.5)
+                    ;
             },
             buildable: false,
         },
