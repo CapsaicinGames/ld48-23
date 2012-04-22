@@ -1,9 +1,11 @@
 
+var menu_margin = 30;
+
 var createBuildMenu = function() {
-    var cur_x = Crafty.viewport.width - 200;
-    var cur_y = Crafty.viewport.height - 30;
     var menu_width = 75;
     var menu_height = 15;
+    var cur_x = Crafty.viewport.width - 200;
+    var cur_y = Crafty.viewport.height - (menu_margin + menu_height);
     for (var name in buildingBlueprints)
     {
         if (buildingBlueprints[name].buildable != false)
@@ -59,11 +61,11 @@ var hud_setup = function() {
     // more complex it could do with breaking down
     // to separate items
     Crafty.e("Status, HUD")
-        .attr({ x : 20, y : 30, w : 100, h : 200} )
+        .attr({ x : menu_margin, y : menu_margin+20, w : 100, h : 200} )
         .text("No colony");
     // Controls the speed of time / economy
     Crafty.e("Time, HUD, Mouse")
-        .attr({ x: 20, y: 10, h: 15, w: 50})
+        .attr({ x: menu_margin, y: menu_margin, h: 15, w: 50})
         .text("x1")
         .bind("Click", function() {
             switch (economy.speed)
@@ -86,7 +88,7 @@ var hud_setup = function() {
     // The Pause button.  It doesn't like
     // being pressed repeatedly
     Crafty.e("Pause, HUD, Mouse")
-        .attr({x:70, y:10, h:15, w:50})
+        .attr({x:menu_margin+50, y:menu_margin, h:15, w:50})
         .text("Pause")
         .bind("Click", function() {
             if (economy.speed > 0)
@@ -125,8 +127,8 @@ var hud_setup = function() {
             },
             init : function () {
                 this.requires("HUD, Mouse");
-                this.x = Crafty.viewport.width - 80;
                 this.w = 60; 
+                this.x = Crafty.viewport.width - (this.w + menu_margin);
                 this.bind("Click", function() {this.onClick();});
             }
         });
@@ -138,18 +140,23 @@ var hud_setup = function() {
 };
 
 var hud_show = function() {
+    var menu_height = 15;
+    var cur_y = Crafty.viewport.height - (menu_height + menu_margin);
     Crafty.e("MenuTopLevel")
-        .attr({y: Crafty.viewport.height - 30, h:15, menuCtor: createBuildMenu, submenu: "BuildMenu"})
+        .attr({y: cur_y, h: menu_height, 
+                menuCtor: createBuildMenu, submenu: "BuildMenu"})
         .text("Build");
+    cur_y -= menu_height;
     Crafty.e("MenuTopLevel")
-        .attr({ y: Crafty.viewport.height - 45, h:15})
+        .attr({ y: cur_y, h: menu_height})
         .text("Destroy")
         .bind("Click", function() {
             hud_state.mode = hudModes.destroy;
             hud_state.modeArg = "";
         });
+    cur_y -= menu_height;
     Crafty.e("MenuTopLevel")
-        .attr({ y: Crafty.viewport.height - 60, h:15, isOverlayEnabled: false})
+        .attr({ y: cur_y, h: menu_height, isOverlayEnabled: false})
         .text("Resources")
         .bind("Click", function() {
             var isOverlayEnabledNow = !this.isOverlayEnabled;

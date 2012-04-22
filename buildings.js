@@ -6,12 +6,14 @@ function buildings_setup() {
     Crafty.c("Building", {
         _colonists: 1,
         resourceDeltas: [],
+        destroyable: true,
         
         init: function() {
             this.resourceDeltas = [];
             this.requires("WorldEntity");
             this.bind("Click", function() {
-                if (hud_state.mode === hudModes.destroy) {
+                if (hud_state.mode === hudModes.destroy &&
+                    this.destroyable === true) {
                     this.destroy();
                 }
             });
@@ -53,6 +55,7 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Storage, grass")
+                    .attr('destroyable', false)
                     .storageDelta(resourcetypes.colonists, 10)
                     .storageDelta(resourcetypes.food, 100)
                     .storageDelta(resourcetypes.ice, 50)
@@ -62,7 +65,8 @@ function buildings_setup() {
                     .storageDelta(resourcetypes.steelore, 50)
                     .storageDelta(resourcetypes.plastic, 50)
                     .storageDelta(resourcetypes.steel, 50)
-                    .storageDelta(resourcetypes.preciousore, 50);
+                    .storageDelta(resourcetypes.preciousore, 10)
+                    .storageDelta(resourcetypes.preciousmetal, 10);
             },
             buildable: false,
         },
@@ -90,6 +94,16 @@ function buildings_setup() {
                     .storageDelta(resourcetypes.colonists, 25);
             },
         },
+        "Capacitor Bank": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.steel, -2),
+            ],
+            factory: function() {
+                return Crafty.e("Storage, grass")
+                    .resourceDelta(resourcetypes.energy, -1)
+                    .storageDelta(resourcetypes.energy, 100);
+            },
+        },
         "Ore locker": {
             constructionCost: [
                 newResourceDelta(resourcetypes.steel, -2),
@@ -97,9 +111,9 @@ function buildings_setup() {
             factory: function() {
                 return Crafty.e("Storage, grass")
                     .resourceDelta(resourcetypes.energy, -1)
-                    .storageDelta(resourcetypes.steelore, 1000)
-                    .storageDelta(resourcetypes.regolith, 1000)
-                    .storageDelta(resourcetypes.preciousore, 1000);
+                    .storageDelta(resourcetypes.steelore, 100)
+                    .storageDelta(resourcetypes.regolith, 100)
+                    .storageDelta(resourcetypes.preciousore, 100);
             },
         },
         "Solar Panel": {
@@ -131,6 +145,31 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.energy, -1)
                     .resourceDelta(resourcetypes.ice, -1)
                     .resourceDelta(resourcetypes.water, 1);
+            },
+        },
+         "Widget factory": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.plastic, -2),
+                newResourceDelta(resourcetypes.steel, -2),
+            ],
+            factory: function() {
+                return Crafty.e("Building, grass")
+                    .resourceDelta(resourcetypes.energy, -3)
+                    .resourceDelta(resourcetypes.steel, -1)
+                    .resourceDelta(resourcetypes.plastic, -2)
+                    .resourceDelta(resourcetypes.widget, 2);
+            },
+        },
+         "Smelter": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.plastic, -2),
+                newResourceDelta(resourcetypes.steel, -3),
+            ],
+            factory: function() {
+                return Crafty.e("Building, grass")
+                    .resourceDelta(resourcetypes.energy, -3)
+                    .resourceDelta(resourcetypes.preciousore, -1)
+                    .resourceDelta(resourcetypes.preciousmetal, 1);
             },
         },
          "Blast furnace": {
