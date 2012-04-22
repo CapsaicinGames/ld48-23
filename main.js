@@ -211,7 +211,7 @@ window.onload = function() {
 
                 var overlay = overlaySprite != null 
                     ? Crafty.e("ResourceOverlay, " + overlaySprite)
-                    .attr({z: (x+1) * (y+1) * asteroid.width})
+                    .attr({z: ((x+1) * (y+1)) * asteroid.width})
                 : null;
                 resourceOverlays[x][y] = overlay;
                 
