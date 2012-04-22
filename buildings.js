@@ -275,8 +275,8 @@ function buildings_setup() {
 function build(blueprint, tileToBuildOn) {
     var over = Crafty.e("BuildingInfoOverlay, outOfPowerOverlay")
         .attr({x: tileToBuildOn.x,
-               y: tileToBuildOn.y,
-               z: 999999});
+               y: tileToBuildOn.y - tilesize/4,
+               z: tileToBuildOn.z+2});
     var bldg = blueprint.factory()
         .attr({x: tileToBuildOn.x,
                y: tileToBuildOn.y - tilesize/2,
