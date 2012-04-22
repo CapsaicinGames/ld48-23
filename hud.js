@@ -29,6 +29,7 @@ var createBuildMenu = function() {
                        h: menu_height-2,
                        printText: txt})
                 .bind("Click", function() {
+                    
                     Crafty("BuildMenu").each(function () {
                         this.css({"background-color": "white"});
                     });
@@ -122,7 +123,8 @@ var hud_setup = function() {
             } else {
                 economy.speed = 1;
                 economy.newStep();
-                this.text("Pause");
+                this.text("Pause");                
+                
                 Crafty("Time").each(function() {this.text("x1") });
             }
         });
@@ -152,6 +154,12 @@ var hud_setup = function() {
                 {
                     this.menuCtor();
                 }
+
+                var showStatusBar = this.submenu == null;
+                Crafty("StatusBar").each(function () {
+                        this.visible = showStatusBar;
+                    });
+
                 this.css({"background-color": selectedMenu});
             },
             init : function () {
@@ -174,6 +182,29 @@ var hud_setup = function() {
     Crafty.e("Selected, HUD")
         .attr({ y: menu_margin+40, h: 220, w: 100, x: Crafty.viewport.width - (menu_margin + 100)})
         .text("Nothing selected");
+
+    var statusBar = Crafty.e("StatusBar, HUD")
+        .attr({
+            x: menu_margin,
+            y: Crafty.viewport.height - menu_margin - 15,
+            w: (Crafty.viewport.width - (menu_margin*2)) * 0.75,
+            h: 15,
+            onTick: function() {
+                var topMsg = statusMessages.calculateTopMessage();
+                if (topMsg === null) {
+                    this.text(" ");
+                } else {
+                    this.text(topMsg.m);
+                }
+                statusMessages.wipeAllMessages();
+                console.log(statusMessages);
+            },
+        })
+        .text("here is a status message")
+    ;
+
+    statusMessages.addMessage("Choose a tile on the asteroid to place your lander");
+    statusBar.onTick();
 
 };
 
@@ -281,3 +312,27 @@ var showResources = function(isShown) {
     });
     
 }
+
+var statusMessages = {
+    _currentMessages: [],
+    
+    addMessage: function(newMsg, strength) {
+        this._currentMessages.push({m:newMsg, s:strength});
+    },
+
+    calculateTopMessage: function() {
+        var strongestMessage = null;
+
+        for(var msgIndex = 0; msgIndex < this._currentMessages.length; ++msgIndex) {
+            if (strongestMessage === null || strongestMessage.s < this._currentMessages[msgIndex].s) {
+                strongestMessage = this._currentMessages[msgIndex];
+            }
+        }
+        
+        return strongestMessage;
+    },
+
+    wipeAllMessages: function() {
+        this._currentMessages = [];
+    },
+};
