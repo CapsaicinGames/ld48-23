@@ -75,8 +75,8 @@ function buildings_setup() {
             factory: function() {
                 return Crafty.e("Building, grass")
                     .resourceDelta(resourcetypes.energy, -1)
-                    .resourceDelta(resourcetypes.ice, 1)
-                    .resourceDelta(resourcetypes.water, -1);
+                    .resourceDelta(resourcetypes.ice, -1)
+                    .resourceDelta(resourcetypes.water, 1);
             },
         },
          "Blast furnace": {
