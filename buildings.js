@@ -269,7 +269,7 @@ function onLanderBuild(tileResource, mapX, mapY) {
             yIndex <= Math.min(mapY + analysedRadius, asteroid.height - 1);
             ++yIndex) {
 
-            if (resourceOverlays[xIndex][yIndex] === null) {
+            if (resourceOverlays[xIndex][yIndex] === undefined) {
                 continue;
             }
 
