@@ -86,6 +86,7 @@ window.onload = function() {
             steelOverlay: [2,0],
             preciousOverlay: [3,0],
             outOfPowerOverlay: [0,1],
+            outOfInputOverlay: [0,2],
         };
 
         Crafty.sprite(tilesize, "image/ground3.png", terrainTypes);
