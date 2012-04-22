@@ -1,8 +1,8 @@
 var resourcetypes = Object.freeze({
 
     energy: { name: "Energy", initialValue: 100 },
-    colonists: { name: "Spare Colonists", initialValue: 5 },
-    food: { name: "Food", initialValue: 5 },
+    colonists: { name: "Spare Colonists", initialValue: 10 },
+    food: { name: "Food", initialValue: 50 },
     ice: { name: "Ice", initialValue: 0 },
     water: { name: "Water", initialValue: 5 },
     regolith: { name: "Regolith", initialValue: 0 },
@@ -14,4 +14,15 @@ var resourcetypes = Object.freeze({
     widgets: { name: "Widgets", initialValue: 0 },
 
 });
+var newResourceDelta = function(resource, cost) {
+    return { r: resource.name, delta: cost };
+}
 
+var colonistNeeds = Object.freeze({
+    per: 10,
+    every: 1,
+    uses: [
+        newResourceDelta(resourcetypes.food, -1),
+        newResourceDelta(resourcetypes.water, -1),
+        ]
+});
