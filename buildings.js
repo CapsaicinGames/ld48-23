@@ -260,5 +260,21 @@ function analyseAsteroid() {
 }
 
 function onLanderBuild(tileResource, mapX, mapY) {
-    console.log("built at " + mapX + ", " + mapY);
+    var analysedRadius = 2;
+    for(var xIndex = Math.max(mapX - analysedRadius, 0); 
+        xIndex <= Math.min(mapX + analysedRadius, asteroid.width - 1); 
+        ++xIndex) {
+
+        for(var yIndex = Math.max(mapY - analysedRadius, 0);
+            yIndex <= Math.min(mapY + analysedRadius, asteroid.height - 1);
+            ++yIndex) {
+
+            if (resourceOverlays[xIndex][yIndex] === null) {
+                continue;
+            }
+
+            resourceOverlays[xIndex][yIndex].isAnalysed = true;
+        }
+
+    }
 }
