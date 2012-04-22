@@ -95,11 +95,14 @@ window.onload = function() {
         init: function() {
             this.requires("2D, Canvas");
             this.visible = false;
+            this.isAnalysed = false;
         },
         setVisibility: function(isVisible) {
-            this.visible = isVisible;
+            this.visible = this.isAnalysed && isVisible;
         },
     });
+
+    resourceOverlays = [];
 
     var cursor = Crafty.e("ResourceOverlay, cursorSprite")
         .attr({z: 999999999999});
@@ -181,6 +184,9 @@ window.onload = function() {
 
     var z = 0;
     for(var x = asteroid.width-1; x >= 0; x--) {
+
+        resourceOverlays[x] = [];
+
         for(var y = 0; y < asteroid.height; y++) {
             var which = convertTileType(asteroid.getTileType(x, y), x, y, asteroid.getResource(x, y));
             if (which === null)
@@ -202,6 +208,7 @@ window.onload = function() {
                 ? Crafty.e("ResourceOverlay, " + overlaySprite)
                     .attr({z: (x+1) * (y+1) * asteroid.width})
                 : null;
+            resourceOverlays[x][y] = overlay;
             
             var isometricTileCoord = mapToIsometricTile(x, y, asteroid.width, asteroid.height);
             newIsometricTiles.push({ coord: isometricTileCoord, e: tile, o: overlay});
