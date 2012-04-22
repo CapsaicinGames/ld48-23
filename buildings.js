@@ -93,7 +93,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2000000),
             ],
             factory: function() {
-                return Crafty.e("Storage, grass")
+                return Crafty.e("Storage, placeholderSprite")
                     .attr({destroyable: false, name: "Colony Ship"})
                     .storageDelta(resourcetypes.colonists, 10)
                     .storageDelta(resourcetypes.food, 100)
@@ -128,7 +128,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2),
             ],
             factory: function() {
-                return Crafty.e("Storage, grass")
+                return Crafty.e("Storage, placeholderSprite")
                     .attr({name: "Habitat"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.colonists, 25);
@@ -139,7 +139,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2),
             ],
             factory: function() {
-                return Crafty.e("Storage, grass")
+                return Crafty.e("Storage, placeholderSprite")
                     .attr({name: "Capacitor Bank"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.energy, 100);
@@ -150,7 +150,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2),
             ],
             factory: function() {
-                return Crafty.e("Storage, grass")
+                return Crafty.e("Storage, placeholderSprite")
                     .attr({name: "Ore locker"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.steelore, 100)
@@ -173,7 +173,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, grass")
+                return Crafty.e("Building, placeholderSprite")
                     .attr({name: "Hydroponics"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .resourceDelta(resourcetypes.water, -1)
@@ -185,7 +185,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, grass")
+                return Crafty.e("Building, placeholderSprite")
                     .attr({name: "Ice melter"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .resourceDelta(resourcetypes.ice, -1)
@@ -198,7 +198,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, grass")
+                return Crafty.e("Building, placeholderSprite")
                     .attr({name: "Widget factory"})
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steel, -1)
@@ -212,7 +212,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -3),
             ],
             factory: function() {
-                return Crafty.e("Building, grass")
+                return Crafty.e("Building, placeholderSprite")
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.preciousore, -1)
                     .resourceDelta(resourcetypes.preciousmetal, 1);
@@ -223,7 +223,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, grass")
+                return Crafty.e("Building, placeholderSprite")
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steelore, -2)
                     .resourceDelta(resourcetypes.steel, 2);
@@ -234,7 +234,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, grass")
+                return Crafty.e("Building, placeholderSprite")
                     .resourceDelta(resourcetypes.energy, -2)
                     .resourceDelta(resourcetypes.regolith, -1)
                     .resourceDelta(resourcetypes.plastic, 1);

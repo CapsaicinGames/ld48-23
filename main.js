@@ -1,10 +1,16 @@
 
-convertTileType = function(type) {
+convertTileType = function(type, x, y, resource) {
     switch (type) {
-        case tiletype.flatground:
-            return "flatground"
-        default:
-            return null;
+    case tiletype.flatground:
+        if (resource == resourcetypes.ice) {
+            return "groundIce";
+        }
+        else {
+            var varientIndex = Crafty.math.randomInt(0, 2);
+            return "groundVarient" + (varientIndex + 1);
+        }
+    default:
+        return null;
     }
 }
 
@@ -31,6 +37,7 @@ function mapToIsometricTile(x, y, mapWidth, mapHeight) {
 
 
 window.onload = function() {
+    Math.seedrandom("seed");
     Crafty.init();
     hud_setup();
     buildings_setup();
@@ -38,10 +45,12 @@ window.onload = function() {
     //economy.newStep();
     var tilesize = 32;
     var terrainTypes = {
-        grass: [0,0],
-        iceground: [1,0],
-        preciousground: [2,0],
-        flatground: [3,0],
+        groundVarient1: [0,0],
+        groundIce: [1,0],
+        groundVarient2: [2,0],
+        groundVarient3: [3,0],
+        cursorSprite: [0,1],
+        placeholderSprite: [1,1],
     };
 
     var buildingTypes = {
@@ -82,18 +91,20 @@ window.onload = function() {
         },
     });
 
+    var cursor = Crafty.e("ResourceOverlay, cursorSprite")
+        .attr({z: 999999999999});
+
     Crafty.c("WorldEntity", {
         _tileSize: 32,
         _canBuild: true,
         init : function() {
             this.requires("2D, Canvas, Mouse");
             this.bind("MouseOver", function() {
-                switchSprite(this, terrainTypes, 1);
-                switchSprite(this, buildingTypes, 1);
-            });
-            this.bind("MouseOut", function() {
-                switchSprite(this, terrainTypes, 0);
-                switchSprite(this, buildingTypes, 0);
+                cursor.x = this._x;
+                cursor.y = this._y;
+                cursor.h = this._h;
+                cursor.z = this._z + 1;
+                cursor.setVisibility(true);
             });
         },
         tileSize: function(size) { 
@@ -152,7 +163,7 @@ window.onload = function() {
             });
         }
     });
-    Crafty.background("url('image/stars.gif')");
+    Crafty.background("url('image/stars.png')");
     iso = Crafty.isometric.size(tilesize);
 
     var newIsometricTiles = new Array();
@@ -160,10 +171,10 @@ window.onload = function() {
     var z = 0;
     for(var x = asteroid.width-1; x >= 0; x--) {
         for(var y = 0; y < asteroid.height; y++) {
-            var which = convertTileType(asteroid.getTileType(x, y));
+            var which = convertTileType(asteroid.getTileType(x, y), x, y, asteroid.getResource(x, y));
             if (which === null)
                 continue; // don't draw tiles where there should be space
-
+            
             var tile = Crafty.e("Terrain, " + which)
                 .attr({z:(x+1) * (y+1), map_x: x, map_y: y})
                 .tileSize(tilesize)
@@ -199,9 +210,9 @@ window.onload = function() {
         newTile.e.attr('z', tileIndex);
         iso.place(newTile.coord[0], newTile.coord[1], 0, newTile.o);
         iso.place(newTile.coord[0], newTile.coord[1], 0, newTile.e);
-     
     }
 
+    iso.place(newIsometricTiles[0].coord[0], newIsometricTiles[0].coord[1], 0, cursor);
     /*
     Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
         if(e.button > 1) return;
