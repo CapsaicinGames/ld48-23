@@ -300,6 +300,11 @@ var economy_setup = function() {
                 this.timeout(function() {this.newStep();}, this.timePerStep);
             },
             populate: function(building, delta) {
+                if (building.minActive == 0) { 
+                    // doesn't need any colonists
+                    return;
+                }
+
                 var okay = false;
                 var newbldgtotal = building._colonists + delta;
                 if (delta > 0 && 
