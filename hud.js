@@ -23,9 +23,15 @@ var hudModes = Object.freeze({
     manage: {}
 });
 
+var overlayModes = Object.freeze({
+    nothing: {},
+    resources: {},
+});
+
 var hud_state = {
     mode: hudModes.nothing,
-    modeArg: ""
+    modeArg: "",
+    overlayMode: overlayModes.nothing,
 };
 
 var hud_setup = function() {
