@@ -37,7 +37,7 @@ function buildings_setup() {
                             ctorCosts[costIndex].delta * -1.0 * refundRatio
                         ));
                     }
-                    console.log(refund);
+
                     economy.debit(refund);
 
                     this.tileEntity._canBuild = true;
