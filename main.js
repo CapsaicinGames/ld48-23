@@ -56,6 +56,8 @@ window.onload = function() {
     var buildingTypes = {
         minesprite: [0,0],
         solarpanelsprite: [1,0],
+        habitatsprite: [2,0],
+        hydroponicssprite: [3,0],
     };
 
     var resourceOverlaySprites = {
