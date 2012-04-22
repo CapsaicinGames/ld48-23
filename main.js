@@ -50,6 +50,7 @@ window.onload = function() {
         groundVarient2: [2,0],
         groundVarient3: [3,0],
         cursorSprite: [0,1],
+        placeholderSprite: [1,1],
     };
 
     var buildingTypes = {
