@@ -49,28 +49,26 @@ function buildings_setup() {
             // intentionally blank
         },
         showOverlay: function(overType, param) {
-            if (overType !== this.overlayType) {
-                switch (overType) {
-                case "no":
-                    this.overlay.visible = false;
-                    break;
-                    
-                case "res":
-                    this.overlay.visible = true;
-                    if (param.indexOf(resourcetypes.energy.name) >= 0) {
-                        this.overlay.sprite(0,1);
-                    } else {
-                        this.overlay.sprite(1,0);
-                    }
-                    break;
-                    
-                case "inactive":
-                    this.overlay.visible = true;
-                    this.overlay.sprite(0,0);
-                    break;
+            switch (overType) {
+            case "no":
+                this.overlay.visible = false;
+                break;
+                
+            case "res":
+                this.overlay.visible = true;
+                if (param.indexOf(resourcetypes.energy.name) >= 0) {
+                    this.overlay.sprite(0,1);
+                } else {
+                    this.overlay.sprite(1,1);
                 }
-                this.overlayType = overType;
+                break;
+                
+            case "inactive":
+                this.overlay.visible = true;
+                this.overlay.sprite(2,1);
+                break;
             }
+            this.overlayType = overType;
         }
     });
 

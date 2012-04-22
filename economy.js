@@ -101,16 +101,17 @@ var economy_setup = function() {
                             break;
                         }
                     }
-                    Crafty(bldgList[i].ent).showOverlay("no");
-                    Crafty(bldgList[i].ent).missing = "";
                     this.energyDelta += cur_energy;
+                    var bldg = Crafty(bldgList[i].ent);
+                    bldg.showOverlay("no");
+                    bldg.missing = "";
                 } else {
-                    Crafty(bldgList[i].ent).showOverlay("res", missing);
+                    bldg.showOverlay("res", missing);
                     var tmp = "Missing ";
                     for (var j = 0; j < missing.length; ++j) {
                         tmp += missing[j] + " ";
                     }
-                    Crafty(bldgList[i].ent).missing = tmp;
+                    bldg.missing = tmp;
                 }
             }
 
