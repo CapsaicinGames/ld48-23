@@ -126,36 +126,59 @@ var economy_setup = function() {
             });
         },
 
-        doBreed: function(olddead, oldres) {
-            if (this.dead === olddead) {
-                // no deaths, there were enough resources
-                var breed = true;
-                for (var i = 0; i < colonistBreeding.neededDelta.length; ++i) {
-                    var res = colonistBreeding.neededDelta[i];
-                    var diff = this._resources[res.r] - oldres[res.r];
-                    if (diff < res.delta) {
-                        breed = false;
-                        this.breedingConstraint = "Don't have " +
-                            res.delta + " surplus " + res.r;
-                    }
-                }
-                if (this._storage["Spare Colonists"] <= 
-                    this._totalColonists) {
+        isBreedingPossible: function(oldcolonistscount, oldres) {
+
+            // can breed if enough food,
+            // and enough space
+
+            var isEveryoneAlive = this._totalColonists > 0 && oldcolonistscount <= this._totalColonists;
+            var msgPrefix = isEveryoneAlive === false ? "Colonists are dying! " : "";
+
+            var breed = true;
+
+            for (var i = 0; i < colonistBreeding.neededDelta.length; ++i) {
+                var res = colonistBreeding.neededDelta[i];
+                var diff = this._resources[res.r] - oldres[res.r];
+                if (diff < res.delta) {
                     breed = false;
-                    this.breedingConstraint = "Don't have enough space";
+
+                    var resourceMsg 
+                        = diff < 0.0 ? "Losing " + diff.toFixed(1) + " " + res.r + " per day. "
+                        : this._resources[res.r] < 0.001 ? "Out of " + res.r + "!"
+                        : isEveryoneAlive ? "Need more " + res.r + "!"
+                        : "Gaining " + diff.toFixed(1) + " " + res.r + " per day, need " 
+                            + res.delta + " for more colonists. ";
+                    
+                    var isResourceLow = this._resources[res.r] < 10;
+
+                    resourceMsg = (isResourceLow ? res.r + " is very low! " : "") 
+                        + resourceMsg;
+
+                    statusMessages.addMessage(msgPrefix + resourceMsg,
+                                              isEveryoneAlive === false && diff <= 0.0 ? 10 
+                                              : isResourceLow ? 5
+                                              : -3);
+
                 }
-                if (breed) {
-                    this._resources["Spare Colonists"]++;
-                    this._totalColonists++;
-                    //console.log("Bred to " + this._totalColonists);
-                } else {
-                    console.log(this.breedingConstraint);
-                }
-            } else {
-                this.breedingConstraint = "Colonists are dying!";
-                console.log(this.breedingConstraint);
             }
+
+            if (isEveryoneAlive === false) {
+                return false;
+            }
+
+            if (this._storage["Spare Colonists"] <= 
+                this._totalColonists) {
+                breed = false;
+                statusMessages.addMessage("No space for more colonists - build a habitat", -5);
+            }
+            
+            return breed;
         },
+
+        doBreed: function() {
+            this._resources["Spare Colonists"]++;
+            this._totalColonists++;
+        }
 
     });
 
@@ -164,19 +187,22 @@ var economy_setup = function() {
             days: 0,
             speed: 1,
             dead: 0,
-            breedingConstraint: "Unknown",
             timePerStep: 2000,
             newStep: function() {
                 this.days++;
                 var oldres = Crafty.clone(this._resources);
-                var olddead = this.dead;
+                var oldcolonistscount = this._totalColonists;
                 this.updateProduction();
                 this.tickBuildings();
                 if (!(this.days % colonistNeeds.every)) {
                     this.consumeResources();
                     //console.log(killed + " died, now " + this._totalColonists);
                 }
-                this.doBreed(olddead, oldres);
+
+                if (this.isBreedingPossible(oldcolonistscount, oldres)) {
+                    this.doBreed();
+                }
+
                 this.constrainResources();
                 this.updateStatus();
                 switch(this.speed)
