@@ -125,6 +125,38 @@ var economy_setup = function() {
                 this.onTick(); 
             });
         },
+
+        doBreed: function(olddead, oldres) {
+            if (this.dead === olddead) {
+                // no deaths, there were enough resources
+                var breed = true;
+                for (var i = 0; i < colonistBreeding.neededDelta.length; ++i) {
+                    var res = colonistBreeding.neededDelta[i];
+                    var diff = this._resources[res.r] - oldres[res.r];
+                    if (diff < res.delta) {
+                        breed = false;
+                        this.breedingConstraint = "Don't have " +
+                            res.delta + " surplus " + res.r;
+                    }
+                }
+                if (this._storage["Spare Colonists"] <= 
+                    this._totalColonists) {
+                    breed = false;
+                    this.breedingConstraint = "Don't have enough space";
+                }
+                if (breed) {
+                    this._resources["Spare Colonists"]++;
+                    this._totalColonists++;
+                    //console.log("Bred to " + this._totalColonists);
+                } else {
+                    console.log(this.breedingConstraint);
+                }
+            } else {
+                this.breedingConstraint = "Colonists are dying!";
+                console.log(this.breedingConstraint);
+            }
+        },
+
     });
 
     return Crafty.e("Economy")
@@ -144,34 +176,7 @@ var economy_setup = function() {
                     this.consumeResources();
                     //console.log(killed + " died, now " + this._totalColonists);
                 }
-                if (this.dead === olddead) {
-                    // no deaths, there were enough resources
-                    var breed = true;
-                    for (var i = 0; i < colonistBreeding.neededDelta.length; ++i) {
-                        var res = colonistBreeding.neededDelta[i];
-                        var diff = this._resources[res.r] - oldres[res.r];
-                        if (diff < res.delta) {
-                            breed = false;
-                            this.breedingConstraint = "Don't have " +
-                                res.delta + " surplus " + res.r;
-                        }
-                    }
-                    if (this._storage["Spare Colonists"] <= 
-                            this._totalColonists) {
-                        breed = false;
-                        this.breedingConstraint = "Don't have enough space";
-                    }
-                    if (breed) {
-                        this._resources["Spare Colonists"]++;
-                        this._totalColonists++;
-                        //console.log("Bred to " + this._totalColonists);
-                    } else {
-                        console.log(this.breedingConstraint);
-                    }
-                } else {
-                    this.breedingConstraint = "Colonists are dying!";
-                        console.log(this.breedingConstraint);
-                }
+                this.doBreed(olddead, oldres);
                 this.constrainResources();
                 this.updateStatus();
                 switch(this.speed)
@@ -220,6 +225,8 @@ var economy_setup = function() {
                 Crafty("Status").each(function() {
                         this.text(newstatus);
                 });
+
+                Crafty("StatusBar").each(function() { this.onTick(); });
             }});
 };
 
