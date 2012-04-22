@@ -17,8 +17,9 @@ function buildings_setup() {
                 if (hud_state.mode === hudModes.select) {
                     hud_state.modeArg = this[0];
                     hud_select_building();
-                } else if (hud_state.mode === hudModes.destroy &&
-                    this.destroyable === true) {
+                } else if (hud_state.mode === hudModes.destroy 
+                           && this.destroyable === true) {
+                    this.tileEntity._canBuild = true;
                     this.destroy();
                     economy.populate(this, -this._colonists);
                 }
@@ -190,13 +191,13 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.preciousmetal, 1);
             },
         },
-        "Blast furnace": {
+        "Steel Refinery": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
                 return Crafty.e("Building, blastfurnacesprite")
-                    .attr({name: "Blast furnace"})
+                    .attr({name: "Steel Refinery"})
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steelore, -2)
                     .resourceDelta(resourcetypes.steel, 2);
@@ -223,7 +224,7 @@ function buildings_setup() {
                     .attr({
                         name: "Astro Analyser", 
                         maxColonists: 9999,
-                        onTick: analyseAsteroid,
+                        onTick: function() { analyseAsteroid(this._colonists); },
                     })
                     .resourceDelta(resourcetypes.energy, -1);
             },
@@ -235,7 +236,9 @@ function build(blueprint, tileToBuildOn) {
     var bldg = blueprint.factory()
         .attr({x: tileToBuildOn.x,
                y: tileToBuildOn.y - tilesize/2,
-               z: tileToBuildOn.z+1});
+               z: tileToBuildOn.z+1,
+               tileEntity: tileToBuildOn 
+              });
     bldg.onBuild(
         asteroid.getResource(tileToBuildOn.map_x, tileToBuildOn.map_y), 
         tileToBuildOn.map_x, tileToBuildOn.map_y
@@ -256,13 +259,24 @@ function createMine(powerDrain, resourceProduction, mineName) {
               });
 }
 
-function analyseAsteroid() {
-    var unanalysedTiles = Crafty("UnanalysedResource");
-    var tileIndexToAnalyse = Crafty.math.randomInt(0, unanalysedTiles.length-1);
-    var overlayToAnalyseID = unanalysedTiles[tileIndexToAnalyse];
-    var overlayEntityToAnalyse = Crafty(overlayToAnalyseID);
-    overlayEntityToAnalyse.removeComponent("UnanalysedResource");
-    refreshResources();
+function analyseAsteroid(loops) {
+
+    while(loops > 0) {
+
+        var unanalysedTiles = Crafty("UnanalysedResource");
+
+        if (unanalysedTiles.length === 0) {
+            return; // nothing to analyse
+        }
+
+        var tileIndexToAnalyse = Crafty.math.randomInt(0, unanalysedTiles.length-1);
+        var overlayToAnalyseID = unanalysedTiles[tileIndexToAnalyse];
+        var overlayEntityToAnalyse = Crafty(overlayToAnalyseID);
+        overlayEntityToAnalyse.removeComponent("UnanalysedResource");
+
+        --loops;
+    }
+   refreshResources();
 }
 
 function onLanderBuild(tileResource, mapX, mapY) {

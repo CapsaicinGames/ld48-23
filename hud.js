@@ -24,10 +24,10 @@ var createBuildMenu = function() {
             Crafty.e("BuildMenu")
                 .text(name)
                 .attr({x : cur_x, 
-                        y : cur_y,
-                        w: menu_width-1,
-                        h: menu_height-2,
-                        printText: txt})
+                       y : cur_y,
+                       w: menu_width-1,
+                       h: menu_height-2,
+                       printText: txt})
                 .bind("Click", function() {
                     Crafty("BuildMenu").each(function () {
                         this.css({"background-color": "white"});
@@ -90,7 +90,7 @@ var hud_setup = function() {
     Crafty.e("Time, HUD, Mouse")
         .attr({ x: menu_margin, y: menu_margin, h: 15, w: 44})
         .text("x1")
-        .bind("Click", function() {
+        .bind("MouseDown", function() {
             switch (economy.speed)
             {
                 case 1:
@@ -113,7 +113,7 @@ var hud_setup = function() {
     Crafty.e("Pause, HUD, Mouse")
         .attr({x:menu_margin+50, y:menu_margin, h:15, w:50})
         .text("Pause")
-        .bind("Click", function() {
+        .bind("MouseDown", function() {
             if (economy.speed > 0)
             {
                 economy.speed = 0;
@@ -158,7 +158,7 @@ var hud_setup = function() {
                 this.requires("HUD, Mouse");
                 this.w = 60; 
                 this.x = Crafty.viewport.width - (this.w + menu_margin);
-                this.bind("Click", function() {this.onClick();});
+                this.bind("MouseDown", function() {this.onClick();});
             }
         });
     Crafty.c("ColonistMenu", {
@@ -254,7 +254,7 @@ var hud_show = function() {
     Crafty.e("MenuTopLevel")
         .attr({ y: cur_y, h: menu_height - 2})
         .text("Destroy")
-        .bind("Click", function() {
+        .bind("MouseDown", function() {
             hud_state.mode = hudModes.destroy;
             hud_state.modeArg = "";
         });
@@ -264,7 +264,7 @@ var hud_show = function() {
     resourceOverlayView = Crafty.e("MenuTopLevel")
         .attr({ y: cur_y, h: menu_height -2, isOverlayEnabled: false})
         .text("Resources")
-        .bind("Click", function() {
+        .bind("MouseDown", function() {
             this.isOverlayEnabled = !this.isOverlayEnabled;
             showResources(this.isOverlayEnabled);
         });
