@@ -66,7 +66,7 @@ var economy_setup = function() {
                     Crafty(bldgList[i].ent).showOverlay("no");
                     Crafty(bldgList[i].ent).missing = "";
                 } else {
-                    Crafty(bldgList[i].ent).showOverlay("res");
+                    Crafty(bldgList[i].ent).showOverlay("res", missing);
                     var tmp = "Missing ";
                     for (var j = 0; j < missing.length; ++j) {
                         tmp += missing[j] + " ";
