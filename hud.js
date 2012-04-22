@@ -15,7 +15,7 @@ var createBuildMenu = function() {
                 .attr({x : cur_x, 
                         y : cur_y,
                         w: menu_width-1,
-                        h: menu_height-1})
+                        h: menu_height-2})
                 .bind("Click", function() {
                         hud_state.mode = hudModes.build;
                         hud_state.modeArg = this._text;
@@ -68,7 +68,7 @@ var hud_setup = function() {
         .text("No colony");
     // Controls the speed of time / economy
     Crafty.e("Time, HUD, Mouse")
-        .attr({ x: menu_margin, y: menu_margin, h: 15, w: 50})
+        .attr({ x: menu_margin, y: menu_margin, h: 15, w: 44})
         .text("x1")
         .bind("Click", function() {
             switch (economy.speed)
@@ -150,12 +150,12 @@ var hud_show = function() {
     var menu_height = 15;
     var cur_y = Crafty.viewport.height - (menu_height + menu_margin);
     Crafty.e("MenuTopLevel")
-        .attr({y: cur_y, h: menu_height, 
+        .attr({y: cur_y, h: menu_height - 2, 
                 menuCtor: createBuildMenu, submenu: "BuildMenu"})
         .text("Build");
     cur_y -= menu_height;
     Crafty.e("MenuTopLevel")
-        .attr({ y: cur_y, h: menu_height})
+        .attr({ y: cur_y, h: menu_height - 2})
         .text("Destroy")
         .bind("Click", function() {
             hud_state.mode = hudModes.destroy;
@@ -163,7 +163,7 @@ var hud_show = function() {
         });
     cur_y -= menu_height;
     Crafty.e("MenuTopLevel")
-        .attr({ y: cur_y, h: menu_height, isOverlayEnabled: false})
+        .attr({ y: cur_y, h: menu_height -2, isOverlayEnabled: false})
         .text("Resources")
         .bind("Click", function() {
             var isOverlayEnabledNow = !this.isOverlayEnabled;
