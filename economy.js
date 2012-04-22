@@ -58,7 +58,7 @@ var economy_setup = function() {
             Crafty("Building").each(function() {
                 totalcol += this._colonists;
             });
-            this._totalColonists = totalcol + this._resources["Spare Colonists"];
+            this._totalColonists = totalcol + this._resources["Colonists"];
         },
         constrainResources: function() {
             var newStorage = {};
@@ -75,7 +75,7 @@ var economy_setup = function() {
             this._storage = newStorage;
 
             for (var type in this._resources) {
-                if (type === "Spare Colonists") {
+                if (type === "Colonists") {
                     if (this._totalColonists > newStorage[type]) {
                         var diff = this._totalColonists - newStorage[type];
                         console.log("Removing " + diff + " colonists due to lack of capacity");
@@ -91,8 +91,8 @@ var economy_setup = function() {
         grimReaperStalksTheColony: function(kill) {
             var topkill = 0;
             // Kill spare colonists first
-            while (kill > 0 && this._resources["Spare Colonists"] > 0) {
-                this._resources["Spare Colonists"]--;
+            while (kill > 0 && this._resources["Colonists"] > 0) {
+                this._resources["Colonists"]--;
                 kill--;
             }
             var totalcol = 0;
@@ -105,7 +105,7 @@ var economy_setup = function() {
                 }
                 totalcol += this._colonists;
             });
-            this._totalColonists = totalcol + this._resources["Spare Colonists"];
+            this._totalColonists = totalcol + this._resources["Colonists"];
             return topkill;
 
         },
@@ -156,13 +156,13 @@ var economy_setup = function() {
                                 res.delta + " surplus " + res.r;
                         }
                     }
-                    if (this._storage["Spare Colonists"] <= 
+                    if (this._storage["Colonists"] <= 
                             this._totalColonists) {
                         breed = false;
                         this.breedingConstraint = "Don't have enough space";
                     }
                     if (breed) {
-                        this._resources["Spare Colonists"]++;
+                        this._resources["Colonists"]++;
                         this._totalColonists++;
                         //console.log("Bred to " + this._totalColonists);
                     } else {
@@ -195,7 +195,7 @@ var economy_setup = function() {
                 var okay = false;
                 var newbldgtotal = building._colonists + delta;
                 if (delta > 0 && 
-                    this._resources["Spare Colonists"] >= delta &&
+                    this._resources["Colonists"] >= delta &&
                     newbldgtotal <= building.maxColonists) {
                     okay = true;
                 } else if (delta < 0 && newbldgtotal >= 0) {
@@ -205,7 +205,7 @@ var economy_setup = function() {
                 }
                 if (okay === true) {
                     building._colonists += delta;
-                    this._resources["Spare Colonists"] -= delta;
+                    this._resources["Colonists"] -= delta;
                 }
             },
             updateStatus : function() {
@@ -213,7 +213,15 @@ var economy_setup = function() {
                 var newstatus = "";
 
                 for(var rKey in this._resources) {
-                    newstatus += "<b>" + rKey + "</b>: " + this._resources[rKey].toFixed(1) + "<br/>";
+                    var key = rKey;
+                    var val = this._resources[rKey];
+                    if (rKey === "Colonists") {
+                        key = "Idle " + rKey;
+                        val = this._resources[rKey].toFixed(0);
+                    } else {
+                        val = this._resources[rKey].toFixed(1);
+                    }
+                    newstatus += "<b>" + key + "</b>: " + val + "<br/>";
                 }
                 newstatus += "<b>Colony size</b>: " + this._totalColonists + "<br>";
                 newstatus += "<b>Day</b>: " + this.days + "<br>";
