@@ -48,7 +48,8 @@ var economy_setup = function() {
             this._resources = currentResources;*/
             var bldgList = [];
             Crafty("Building").each(function() {
-                bldgList.push(this.resourceDeltas);
+                if (this.isActive() === true)
+                    bldgList.push(this.resourceDeltas);
             });
             for (var i = 0; i < bldgList.length; ++i) {
                 this.debit(bldgList[i]);

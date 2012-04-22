@@ -29,11 +29,43 @@ function buildings_setup() {
         },
     });
 
+    Crafty.c("PowerGenerator", { init : function() { this.requires("Building"); } });
+    Crafty.c("Storage", {
+        storageDeltas: [],
+        init : function() {
+            this.requires("Building");
+            this.storageDeltas = [];            
+        },
+        storageDelta: function(resource,delta) {
+            this.storageDeltas.push(newResourceDelta(resource, delta));
+            return this;
+        }
+    });
+
     var newResourceDelta = function(resource, cost) {
         return { r: resource.name, delta: cost };
     }
 
     buildingBlueprints = {
+        "LandedShip": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.steel, -2000000),
+            ],
+            factory: function() {
+                return Crafty.e("Storage, grass")
+                    .storageDelta(resourcetypes.colonists, 10)
+                    .storageDelta(resourcetypes.food, 100)
+                    .storageDelta(resourcetypes.ice, 50)
+                    .storageDelta(resourcetypes.energy, 50)
+                    .storageDelta(resourcetypes.water, 50)
+                    .storageDelta(resourcetypes.regolith, 50)
+                    .storageDelta(resourcetypes.steelore, 50)
+                    .storageDelta(resourcetypes.plastic, 50)
+                    .storageDelta(resourcetypes.steel, 50)
+                    .storageDelta(resourcetypes.preciousore, 50);
+            },
+            buildable: false,
+        },
         "Mine": {
             constructionCost: [ 
                 newResourceDelta(resourcetypes.steel, -3),
@@ -48,12 +80,34 @@ function buildings_setup() {
             ],
             factory: function() { return createMine(-2, 2); }
         },
+        "Habitat": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.steel, -2),
+            ],
+            factory: function() {
+                return Crafty.e("Storage, grass")
+                    .resourceDelta(resourcetypes.energy, -1)
+                    .storageDelta(resourcetypes.colonists, 25);
+            },
+        },
+        "Ore locker": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.steel, -2),
+            ],
+            factory: function() {
+                return Crafty.e("Storage, grass")
+                    .resourceDelta(resourcetypes.energy, -1)
+                    .storageDelta(resourcetypes.steelore, 1000)
+                    .storageDelta(resourcetypes.regolith, 1000)
+                    .storageDelta(resourcetypes.preciousore, 1000);
+            },
+        },
         "Solar Panel": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, solarpanelsprite")
+                return Crafty.e("PowerGenerator, solarpanelsprite")
                     .resourceDelta(resourcetypes.energy, 3);
             },
        },

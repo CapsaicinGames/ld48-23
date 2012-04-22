@@ -6,20 +6,23 @@ var createBuildMenu = function() {
     var menu_height = 15;
     for (var name in buildingBlueprints)
     {
-        Crafty.e("BuildMenu")
-            .text(name)
-            .attr({x : cur_x, 
-                    y : cur_y,
-                    w: menu_width-1,
-                    h: menu_height-1})
-            .bind("Click", function() {
-                    hud_state.mode = hudModes.build;
-                    hud_state.modeArg = this._text;
-                });
-        cur_x -= menu_width;
-        if (cur_x < menu_width) {
-            cur_y -= menu_height;
-            cur_x = Crafty.viewport.width - 200 - menu_width;
+        if (buildingBlueprints[name].buildable != false)
+        {
+            Crafty.e("BuildMenu")
+                .text(name)
+                .attr({x : cur_x, 
+                        y : cur_y,
+                        w: menu_width-1,
+                        h: menu_height-1})
+                .bind("Click", function() {
+                        hud_state.mode = hudModes.build;
+                        hud_state.modeArg = this._text;
+                    });
+            cur_x -= menu_width;
+            if (cur_x < menu_width) {
+                cur_y -= menu_height;
+                cur_x = Crafty.viewport.width - 200 - menu_width;
+            }
         }
 
     }
@@ -29,11 +32,12 @@ var hudModes = Object.freeze({
     nothing: {},
     build: {},
     destroy: {},
+    placeShip: {},
     manage: {}
 });
 
 var hud_state = {
-    mode: hudModes.nothing,
+    mode: hudModes.placeShip,
     modeArg: ""
 };
 

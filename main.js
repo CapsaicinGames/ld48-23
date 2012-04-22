@@ -35,7 +35,7 @@ window.onload = function() {
     hud_setup();
     buildings_setup();
     economy = economy_setup();
-    economy.newStep();
+    //economy.newStep();
     var tilesize = 32;
     var terrainTypes = {
         grass: [0,0],
@@ -109,13 +109,24 @@ window.onload = function() {
                         {
                             // Now build it
                             bldg = desired.factory()
-                            .attr({x: this.x,y: this.y - 16,z: this.z+1});
+                            .attr({x: this.x,
+                                y: this.y - tilesize/2,
+                                z: this.z+1});
                             bldg.onBuild(asteroid.getResource(this.map_x, this.map_y));
                             this._canBuild = false;
                         } else {
                             // can't alert, breaks mousedown
                             console.log("Cannot afford to build " + hud_state.modeArg);
                         }
+                    } else if (hud_state.mode === hudModes.placeShip) {
+                        bldg = buildingBlueprints["LandedShip"].factory()
+                                .attr({x: this.x,
+                                    y: this.y - tilesize/2,
+                                    z: this.z+1});
+                        this._canBuild = false;
+                        hud_state.mode = hudModes.nothing;
+                        economy.newStep();
+                    } else {
                     }
                 }
             });
@@ -181,5 +192,4 @@ window.onload = function() {
         });
     });
 
-    economy.updateStatus();
 }
