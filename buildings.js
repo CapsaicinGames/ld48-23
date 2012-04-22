@@ -213,6 +213,7 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Building, placeholderSprite")
+                    .attr({name: "Smelter"})
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.preciousore, -1)
                     .resourceDelta(resourcetypes.preciousmetal, 1);
@@ -224,6 +225,7 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Building, placeholderSprite")
+                    .attr({name: "Blast furnace"})
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steelore, -2)
                     .resourceDelta(resourcetypes.steel, 2);
@@ -235,6 +237,7 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Building, placeholderSprite")
+                    .attr({name: "RegoPlasticiser"})
                     .resourceDelta(resourcetypes.energy, -2)
                     .resourceDelta(resourcetypes.regolith, -1)
                     .resourceDelta(resourcetypes.plastic, 1);
