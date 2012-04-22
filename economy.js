@@ -100,7 +100,12 @@ var economy_setup = function() {
                 totalcol += this._colonists;
             });
             this._totalColonists = totalcol + this._resources["Spare Colonists"];
-        }
+        },
+        tickBuildings: function() {
+            Crafty("Building").each(function() {
+                this.onTick(); 
+            });
+        },
     });
 
     return Crafty.e("Economy")
@@ -110,6 +115,7 @@ var economy_setup = function() {
             timePerStep: 2000,
             newStep: function() {
                 this.days++;
+                this.tickBuildings();
                 this.updateResources();
                 if (!(this.days % colonistNeeds.every)) {
                     this.consumeResources();
