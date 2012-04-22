@@ -90,16 +90,17 @@ var economy_setup = function() {
             // Otherwise clear the overlay
             for (var i = 0; i < bldgList.length; ++i) {
                 var missing = this.debit(bldgList[i].delta);
+                var bldg = Crafty(bldgList[i].ent);
                 if (missing.length == 0) {
-                    Crafty(bldgList[i].ent).showOverlay("no");
-                    Crafty(bldgList[i].ent).missing = "";
+                    bldg.showOverlay("no");
+                    bldg.missing = "";
                 } else {
-                    Crafty(bldgList[i].ent).showOverlay("res", missing);
+                    bldg.showOverlay("res", missing);
                     var tmp = "Missing ";
                     for (var j = 0; j < missing.length; ++j) {
                         tmp += missing[j] + " ";
                     }
-                    Crafty(bldgList[i].ent).missing = tmp;
+                    bldg.missing = tmp;
                 }
             }
 
