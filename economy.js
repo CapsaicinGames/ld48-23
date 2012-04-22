@@ -56,6 +56,34 @@ var economy_setup = function() {
                     this.showOverlay("inactive");
                     
             });
+
+            var energySorter = function(a, b) {
+                var a_energy = 0;
+                var b_energy = 0;
+                for (var i = 0; i < a.delta.length; ++i) {
+                    if (a.delta[i].r == resourcetypes.energy.name) {
+                        a_energy = a.delta[i].delta;
+                        break;
+                    }
+                }
+                for (var i = 0; i < b.delta.length; ++i) {
+                    if (b.delta[i].r == resourcetypes.energy.name) {
+                        b_energy = b.delta[i].delta;
+                        break;
+                    }
+                }
+                var ret;
+                if (a_energy < b_energy) {
+                    ret = 1;
+                } else if (a_energy > b_energy) {
+                    ret = -1;
+                } else {
+                    ret = 0;
+                }
+                return ret;
+            };
+            bldgList.sort(energySorter);
+
             // Try to perform each building's transaction.
             // If it fails, record some text saying why for
             // the building and enable the overlay saying it failed.
