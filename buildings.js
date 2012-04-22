@@ -256,7 +256,7 @@ function createMine(powerDrain, resourceProduction, mineName) {
 }
 
 function analyseAsteroid() {
-    console.log("tick analyser!");
+    
 }
 
 function onLanderBuild(tileResource, mapX, mapY) {
@@ -273,7 +273,7 @@ function onLanderBuild(tileResource, mapX, mapY) {
                 continue;
             }
 
-            resourceOverlays[xIndex][yIndex].isAnalysed = true;
+            resourceOverlays[xIndex][yIndex].removeComponent("UnanalysedResource");
         }
 
     }

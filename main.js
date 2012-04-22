@@ -91,14 +91,15 @@ window.onload = function() {
         return false;
     };
 
+    Crafty.c("UnanalysedResource", {});
+
     Crafty.c("ResourceOverlay", {
         init: function() {
-            this.requires("2D, Canvas");
+            this.requires("2D, Canvas, UnanalysedResource");
             this.visible = false;
-            this.isAnalysed = false;
         },
         setVisibility: function(isVisible) {
-            this.visible = this.isAnalysed && isVisible;
+            this.visible = this.has("UnanalysedResource") === false && isVisible;
         },
     });
 
