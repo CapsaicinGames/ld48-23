@@ -164,7 +164,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, placeholderSprite")
+                return Crafty.e("Building, widgetfactorysprite")
                     .attr({name: "Widget factory"})
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steel, -1)
@@ -178,7 +178,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -3),
             ],
             factory: function() {
-                return Crafty.e("Building, placeholderSprite")
+                return Crafty.e("Building, precioussmeltersprite")
                     .attr({name: "Smelter"})
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.preciousore, -1)
