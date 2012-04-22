@@ -8,13 +8,13 @@ convertTileType = function(type) {
     }
 }
 
-convertResourceToTileType = function(type) {
+convertResourceToOverlayType = function(type) {
 
     switch(type) {
-    case resourcetypes.ice: return "iceground";
-    case resourcetypes.regolith: return "grass";
-    case resourcetypes.steelore: return "flatground";
-    case resourcetypes.preciousore: return "preciousground";
+    case resourcetypes.ice: return "iceOverlay";
+    case resourcetypes.regolith: return "regolithOverlay";
+    case resourcetypes.steelore: return "steelOverlay";
+    case resourcetypes.preciousore: return "preciousOverlay";
     default: return null;
     }
 
@@ -71,6 +71,16 @@ window.onload = function() {
         }
         return false;
     };
+
+    Crafty.c("ResourceOverlay", {
+        init: function() {
+            this.requires("2D, Canvas");
+            this.visible = false;
+        },
+        setVisibility: function(isVisible) {
+            this.visible = isVisible;
+        },
+    });
 
     Crafty.c("WorldEntity", {
         _tileSize: 32,
@@ -139,11 +149,11 @@ window.onload = function() {
     for(var x = asteroid.width-1; x >= 0; x--) {
         for(var y = 0; y < asteroid.height; y++) {
             var which = convertTileType(asteroid.getTileType(x, y));
-            //var which = convertResourceToTileType(asteroid.getResource(x, y));
             if (which === null)
                 continue; // don't draw tiles where there should be space
+
             var tile = Crafty.e("Terrain, " + which)
-                .attr({z:x+1 * y+1, map_x: x, map_y: y})
+                .attr({z:(x+1) * (y+1), map_x: x, map_y: y})
                 .tileSize(tilesize)
                 .areaMap([tilesize/2,0],
                             [tilesize,tilesize/4],
@@ -151,9 +161,16 @@ window.onload = function() {
                             [tilesize/2,tilesize],
                             [0,3*tilesize/4],
                             [0,tilesize/4]);
+
+            var overlaySprite = convertResourceToOverlayType(asteroid.getResource(x, y));
+
+            var overlay = overlaySprite != null 
+                ? Crafty.e("ResourceOverlay, " + overlaySprite)
+                    .attr({z: (x+1) * (y+1) * asteroid.width})
+                : null;
             
             var isometricTileCoord = mapToIsometricTile(x, y, asteroid.width, asteroid.height);
-            newIsometricTiles.push({ coord: isometricTileCoord, e: tile});
+            newIsometricTiles.push({ coord: isometricTileCoord, e: tile, o: overlay});
         }
     }
 
@@ -168,7 +185,9 @@ window.onload = function() {
     for(var tileIndex = 0; tileIndex < newIsometricTiles.length; ++tileIndex) {
         var newTile = newIsometricTiles[tileIndex];
         newTile.e.attr('z', tileIndex);
+        iso.place(newTile.coord[0], newTile.coord[1], 0, newTile.o);
         iso.place(newTile.coord[0], newTile.coord[1], 0, newTile.e);
+     
     }
 
     Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
