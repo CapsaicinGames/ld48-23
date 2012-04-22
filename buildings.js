@@ -89,7 +89,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2),
             ],
             factory: function() {
-                return Crafty.e("Storage, placeholderSprite")
+                return Crafty.e("Storage, habitatsprite")
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.colonists, 25);
             },
@@ -130,7 +130,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, placeholderSprite")
+                return Crafty.e("Building, hydroponicssprite")
                     .resourceDelta(resourcetypes.energy, -1)
                     .resourceDelta(resourcetypes.water, -1)
                     .resourceDelta(resourcetypes.food, 1);
