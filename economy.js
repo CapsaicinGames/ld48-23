@@ -38,14 +38,6 @@ var economy_setup = function() {
         },
 
         updateResources: function() {
-            /*var currentResources = this._resources;
-            Crafty("Building").each(function() {
-                for(var i = 0; i < this.resourceDeltas.length; ++i) {
-                    var rKey = this.resourceDeltas[i];
-                    currentResources[rKey.r] += rKey.delta;
-                }
-            });
-            this._resources = currentResources;*/
             var bldgList = [];
             Crafty("Building").each(function() {
                 if (this.isActive() === true)
@@ -99,6 +91,23 @@ var economy_setup = function() {
                 this.days++;
                 this.timeout(function() {this.newStep();}, this.timePerStep);
             },
+            populate: function(building, delta) {
+                var okay = false;
+                var newbldgtotal = building._colonists + delta;
+                if (delta > 0 && 
+                    this._resources["Spare Colonists"] >= delta &&
+                    newbldgtotal <= building.maxColonists) {
+                    okay = true;
+                } else if (delta < 0 && newbldgtotal >= 0) {
+                    okay = true;
+                } else {
+                    okay = false;
+                }
+                if (okay === true) {
+                    building._colonists += delta;
+                    this._resources["Spare Colonists"] -= delta;
+                }
+            },
             updateStatus : function() {
 
                 var newstatus = "";
@@ -106,7 +115,11 @@ var economy_setup = function() {
                 for(var rKey in this._resources) {
                     newstatus += "<b>" + rKey + "</b>: " + this._resources[rKey] + "<br/>";
                 }
-                
+                var totalcol = 0;
+                Crafty("Building").each(function() {
+                    totalcol += this._colonists;
+                });
+                newstatus += "<b>Colony size</b>: " + (totalcol + this._resources["Spare Colonists"]) + "<br>";
                 newstatus += "<b>Day</b>: " + this.days + "<br>";
                 Crafty("Status").each(function() {
                         this.text(newstatus);

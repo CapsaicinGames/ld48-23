@@ -4,7 +4,8 @@ var buildingBlueprints = {};
 
 function buildings_setup() {
     Crafty.c("Building", {
-        _colonists: 1,
+        _colonists: 0,
+        maxColonists: 1,
         resourceDeltas: [],
         destroyable: true,
         name: "Unknown",
@@ -14,43 +15,8 @@ function buildings_setup() {
             this.requires("WorldEntity");
             this.bind("Click", function() {
                 if (hud_state.mode === hudModes.select) {
-                    var info = "<b>" + this.name + "</b><br>";
-                    var subinfo = "";
-                    for (var i = 0; i < this.resourceDeltas.length; ++i) {
-                        var res = this.resourceDeltas[i];
-                        if (res.delta < 0) {
-                            subinfo += "<li>" + (-res.delta) + " " + res.r + "</li>";
-                        }
-                    }
-                    if (subinfo.length > 0) {
-                        info += "Consumes:<ul class='reslist'>" + 
-                                subinfo + "</ul>";
-                        subinfo = "";
-                    }
-                    for (var i = 0; i < this.resourceDeltas.length; ++i) {
-                        var res = this.resourceDeltas[i];
-                        if (res.delta > 0) {
-                            subinfo += "<li>" + res.delta + " " + res.r + "</li>";
-                        }
-                    }
-                    if (subinfo.length > 0) {
-                        info += "Produces:<ul class='reslist'>";
-                        info += subinfo + "</ul>";
-                        subinfo = "";
-                    }
-                    if (this.has("Storage")) {
-                        info += "Stores:<ul class='reslist'>";
-                        for (var i = 0; i < this.storageDeltas.length; ++i) {
-                            var res = this.storageDeltas[i];
-                            if (res.delta > 0) {
-                                info += "<li>" + res.delta + " " + res.r + "</li>";
-                            }
-                        }
-                        info += "</ul>";
-                    }
-                    info += "Colonists: " + this._colonists;
                     hud_state.modeArg = this[0];
-                    Crafty("Selected").each(function () { this.text(info);}); 
+                    hud_select_building();
                 } else if (hud_state.mode === hudModes.destroy &&
                     this.destroyable === true) {
                     this.destroy();

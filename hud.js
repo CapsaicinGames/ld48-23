@@ -15,7 +15,7 @@ var createBuildMenu = function() {
                 .attr({x : cur_x, 
                         y : cur_y,
                         w: menu_width-1,
-                        h: menu_height-1})
+                        h: menu_height-2})
                 .bind("Click", function() {
                         hud_state.mode = hudModes.build;
                         hud_state.modeArg = this._text;
@@ -68,7 +68,7 @@ var hud_setup = function() {
         .text("No colony");
     // Controls the speed of time / economy
     Crafty.e("Time, HUD, Mouse")
-        .attr({ x: menu_margin, y: menu_margin, h: 15, w: 50})
+        .attr({ x: menu_margin, y: menu_margin, h: 15, w: 44})
         .text("x1")
         .bind("Click", function() {
             switch (economy.speed)
@@ -135,6 +135,11 @@ var hud_setup = function() {
                 this.bind("Click", function() {this.onClick();});
             }
         });
+    Crafty.c("ColonistMenu", {
+            init : function() {
+                this.requires("HUD, Mouse");
+                }
+            });
     Crafty.c("BuildMenu", {
             init : function() {
                 this.requires("HUD, Mouse");
@@ -146,16 +151,81 @@ var hud_setup = function() {
 
 };
 
+var hud_select_building = function() {
+    var bldg = Crafty(hud_state.modeArg);
+    var info = "<b>" + bldg.name + "</b><br>";
+    var subinfo = "";
+    for (var i = 0; i < bldg.resourceDeltas.length; ++i) {
+        var res = bldg.resourceDeltas[i];
+        if (res.delta < 0) {
+            subinfo += "<li>" + (-res.delta) + " " + res.r + "</li>";
+        }
+    }
+    if (subinfo.length > 0) {
+        info += "Consumes:<ul class='reslist'>" + 
+                subinfo + "</ul>";
+        subinfo = "";
+    }
+    for (var i = 0; i < bldg.resourceDeltas.length; ++i) {
+        var res = bldg.resourceDeltas[i];
+        if (res.delta > 0) {
+            subinfo += "<li>" + res.delta + " " + res.r + "</li>";
+        }
+    }
+    if (subinfo.length > 0) {
+        info += "Produces:<ul class='reslist'>";
+        info += subinfo + "</ul>";
+        subinfo = "";
+    }
+    if (bldg.has("Storage")) {
+        info += "Stores:<ul class='reslist'>";
+        for (var i = 0; i < bldg.storageDeltas.length; ++i) {
+            var res = bldg.storageDeltas[i];
+            if (res.delta > 0) {
+                info += "<li>" + res.delta + " " + res.r + "</li>";
+            }
+        }
+        info += "</ul>";
+    }
+    info += "Colonists: " + bldg._colonists;
+    Crafty("Selected").each(function () { this.text(info);}); 
+    hud_colonists(true, true);
+
+};
+
+var hud_colonists = function(showplus, showminus) {
+    Crafty("ColonistMenu").each(function() {this.destroy();});
+    if (showplus === true) {
+        Crafty.e("ColInc, ColonistMenu")
+            .attr({x: Crafty.viewport.width - 50, y: menu_margin, w: 20, h: 15})
+            .text("+")
+            .bind("Click", function() {
+                    economy.populate(Crafty(hud_state.modeArg), 1);
+                    hud_select_building();
+                });
+    }
+    if (showminus === true) {
+        Crafty.e("ColDec, ColonistMenu")
+            .attr({x: Crafty.viewport.width - 80, y: menu_margin, w: 20, h: 15})
+            .text("-")
+            .bind("Click", function() {
+                    economy.populate(Crafty(hud_state.modeArg), -1);
+                    hud_select_building();
+                });
+    } else {
+    }
+};
+
 var hud_show = function() {
     var menu_height = 15;
     var cur_y = Crafty.viewport.height - (menu_height + menu_margin);
     Crafty.e("MenuTopLevel")
-        .attr({y: cur_y, h: menu_height, 
+        .attr({y: cur_y, h: menu_height - 2, 
                 menuCtor: createBuildMenu, submenu: "BuildMenu"})
         .text("Build");
     cur_y -= menu_height;
     Crafty.e("MenuTopLevel")
-        .attr({ y: cur_y, h: menu_height})
+        .attr({ y: cur_y, h: menu_height - 2})
         .text("Destroy")
         .bind("Click", function() {
             hud_state.mode = hudModes.destroy;
@@ -163,7 +233,7 @@ var hud_show = function() {
         });
     cur_y -= menu_height;
     Crafty.e("MenuTopLevel")
-        .attr({ y: cur_y, h: menu_height, isOverlayEnabled: false})
+        .attr({ y: cur_y, h: menu_height -2, isOverlayEnabled: false})
         .text("Resources")
         .bind("Click", function() {
             var isOverlayEnabledNow = !this.isOverlayEnabled;

@@ -146,6 +146,7 @@ window.onload = function() {
                                 y: this.y - tilesize/2,
                                 z: this.z+1});
                             bldg.onBuild(asteroid.getResource(this.map_x, this.map_y));
+                            economy.populate(bldg, 1);
                             this._canBuild = false;
                         } else {
                             // can't alert, breaks mousedown
