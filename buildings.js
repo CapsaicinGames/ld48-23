@@ -39,12 +39,7 @@ function buildings_setup() {
         },
         isActive: function() {
             var ret = this._colonists >= this.minActive;
-           if (!ret) {
-               this.overlay.visible = true;
-           } else {
-               this.overlay.visible = false;
-           }
-           return ret;
+            return ret;
         },
         onBuild: function(tileResource, atX, atY) {
             // intentionally blank
@@ -52,6 +47,26 @@ function buildings_setup() {
         onTick: function() {
             // intentionally blank
         },
+        showOverlay: function(overType) {
+            if (overType !== this.overlayType) {
+                switch (overType) {
+                    case "no":
+                        this.overlay.visible = false;
+                        break;
+
+                    case "res":
+                        this.overlay.visible = true;
+                        this.overlay.sprite(1,0);
+                        break;
+
+                    case "inactive":
+                        this.overlay.visible = true;
+                        this.overlay.sprite(0,0);
+                        break;
+                }
+                this.overlayType = overType;
+            }
+        }
     });
 
     Crafty.c("PowerGenerator", { init : function() { this.requires("Building"); } });

@@ -49,10 +49,17 @@ var economy_setup = function() {
             var bldgList = [];
             Crafty("Building").each(function() {
                 if (this.isActive() === true)
-                    bldgList.push(this.resourceDeltas);
+                    bldgList.push({ent: this[0], delta: this.resourceDeltas});
+                else
+                    this.showOverlay("inactive");
+                    
             });
             for (var i = 0; i < bldgList.length; ++i) {
-                this.debit(bldgList[i]);
+                if (this.debit(bldgList[i].delta)) {
+                    Crafty(bldgList[i].ent).showOverlay("no");
+                } else {
+                    Crafty(bldgList[i].ent).showOverlay("res");
+                }
             }
             var totalcol = 0;
             Crafty("Building").each(function() {
