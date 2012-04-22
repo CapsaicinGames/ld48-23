@@ -100,7 +100,7 @@ function buildings_setup() {
                     .storageDelta(resourcetypes.colonists, 10)
                     .storageDelta(resourcetypes.food, 100)
                     .storageDelta(resourcetypes.ice, 50)
-                    .storageDelta(resourcetypes.energy, 50)
+                    //.storageDelta(resourcetypes.energy, 50)
                     .storageDelta(resourcetypes.water, 50)
                     .storageDelta(resourcetypes.regolith, 50)
                     .storageDelta(resourcetypes.steelore, 50)

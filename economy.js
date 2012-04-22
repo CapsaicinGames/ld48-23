@@ -161,7 +161,7 @@ var economy_setup = function() {
             var rescount = Math.ceil(this._totalColonists / colonistNeeds.per);
             var kill = 0;
             for (var i = 0; i < rescount; ++i) {
-                if (this.debit(colonistNeeds.uses).length == 0) {
+                if (this.debit(colonistNeeds.uses).length !== 0) {
                     kill++;
                     break;
                  }
