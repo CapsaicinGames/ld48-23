@@ -84,15 +84,26 @@ var economy_setup = function() {
             };
             bldgList.sort(energySorter);
 
+            this.energyDelta = 0;
             // Try to perform each building's transaction.
             // If it fails, record some text saying why for
             // the building and enable the overlay saying it failed.
             // Otherwise clear the overlay
+            // Also measure energy production
             for (var i = 0; i < bldgList.length; ++i) {
+                var cur_energy = 0;
                 var missing = this.debit(bldgList[i].delta);
+
                 if (missing.length == 0) {
+                    for (var j = 0; j < bldgList[i].delta.length; ++j) {
+                        if (bldgList[i].delta[j].r == resourcetypes.energy.name) {
+                            cur_energy = bldgList[i].delta[j].delta;
+                            break;
+                        }
+                    }
                     Crafty(bldgList[i].ent).showOverlay("no");
                     Crafty(bldgList[i].ent).missing = "";
+                    this.energyDelta += cur_energy;
                 } else {
                     Crafty(bldgList[i].ent).showOverlay("res", missing);
                     var tmp = "Missing ";
@@ -323,7 +334,9 @@ var economy_setup = function() {
             },
             updateStatus : function() {
 
-                var newstatus = "";
+                var newstatus = "<table class='statustable'><tr><th>Resource</th><th>Amt</th></tr>";
+                newstatus += "<tr><td>Energy production</td><td>" + 
+                    this.energyDelta.toFixed(1) + "</td></tr>";
 
                 for(var rKey in this._resources) {
                     var key = rKey;
@@ -334,10 +347,10 @@ var economy_setup = function() {
                     } else {
                         val = this._resources[rKey].toFixed(1);
                     }
-                    newstatus += "<b>" + key + "</b>: " + val + "<br/>";
+                    newstatus += "<tr><td>" + key + "</td><td>" + val + "</td></tr>";
                 }
-                newstatus += "<b>Colony size</b>: " + this._totalColonists + "<br>";
-                newstatus += "<b>Day</b>: " + this.days + "<br>";
+                newstatus += "<tr><td>Colony size</td><td>" + this._totalColonists + "</td></tr>";
+                newstatus += "<tr><td>Day</td><td>" + this.days + "</td></tr></table>";
                 Crafty("Status").each(function() {
                         this.text(newstatus);
                 });
