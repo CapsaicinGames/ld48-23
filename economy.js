@@ -9,6 +9,7 @@ var economy_setup = function() {
     Crafty.c("Economy", {
         _resources: {},
         _totalColonists: 0,
+        _storage: {},
         
         init: function() {
             for(var rKey in resourcetypes) {
@@ -44,7 +45,7 @@ var economy_setup = function() {
             return success;
         },
 
-        updateResources: function() {
+        updateProduction: function() {
             var bldgList = [];
             Crafty("Building").each(function() {
                 if (this.isActive() === true)
@@ -53,6 +54,13 @@ var economy_setup = function() {
             for (var i = 0; i < bldgList.length; ++i) {
                 this.debit(bldgList[i]);
             }
+            var totalcol = 0;
+            Crafty("Building").each(function() {
+                totalcol += this._colonists;
+            });
+            this._totalColonists = totalcol + this._resources["Spare Colonists"];
+        },
+        constrainResources: function() {
             var newStorage = {};
             Crafty("Storage").each(function() {
                 for (var i = 0; i < this.storageDeltas.length; ++i) {
@@ -64,16 +72,13 @@ var economy_setup = function() {
                     }
                 }
             });
+            this._storage = newStorage;
+
             for (var type in this._resources) {
                 if (this._resources[type] > newStorage[type]) {
                     this._resources[type] = newStorage[type];
                 }
             }
-            var totalcol = 0;
-            Crafty("Building").each(function() {
-                totalcol += this._colonists;
-            });
-            this._totalColonists = totalcol + this._resources["Spare Colonists"];
         },
         consumeResources: function() {
             var rescount = Math.ceil(this._totalColonists / colonistNeeds.per);
@@ -84,6 +89,7 @@ var economy_setup = function() {
                     break;
                  }
             }
+            var topkill = 0;
             // Kill spare colonists first
             while (kill > 0 && this._resources["Spare Colonists"] > 0) {
                 this._resources["Spare Colonists"]--;
@@ -100,6 +106,10 @@ var economy_setup = function() {
                 totalcol += this._colonists;
             });
             this._totalColonists = totalcol + this._resources["Spare Colonists"];
+            /*if (this._totalColonists <= 0) {
+                Crafty.scene("GameOver");
+            }*/
+            return topkill;
         },
         tickBuildings: function() {
             Crafty("Building").each(function() {
@@ -112,14 +122,38 @@ var economy_setup = function() {
             .attr({
             days: 0,
             speed: 1,
+            dead: 0,
             timePerStep: 2000,
             newStep: function() {
                 this.days++;
+                var oldres = Crafty.clone(this._resources);
+                var killed = 0;
+                this.updateProduction();
                 this.tickBuildings();
-                this.updateResources();
                 if (!(this.days % colonistNeeds.every)) {
-                    this.consumeResources();
+                    killed += this.consumeResources();
+                    //console.log(killed + " died, now " + this._totalColonists);
                 }
+                if (killed == 0) {
+                    // no deaths, there were enough resources
+                    var breed = true;
+                    for (var i = 0; i < colonistBreeding.neededDelta.length; ++i) {
+                        var res = colonistBreeding.neededDelta[i];
+                        var diff = this._resources[res.r] - oldres[res.r];
+                        if (diff < res.delta)
+                            breed = false;
+                    }
+                    if (this._storage["Spare Colonists"] <= 
+                            this._totalColonists) {
+                        breed = false;
+                    }
+                    if (breed) {
+                        this._resources["Spare Colonists"]++;
+                        this._totalColonists++;
+                        //console.log("Bred to " + this._totalColonists);
+                    }
+                }
+                this.constrainResources();
                 this.updateStatus();
                 switch(this.speed)
                 {
@@ -160,7 +194,7 @@ var economy_setup = function() {
                 var newstatus = "";
 
                 for(var rKey in this._resources) {
-                    newstatus += "<b>" + rKey + "</b>: " + this._resources[rKey] + "<br/>";
+                    newstatus += "<b>" + rKey + "</b>: " + this._resources[rKey].toFixed(1) + "<br/>";
                 }
                 newstatus += "<b>Colony size</b>: " + this._totalColonists + "<br>";
                 newstatus += "<b>Day</b>: " + this.days + "<br>";

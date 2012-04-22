@@ -1,7 +1,13 @@
 body
 {
-background-color: 'white';
+background-color: white;
 padding: none;
+}
+
+div#cr-stage {
+    padding-right: 15px;
+    margin-right: 15px;
+    background-color: black;
 }
 ul.reslist
 {
