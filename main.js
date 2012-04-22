@@ -156,7 +156,7 @@ window.onload = function() {
                                     y: this.y - tilesize/2,
                                     z: this.z+1});
                         this._canBuild = false;
-                        hud_state.mode = hudModes.nothing;
+                        hud_state.mode = hudModes.select;
                         economy.newStep();
                         hud_show();
                     } else {
@@ -165,7 +165,7 @@ window.onload = function() {
             });
         }
     });
-    Crafty.background("#000");
+    Crafty.background("url('image/stars.png')");
     iso = Crafty.isometric.size(tilesize);
 
     var newIsometricTiles = new Array();
@@ -215,7 +215,7 @@ window.onload = function() {
     }
 
     iso.place(newIsometricTiles[0].coord[0], newIsometricTiles[0].coord[1], 0, cursor);
-
+    /*
     Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
         if(e.button > 1) return;
         var base = {x: e.clientX, y: e.clientY};
@@ -233,6 +233,6 @@ window.onload = function() {
         Crafty.addEvent(this, Crafty.stage.elem, "mouseup", function() {
             Crafty.removeEvent(this, Crafty.stage.elem, "mousemove", scroll);
         });
-    });
+    });*/
 
 }
