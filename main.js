@@ -76,7 +76,7 @@ window.onload = function() {
         _tileSize: 32,
         _canBuild: true,
         init : function() {
-            this.requires("2D, DOM, Mouse");
+            this.requires("2D, Canvas, Mouse");
             this.bind("MouseOver", function() {
                 switchSprite(this, terrainTypes, 1);
                 switchSprite(this, buildingTypes, 1);
@@ -107,10 +107,24 @@ window.onload = function() {
             this.bind("MouseDown", function(e) {
                 if (this._canBuild === true) {
                     if (hud_state.mode === hudModes.build) {
-                        bldg = buildingBlueprints[hud_state.modeArg].factory()
-                            .attr({x: this.x,y: this.y - 16,z: this.z+1});
-                        bldg.onBuild(asteroid.getResource(this.map_x, this.map_y));
-                        this._canBuild = false;
+
+                        var desired = buildingBlueprints[hud_state.modeArg];
+                        // First check if we can build it
+                        var available = false;
+
+                        // Now can we afford it
+                        
+                        if (economy.debit(desired.constructionCost) === true)
+                        {
+                            // Now build it
+                            bldg = desired.factory()
+                                .attr({x: this.x,y: this.y - 16,z: this.z+1});
+                            bldg.onBuild(asteroid.getResource(this.map_x, this.map_y));
+                            this._canBuild = false;
+                        } else {
+                            // can't alert, breaks mousedown
+                            console.log("Cannot afford to build " + hud_state.modeArg);
+                        }
                     }
                 }
             });

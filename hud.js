@@ -1,17 +1,26 @@
 
 var createBuildMenu = function() {
     var cur_x = Crafty.viewport.width - 200;
+    var cur_y = Crafty.viewport.height - 30;
     var menu_width = 75;
+    var menu_height = 15;
     for (var name in buildingBlueprints)
     {
         Crafty.e("BuildMenu")
             .text(name)
-            .attr({x : cur_x, w: menu_width-1})
+            .attr({x : cur_x, 
+                    y : cur_y,
+                    w: menu_width-1,
+                    h: menu_height-1})
             .bind("Click", function() {
                     hud_state.mode = hudModes.build;
                     hud_state.modeArg = this._text;
                 });
         cur_x -= menu_width;
+        if (cur_x < menu_width) {
+            cur_y -= menu_height;
+            cur_x = Crafty.viewport.width - 200 - menu_width;
+        }
 
     }
 };
@@ -38,13 +47,12 @@ var hud_setup = function() {
     Crafty.c("HUD", {
         init: function () {
             this.addComponent("2D, DOM, Text"); 
-            this.textColor("#0000ff")
-            this.textFont({size:"10px", family:"sans"})
+            this.textColor("#0000ff");
+            this.textFont({size:"10px", family:"sans"});
             this.css({
                 "background-color":"white",
-                "opacity": "0.5",
                 });
-            this.z = 1000;
+            this.attr({z: 1000, alpha: 0.8});
             }
         });
 
@@ -53,7 +61,7 @@ var hud_setup = function() {
     // more complex it could do with breaking down
     // to separate items
     Crafty.e("Status, HUD")
-        .attr({ x : 20, y : 30, w : 100, h : 150} )
+        .attr({ x : 20, y : 30, w : 100, h : 200} )
         .text("No colony");
     // Controls the speed of time / economy
     Crafty.e("Time, HUD, Mouse")
@@ -127,16 +135,14 @@ var hud_setup = function() {
     Crafty.c("BuildMenu", {
             init : function() {
                 this.requires("HUD, Mouse");
-                this.attr({ y: 10,
-                            h: 15});
                 }
             });
 
     Crafty.e("MenuTopLevel")
-        .attr({y: 10, h:15, menuCtor: createBuildMenu, submenu: "BuildMenu"})
+        .attr({y: Crafty.viewport.height - 30, h:15, menuCtor: createBuildMenu, submenu: "BuildMenu"})
         .text("Build");
     Crafty.e("MenuTopLevel")
-        .attr({ y: 25, h:15})
+        .attr({ y: Crafty.viewport.height - 45, h:15})
         .text("Destroy")
         .bind("Click", function() {
             hud_state.mode = hudModes.destroy;

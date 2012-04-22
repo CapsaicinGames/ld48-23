@@ -13,14 +13,46 @@ var economy_setup = function() {
             return this._resources[resourceType.name];
         },
 
+        /** Attempt to debit an array of resources
+         *  @param resourceList array of map{r,.delta)
+         *  @returns true iff debit was successful
+         */
+        debit: function (resourceList) {
+            var success = true;
+            for (var i = 0; i < resourceList.length; i++) {
+                var res = resourceList[i];
+                if (res.delta < 0) {
+                    if (this._resources[res.r] < -res.delta)
+                        success = false;
+                }
+            }
+
+            if (success === true) {
+                for (var i = 0; i < resourceList.length; i++) {
+                    var res = resourceList[i];
+                    this._resources[res.r] += res.delta;
+                }
+            }
+
+            return success;
+        },
+
         updateResources: function() {
-            var currentResources = this._resources;
+            /*var currentResources = this._resources;
             Crafty("Building").each(function() {
-                for(var rKey in this.resourceDeltas) {
-                    currentResources[rKey] += this.resourceDeltas[rKey];
+                for(var i = 0; i < this.resourceDeltas.length; ++i) {
+                    var rKey = this.resourceDeltas[i];
+                    currentResources[rKey.r] += rKey.delta;
                 }
             });
-            this._resources = currentResources;
+            this._resources = currentResources;*/
+            var bldgList = [];
+            Crafty("Building").each(function() {
+                bldgList.push(this.resourceDeltas);
+            });
+            for (var i = 0; i < bldgList.length; ++i) {
+                this.debit(bldgList[i]);
+            }
         }
     });
 
