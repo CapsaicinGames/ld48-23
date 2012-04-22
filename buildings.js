@@ -20,6 +20,7 @@ function buildings_setup() {
                 } else if (hud_state.mode === hudModes.destroy &&
                     this.destroyable === true) {
                     this.destroy();
+                    economy.populate(this, -this._colonists);
                 }
             });
         },

@@ -84,7 +84,7 @@ var hud_setup = function() {
     // more complex it could do with breaking down
     // to separate items
     Crafty.e("Status, HUD")
-        .attr({ x : menu_margin, y : menu_margin+20, w : 100, h : 200} )
+        .attr({ x : menu_margin, y : menu_margin+20, w : 110, h : 220} )
         .text("No colony");
     // Controls the speed of time / economy
     Crafty.e("Time, HUD, Mouse")
@@ -226,7 +226,7 @@ var hud_colonists = function(showplus, showminus) {
         Crafty.e("ColInc, ColonistMenu")
             .attr({x: Crafty.viewport.width - 50, y: menu_margin, w: 20, h: 15})
             .text("+")
-            .bind("Click", function() {
+            .bind("MouseDown", function() {
                     economy.populate(Crafty(hud_state.modeArg), 1);
                     hud_select_building();
                 });
@@ -235,7 +235,7 @@ var hud_colonists = function(showplus, showminus) {
         Crafty.e("ColDec, ColonistMenu")
             .attr({x: Crafty.viewport.width - 80, y: menu_margin, w: 20, h: 15})
             .text("-")
-            .bind("Click", function() {
+            .bind("MouseDown", function() {
                     economy.populate(Crafty(hud_state.modeArg), -1);
                     hud_select_building();
                 });

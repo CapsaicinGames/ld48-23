@@ -9,8 +9,8 @@ var resourcetypes = Object.freeze({
     steelore: { name: "Steel ore", initialValue: 0 },
     plastic: { name: "Plastic", initialValue: 20 },
     steel: { name: "Steel", initialValue: 20 },
-    preciousore: { name: "Precious metal ore", initialValue: 0 },
-    preciousmetal: { name: "Precious metal", initialValue: 0 },
+    preciousore: { name: "Rare earth ore", initialValue: 0 },
+    preciousmetal: { name: "Rare earth", initialValue: 0 },
     widgets: { name: "Widgets", initialValue: 0 },
 
 });

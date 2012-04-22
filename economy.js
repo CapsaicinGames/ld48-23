@@ -75,20 +75,20 @@ var economy_setup = function() {
             this._storage = newStorage;
 
             for (var type in this._resources) {
-                if (this._resources[type] > newStorage[type]) {
-                    this._resources[type] = newStorage[type];
+                if (type === "Spare Colonists") {
+                    if (this._totalColonists > newStorage[type]) {
+                        var diff = this._totalColonists - newStorage[type];
+                        console.log("Removing " + diff + " colonists due to lack of capacity");
+                        this.grimReaperStalksTheColony(diff);
+                    }                
+                } else {
+                    if (this._resources[type] > newStorage[type]) {
+                        this._resources[type] = newStorage[type];
+                    }
                 }
             }
         },
-        consumeResources: function() {
-            var rescount = Math.ceil(this._totalColonists / colonistNeeds.per);
-            var kill = 0;
-            for (var i = 0; i < rescount; ++i) {
-                if (!this.debit(colonistNeeds.uses)) {
-                    kill++;
-                    break;
-                 }
-            }
+        grimReaperStalksTheColony: function(kill) {
             var topkill = 0;
             // Kill spare colonists first
             while (kill > 0 && this._resources["Spare Colonists"] > 0) {
@@ -106,10 +106,19 @@ var economy_setup = function() {
                 totalcol += this._colonists;
             });
             this._totalColonists = totalcol + this._resources["Spare Colonists"];
-            /*if (this._totalColonists <= 0) {
-                Crafty.scene("GameOver");
-            }*/
             return topkill;
+
+        },
+        consumeResources: function() {
+            var rescount = Math.ceil(this._totalColonists / colonistNeeds.per);
+            var kill = 0;
+            for (var i = 0; i < rescount; ++i) {
+                if (!this.debit(colonistNeeds.uses)) {
+                    kill++;
+                    break;
+                 }
+            }
+            this.grimReaperStalksTheColony(kill);
         },
         tickBuildings: function() {
             Crafty("Building").each(function() {
@@ -123,35 +132,45 @@ var economy_setup = function() {
             days: 0,
             speed: 1,
             dead: 0,
+            breedingConstraint: "Unknown",
             timePerStep: 2000,
             newStep: function() {
                 this.days++;
                 var oldres = Crafty.clone(this._resources);
-                var killed = 0;
+                var olddead = this.dead;
                 this.updateProduction();
                 this.tickBuildings();
                 if (!(this.days % colonistNeeds.every)) {
-                    killed += this.consumeResources();
+                    this.consumeResources();
                     //console.log(killed + " died, now " + this._totalColonists);
                 }
-                if (killed == 0) {
+                if (this.dead === olddead) {
                     // no deaths, there were enough resources
                     var breed = true;
                     for (var i = 0; i < colonistBreeding.neededDelta.length; ++i) {
                         var res = colonistBreeding.neededDelta[i];
                         var diff = this._resources[res.r] - oldres[res.r];
-                        if (diff < res.delta)
+                        if (diff < res.delta) {
                             breed = false;
+                            this.breedingConstraint = "Don't have " +
+                                res.delta + " surplus " + res.r;
+                        }
                     }
                     if (this._storage["Spare Colonists"] <= 
                             this._totalColonists) {
                         breed = false;
+                        this.breedingConstraint = "Don't have enough space";
                     }
                     if (breed) {
                         this._resources["Spare Colonists"]++;
                         this._totalColonists++;
                         //console.log("Bred to " + this._totalColonists);
+                    } else {
+                        console.log(this.breedingConstraint);
                     }
+                } else {
+                    this.breedingConstraint = "Colonists are dying!";
+                        console.log(this.breedingConstraint);
                 }
                 this.constrainResources();
                 this.updateStatus();
