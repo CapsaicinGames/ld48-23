@@ -43,7 +43,7 @@ window.onload = function() {
     buildings_setup();
     economy = economy_setup();
     //economy.newStep();
-    var tilesize = 32;
+    tilesize = 32; // intentionally global
     var terrainTypes = {
         groundVarient1: [0,0],
         groundIce: [1,0],
@@ -102,7 +102,7 @@ window.onload = function() {
         },
     });
 
-    resourceOverlays = [];
+    resourceOverlays = []; // intentionally global
 
     var cursor = Crafty.e("ResourceOverlay, cursorSprite")
         .attr({z: 999999999999});
@@ -151,23 +151,14 @@ window.onload = function() {
                         if (economy.debit(desired.constructionCost) === true)
                         {
                             // Now build it
-                            bldg = desired.factory()
-                            .attr({x: this.x,
-                                y: this.y - tilesize/2,
-                                z: this.z+1});
-                            bldg.onBuild(asteroid.getResource(this.map_x, this.map_y));
+                            var bldg = build(desired, this);
                             economy.populate(bldg, 1);
-                            this._canBuild = false;
                         } else {
                             // can't alert, breaks mousedown
                             console.log("Cannot afford to build " + hud_state.modeArg);
                         }
                     } else if (hud_state.mode === hudModes.placeShip) {
-                        bldg = buildingBlueprints["LandedShip"].factory()
-                                .attr({x: this.x,
-                                    y: this.y - tilesize/2,
-                                    z: this.z+1});
-                        this._canBuild = false;
+                        var bldg = build(buildingBlueprints["LandedShip"], this);
                         hud_state.mode = hudModes.select;
                         economy.newStep();
                         hud_show();

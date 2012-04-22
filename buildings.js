@@ -31,7 +31,7 @@ function buildings_setup() {
         isActive: function() {
             return this._colonists > 0; 
         },
-        onBuild: function(tileResource) {
+        onBuild: function(tileResource, atX, atY) {
             // intentionally blank
         },
         onTick: function() {
@@ -60,7 +60,11 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Storage, landersprite")
-                    .attr({destroyable: false, name: "Colony Ship"})
+                    .attr({
+                        destroyable: false, 
+                        name: "Colony Ship",
+                        onBuild: onLanderBuild,
+                    })
                     .storageDelta(resourcetypes.colonists, 10)
                     .storageDelta(resourcetypes.food, 100)
                     .storageDelta(resourcetypes.ice, 50)
@@ -226,16 +230,35 @@ function buildings_setup() {
     }
 }
 
+function build(blueprint, tileToBuildOn) {
+    var bldg = blueprint.factory()
+        .attr({x: tileToBuildOn.x,
+               y: tileToBuildOn.y - tilesize/2,
+               z: tileToBuildOn.z+1});
+    bldg.onBuild(
+        asteroid.getResource(tileToBuildOn.map_x, tileToBuildOn.map_y), 
+        tileToBuildOn.map_x, tileToBuildOn.map_y
+    );
+
+    tileToBuildOn._canBuild = false;
+    
+    return bldg;
+}
+
 function createMine(powerDrain, resourceProduction, mineName) {
     return Crafty.e("Building, minesprite")
         .resourceDelta(resourcetypes.energy, powerDrain)
         .attr({name: mineName,
-            onBuild: function(tileResource) {
-            this.resourceDelta(tileResource, resourceProduction);
-        }});
+               onBuild: function(tileResource) {
+                   this.resourceDelta(tileResource, resourceProduction);
+               },
+              });
 }
 
 function analyseAsteroid() {
     console.log("tick analyser!");
 }
 
+function onLanderBuild(tileResource, mapX, mapY) {
+    console.log("built at " + mapX + ", " + mapY);
+}
