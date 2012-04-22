@@ -198,7 +198,7 @@ var hud_setup = function() {
                     this.text("<b>" + topMsg.m + "</b>");
                 }
                 statusMessages.wipeAllMessages();
-                console.log(statusMessages);
+                //console.log(statusMessages);
             },
         })
         .text("here is a status message")

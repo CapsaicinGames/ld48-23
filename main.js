@@ -46,7 +46,10 @@ window.onload = function() {
             .text("Your colonists are dead, GAME OVER");
         Crafty.stop();
     });
-    Math.seedrandom("seed");
+    Math.seedrandom();//"seed");
+    asteroid.init(Crafty.math.randomInt(12, 20),
+                Crafty.math.randomInt(12, 20));
+
     Crafty.init();
     buildings_setup();
     economy = economy_setup();
@@ -215,7 +218,7 @@ window.onload = function() {
                 : null;
                 resourceOverlays[x][y] = overlay;
                 
-                var isometricTileCoord = mapToIsometricTile(x, y, asteroid.width, asteroid.height);
+                var isometricTileCoord = mapToIsometricTile(x, y, 20, 20);
                 newIsometricTiles.push({ coord: isometricTileCoord, e: tile, o: overlay});
             }
         }
