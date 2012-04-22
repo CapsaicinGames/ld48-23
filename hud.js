@@ -135,6 +135,11 @@ var hud_setup = function() {
                 this.bind("Click", function() {this.onClick();});
             }
         });
+    Crafty.c("ColonistMenu", {
+            init : function() {
+                this.requires("HUD, Mouse");
+                }
+            });
     Crafty.c("BuildMenu", {
             init : function() {
                 this.requires("HUD, Mouse");
@@ -144,6 +149,71 @@ var hud_setup = function() {
         .attr({ y: menu_margin+40, h: 220, w: 100, x: Crafty.viewport.width - (menu_margin + 100)})
         .text("Nothing selected");
 
+};
+
+var hud_select_building = function() {
+    var bldg = Crafty(hud_state.modeArg);
+    var info = "<b>" + bldg.name + "</b><br>";
+    var subinfo = "";
+    for (var i = 0; i < bldg.resourceDeltas.length; ++i) {
+        var res = bldg.resourceDeltas[i];
+        if (res.delta < 0) {
+            subinfo += "<li>" + (-res.delta) + " " + res.r + "</li>";
+        }
+    }
+    if (subinfo.length > 0) {
+        info += "Consumes:<ul class='reslist'>" + 
+                subinfo + "</ul>";
+        subinfo = "";
+    }
+    for (var i = 0; i < bldg.resourceDeltas.length; ++i) {
+        var res = bldg.resourceDeltas[i];
+        if (res.delta > 0) {
+            subinfo += "<li>" + res.delta + " " + res.r + "</li>";
+        }
+    }
+    if (subinfo.length > 0) {
+        info += "Produces:<ul class='reslist'>";
+        info += subinfo + "</ul>";
+        subinfo = "";
+    }
+    if (bldg.has("Storage")) {
+        info += "Stores:<ul class='reslist'>";
+        for (var i = 0; i < bldg.storageDeltas.length; ++i) {
+            var res = bldg.storageDeltas[i];
+            if (res.delta > 0) {
+                info += "<li>" + res.delta + " " + res.r + "</li>";
+            }
+        }
+        info += "</ul>";
+    }
+    info += "Colonists: " + bldg._colonists;
+    Crafty("Selected").each(function () { this.text(info);}); 
+    hud_colonists(true, true);
+
+};
+
+var hud_colonists = function(showplus, showminus) {
+    Crafty("ColonistMenu").each(function() {this.destroy();});
+    if (showplus === true) {
+        Crafty.e("ColInc, ColonistMenu")
+            .attr({x: Crafty.viewport.width - 50, y: menu_margin, w: 20, h: 15})
+            .text("+")
+            .bind("Click", function() {
+                    economy.populate(Crafty(hud_state.modeArg), 1);
+                    hud_select_building();
+                });
+    }
+    if (showminus === true) {
+        Crafty.e("ColDec, ColonistMenu")
+            .attr({x: Crafty.viewport.width - 80, y: menu_margin, w: 20, h: 15})
+            .text("-")
+            .bind("Click", function() {
+                    economy.populate(Crafty(hud_state.modeArg), -1);
+                    hud_select_building();
+                });
+    } else {
+    }
 };
 
 var hud_show = function() {
