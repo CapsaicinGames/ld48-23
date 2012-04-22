@@ -1,7 +1,14 @@
+// tea-leaved from http://snippets.dzone.com/posts/show/849
+shuffle = function(o) {
+   for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+   return o; 
+};
+
 var economy_setup = function() {
     
     Crafty.c("Economy", {
         _resources: {},
+        _totalColonists: 0,
         
         init: function() {
             for(var rKey in resourcetypes) {
@@ -62,6 +69,37 @@ var economy_setup = function() {
                     this._resources[type] = newStorage[type];
                 }
             }
+            var totalcol = 0;
+            Crafty("Building").each(function() {
+                totalcol += this._colonists;
+            });
+            this._totalColonists = totalcol + this._resources["Spare Colonists"];
+        },
+        consumeResources: function() {
+            var rescount = Math.ceil(this._totalColonists / colonistNeeds.per);
+            var kill = 0;
+            for (var i = 0; i < rescount; ++i) {
+                if (!this.debit(colonistNeeds.uses)) {
+                    kill++;
+                    break;
+                 }
+            }
+            // Kill spare colonists first
+            while (kill > 0 && this._resources["Spare Colonists"] > 0) {
+                this._resources["Spare Colonists"]--;
+                kill--;
+            }
+            var totalcol = 0;
+            // Then the ones in buildings
+            shuffle(Crafty("Building")).each(function() {
+                while (kill > 0 && this._colonists > 0)
+                {
+                    kill--;
+                    this._colonists--;
+                }
+                totalcol += this._colonists;
+            });
+            this._totalColonists = totalcol + this._resources["Spare Colonists"];
         }
     });
 
@@ -71,7 +109,11 @@ var economy_setup = function() {
             speed: 1,
             timePerStep: 2000,
             newStep: function() {
+                this.days++;
                 this.updateResources();
+                if (!(this.days % colonistNeeds.every)) {
+                    this.consumeResources();
+                }
                 this.updateStatus();
                 switch(this.speed)
                 {
@@ -88,7 +130,6 @@ var economy_setup = function() {
                 default:
                     this.timePerStep = 2000;
                 }
-                this.days++;
                 this.timeout(function() {this.newStep();}, this.timePerStep);
             },
             populate: function(building, delta) {
@@ -115,11 +156,7 @@ var economy_setup = function() {
                 for(var rKey in this._resources) {
                     newstatus += "<b>" + rKey + "</b>: " + this._resources[rKey] + "<br/>";
                 }
-                var totalcol = 0;
-                Crafty("Building").each(function() {
-                    totalcol += this._colonists;
-                });
-                newstatus += "<b>Colony size</b>: " + (totalcol + this._resources["Spare Colonists"]) + "<br>";
+                newstatus += "<b>Colony size</b>: " + this._totalColonists + "<br>";
                 newstatus += "<b>Day</b>: " + this.days + "<br>";
                 Crafty("Status").each(function() {
                         this.text(newstatus);

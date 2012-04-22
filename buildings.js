@@ -49,9 +49,6 @@ function buildings_setup() {
         }
     });
 
-    var newResourceDelta = function(resource, cost) {
-        return { r: resource.name, delta: cost };
-    }
 
     buildingBlueprints = {
         "LandedShip": {
