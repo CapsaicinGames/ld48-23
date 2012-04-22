@@ -1,5 +1,6 @@
 
 var menu_margin = 30;
+var selectedMenu = "#e0ffe0";
 
 var createBuildMenu = function() {
     var menu_width = 75;
@@ -10,16 +11,35 @@ var createBuildMenu = function() {
     {
         if (buildingBlueprints[name].buildable != false)
         {
+            var txt = "<b>" + name + "</b><br>";
+            txt += "Costs:<ul class='reslist'>";
+            for (var i = 0; 
+                i < buildingBlueprints[name].constructionCost.length; 
+                ++i) {
+                var res = buildingBlueprints[name].constructionCost[i];
+                txt += "<li>" + (-res.delta) + " " + res.r + "</li>";
+            }
+
+            txt += "</ul>";
             Crafty.e("BuildMenu")
                 .text(name)
                 .attr({x : cur_x, 
                         y : cur_y,
                         w: menu_width-1,
-                        h: menu_height-2})
+                        h: menu_height-2,
+                        printText: txt})
                 .bind("Click", function() {
-                        hud_state.mode = hudModes.build;
-                        hud_state.modeArg = this._text;
+                    Crafty("BuildMenu").each(function () {
+                        this.css({"background-color": "white"});
                     });
+                    this.css({"background-color": selectedMenu});
+                    hud_state.mode = hudModes.build;
+                    hud_state.modeArg = this._text;
+                    var tmp = this.printText;
+                    Crafty("Selected").each(function() {
+                        this.text(tmp);
+                        });
+                });
             cur_x -= menu_width;
             if (cur_x < menu_width) {
                 cur_y -= menu_height;
@@ -114,19 +134,25 @@ var hud_setup = function() {
             onClick : function() {
                 // Ensure all other menus are closed
                 Crafty("MenuTopLevel").each(function() {
-                        if (this.submenu != null) {
-                            // Delete the menu
-                            Crafty(this.submenu).each(function() {
-                                this.destroy();
-                                });
-                        }
-                    });
+                    this.css({"background-color":"white"});
+                    if (this.submenu != null) {
+                        // Delete the menu
+                        Crafty(this.submenu).each(function() {
+                            this.destroy();
+                            });
+                    }
+                });
                 // Clear current hud mode
                 hud_state.mode = hudModes.select;
+                hud_colonists(false,false);
+                Crafty("Selected").each(function() {
+                    this.text("Nothing selected");
+                    });
                 if (this.submenu != null)
                 {
                     this.menuCtor();
                 }
+                this.css({"background-color": selectedMenu});
             },
             init : function () {
                 this.requires("HUD, Mouse");
@@ -188,7 +214,8 @@ var hud_select_building = function() {
         info += "</ul>";
     }
     info += "Colonists: " + bldg._colonists;
-    Crafty("Selected").each(function () { this.text(info);}); 
+    Crafty("Selected").each(function () { 
+            this.text(info);}); 
     hud_colonists(true, true);
 
 };
@@ -237,7 +264,7 @@ var hud_show = function() {
         .text("Resources")
         .bind("Click", function() {
             var isOverlayEnabledNow = !this.isOverlayEnabled;
-            console.log("setting visibility " + isOverlayEnabledNow);
+            //console.log("setting visibility " + isOverlayEnabledNow);
             Crafty("ResourceOverlay").each(function() {
                 this.setVisibility(isOverlayEnabledNow);
             });
