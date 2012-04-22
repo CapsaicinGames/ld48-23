@@ -115,6 +115,7 @@ window.onload = function() {
             },
         });
 
+
         resourceOverlays = []; // intentionally global
 
         var cursor = Crafty.e("ResourceOverlay, cursorSprite")

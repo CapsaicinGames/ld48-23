@@ -3,6 +3,12 @@
 var buildingBlueprints = {};
 
 function buildings_setup() {
+    Crafty.c("BuildingInfoOverlay", {
+        init: function() {
+            this.requires("2D, Canvas");
+            this.visible = false;
+        },
+    });
     Crafty.c("Building", {
         _colonists: 0,
         maxColonists: 1,
@@ -32,7 +38,13 @@ function buildings_setup() {
             return this;
         },
         isActive: function() {
-            return this._colonists >= this.minActive; 
+            var ret = this._colonists >= this.minActive;
+           if (!ret) {
+               this.overlay.visible = true;
+           } else {
+               this.overlay.visible = false;
+           }
+           return ret;
         },
         onBuild: function(tileResource, atX, atY) {
             // intentionally blank
@@ -238,11 +250,16 @@ function buildings_setup() {
 }
 
 function build(blueprint, tileToBuildOn) {
+    var over = Crafty.e("BuildingInfoOverlay, regolithOverlay")
+        .attr({x: tileToBuildOn.x,
+               y: tileToBuildOn.y,
+               z: 999});
     var bldg = blueprint.factory()
         .attr({x: tileToBuildOn.x,
                y: tileToBuildOn.y - tilesize/2,
                z: tileToBuildOn.z+1,
-               tileEntity: tileToBuildOn 
+               tileEntity: tileToBuildOn,
+               overlay: over 
               });
     bldg.onBuild(
         asteroid.getResource(tileToBuildOn.map_x, tileToBuildOn.map_y), 
