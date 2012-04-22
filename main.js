@@ -7,7 +7,6 @@ convertTileType = function(type, x, y, resource) {
         }
         else {
             var varientIndex = Crafty.math.randomInt(0, 2);
-            console.log("p " + x + "," + y + ": " + varientIndex);
             return "groundVarient" + (varientIndex + 1);
         }
     default:
@@ -50,6 +49,7 @@ window.onload = function() {
         groundIce: [1,0],
         groundVarient2: [2,0],
         groundVarient3: [3,0],
+        cursorSprite: [0,1],
     };
 
     var buildingTypes = {
@@ -90,18 +90,20 @@ window.onload = function() {
         },
     });
 
+    var cursor = Crafty.e("ResourceOverlay, cursorSprite")
+        .attr({z: 999999999999});
+
     Crafty.c("WorldEntity", {
         _tileSize: 32,
         _canBuild: true,
         init : function() {
             this.requires("2D, Canvas, Mouse");
             this.bind("MouseOver", function() {
-                switchSprite(this, terrainTypes, 1);
-                switchSprite(this, buildingTypes, 1);
-            });
-            this.bind("MouseOut", function() {
-                switchSprite(this, terrainTypes, 0);
-                switchSprite(this, buildingTypes, 0);
+                cursor.x = this._x;
+                cursor.y = this._y;
+                cursor.h = this._h;
+                cursor.z = this._z + 1;
+                cursor.setVisibility(true);
             });
         },
         tileSize: function(size) { 
@@ -171,7 +173,6 @@ window.onload = function() {
             var which = convertTileType(asteroid.getTileType(x, y), x, y, asteroid.getResource(x, y));
             if (which === null)
                 continue; // don't draw tiles where there should be space
-            console.log("w: " + which);
             
             var tile = Crafty.e("Terrain, " + which)
                 .attr({z:(x+1) * (y+1), map_x: x, map_y: y})
@@ -208,8 +209,9 @@ window.onload = function() {
         newTile.e.attr('z', tileIndex);
         iso.place(newTile.coord[0], newTile.coord[1], 0, newTile.o);
         iso.place(newTile.coord[0], newTile.coord[1], 0, newTile.e);
-     
     }
+
+    iso.place(newIsometricTiles[0].coord[0], newIsometricTiles[0].coord[1], 0, cursor);
 
     Crafty.addEvent(this, Crafty.stage.elem, "mousedown", function(e) {
         if(e.button > 1) return;
