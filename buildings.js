@@ -213,9 +213,9 @@ function buildings_setup() {
                 return Crafty.e("Storage, widgetfactorysprite")
                     .attr({name: "Widget factory"})
                     .resourceDelta(resourcetypes.energy, -3)
-                    .resourceDelta(resourcetypes.steel, -1)
-                    .resourceDelta(resourcetypes.plastic, -2)
-                    .resourceDelta(resourcetypes.widgets, 2)
+                    .resourceDelta(resourcetypes.steel, -0.2)
+                    .resourceDelta(resourcetypes.plastic, -0.2)
+                    .resourceDelta(resourcetypes.widgets, 0.1)
                     .storageDelta(resourcetypes.widgets, 4)
                 ;
             },
@@ -229,8 +229,8 @@ function buildings_setup() {
                 return Crafty.e("Storage, precioussmeltersprite")
                     .attr({name: "Smelter"})
                     .resourceDelta(resourcetypes.energy, -3)
-                    .resourceDelta(resourcetypes.preciousore, -1)
-                    .resourceDelta(resourcetypes.preciousmetal, 1)
+                    .resourceDelta(resourcetypes.preciousore, -0.1)
+                    .resourceDelta(resourcetypes.preciousmetal, 0.1)
                     .storageDelta(resourcetypes.preciousmetal, 3)
                 ;
             },
@@ -243,8 +243,8 @@ function buildings_setup() {
                 return Crafty.e("Building, blastfurnacesprite")
                     .attr({name: "Steel Refinery"})
                     .resourceDelta(resourcetypes.energy, -3)
-                    .resourceDelta(resourcetypes.steelore, -2)
-                    .resourceDelta(resourcetypes.steel, 2);
+                    .resourceDelta(resourcetypes.steelore, -0.2)
+                    .resourceDelta(resourcetypes.steel, 0.2);
             },
         },
         "RegoPlasticiser": {
@@ -255,8 +255,30 @@ function buildings_setup() {
                 return Crafty.e("Building, plasticisersprite")
                     .attr({name: "RegoPlasticiser"})
                     .resourceDelta(resourcetypes.energy, -2)
-                    .resourceDelta(resourcetypes.regolith, -1)
-                    .resourceDelta(resourcetypes.plastic, 1);
+                    .resourceDelta(resourcetypes.regolith, -0.1)
+                    .resourceDelta(resourcetypes.plastic, 0.1);
+            },
+        },
+         "Widget Store": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.steel, -5),
+            ],
+            factory: function() {
+                return Crafty.e("Storage, orelockersprite")
+                    .attr({name: "Widget store"})
+                    .resourceDelta(resourcetypes.energy, -1)
+                    .storageDelta(resourcetypes.widgets, 100);
+            },
+        },
+        "Precious Store": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.steel, -5),
+            ],
+            factory: function() {
+                return Crafty.e("Storage, orelockersprite")
+                    .attr({name: "Rare earth strore"})
+                    .resourceDelta(resourcetypes.energy, -1)
+                    .storageDelta(resourcetypes.preciousmetal, 100);
             },
         },
         "Astro Analyser": {
