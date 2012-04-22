@@ -17,8 +17,9 @@ function buildings_setup() {
                 if (hud_state.mode === hudModes.select) {
                     hud_state.modeArg = this[0];
                     hud_select_building();
-                } else if (hud_state.mode === hudModes.destroy &&
-                    this.destroyable === true) {
+                } else if (hud_state.mode === hudModes.destroy 
+                           && this.destroyable === true) {
+                    this.tileEntity._canBuild = true;
                     this.destroy();
                 }
             });
@@ -234,7 +235,9 @@ function build(blueprint, tileToBuildOn) {
     var bldg = blueprint.factory()
         .attr({x: tileToBuildOn.x,
                y: tileToBuildOn.y - tilesize/2,
-               z: tileToBuildOn.z+1});
+               z: tileToBuildOn.z+1,
+               tileEntity: tileToBuildOn 
+              });
     bldg.onBuild(
         asteroid.getResource(tileToBuildOn.map_x, tileToBuildOn.map_y), 
         tileToBuildOn.map_x, tileToBuildOn.map_y
