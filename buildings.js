@@ -34,6 +34,9 @@ function buildings_setup() {
         onBuild: function(tileResource) {
             // intentionally blank
         },
+        onTick: function() {
+            // intentionally blank
+        },
     });
 
     Crafty.c("PowerGenerator", { init : function() { this.requires("Building"); } });
@@ -206,6 +209,20 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.plastic, 1);
             },
         },
+        "Astro Analyser": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.plastic, -1),
+            ],
+            factory: function() {
+                return Crafty.e("Building, placeholderSprite")
+                    .attr({
+                        name: "Astro Analyser", 
+                        maxColonists: 9999,
+                        onTick: analyseAsteroid,
+                    })
+                    .resourceDelta(resourcetypes.energy, -1);
+            },
+        },          
     }
 }
 
@@ -216,5 +233,9 @@ function createMine(powerDrain, resourceProduction, mineName) {
             onBuild: function(tileResource) {
             this.resourceDelta(tileResource, resourceProduction);
         }});
+}
+
+function analyseAsteroid() {
+    console.log("tick analyser!");
 }
 
