@@ -64,6 +64,8 @@ window.onload = function() {
         plasticisersprite: [3,1],
         widgetfactorysprite: [3,2],
         precioussmeltersprite: [2,2],
+        orelockersprite: [0,2],
+        capacitorbanksprite: [1,2],
     };
 
     var resourceOverlaySprites = {
