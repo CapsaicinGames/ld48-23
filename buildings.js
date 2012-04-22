@@ -3,9 +3,17 @@
 var buildingBlueprints = {};
 
 function buildings_setup() {
+    Crafty.c("BuildingInfoOverlay", {
+        init: function() {
+            this.requires("2D, Canvas");
+            this.visible = false;
+        },
+    });
     Crafty.c("Building", {
         _colonists: 0,
         maxColonists: 1,
+        minActive: 1,
+        missing: "", // human readable string of what's not working
         resourceDeltas: [],
         destroyable: true,
         name: "Unknown",
@@ -31,7 +39,8 @@ function buildings_setup() {
             return this;
         },
         isActive: function() {
-            return this._colonists > 0; 
+            var ret = this._colonists >= this.minActive;
+            return ret;
         },
         onBuild: function(tileResource, atX, atY) {
             // intentionally blank
@@ -39,6 +48,26 @@ function buildings_setup() {
         onTick: function() {
             // intentionally blank
         },
+        showOverlay: function(overType) {
+            if (overType !== this.overlayType) {
+                switch (overType) {
+                    case "no":
+                        this.overlay.visible = false;
+                        break;
+
+                    case "res":
+                        this.overlay.visible = true;
+                        this.overlay.sprite(1,0);
+                        break;
+
+                    case "inactive":
+                        this.overlay.visible = true;
+                        this.overlay.sprite(0,0);
+                        break;
+                }
+                this.overlayType = overType;
+            }
+        }
     });
 
     Crafty.c("PowerGenerator", { init : function() { this.requires("Building"); } });
@@ -63,6 +92,7 @@ function buildings_setup() {
             factory: function() {
                 return Crafty.e("Storage, landersprite")
                     .attr({
+                        minActive: 0,
                         destroyable: false, 
                         name: "Colony Ship",
                         onBuild: onLanderBuild,
@@ -76,8 +106,11 @@ function buildings_setup() {
                     .storageDelta(resourcetypes.steelore, 50)
                     .storageDelta(resourcetypes.plastic, 50)
                     .storageDelta(resourcetypes.steel, 50)
-                    .storageDelta(resourcetypes.preciousore, 10)
-                    .storageDelta(resourcetypes.preciousmetal, 10);
+                    //.storageDelta(resourcetypes.preciousore, 10)
+                    //.storageDelta(resourcetypes.preciousmetal, 10)
+                    .resourceDelta(resourcetypes.food, 0.5)
+                    .resourceDelta(resourcetypes.water, 0.5)
+                    ;
             },
             buildable: false,
         },
@@ -233,11 +266,16 @@ function buildings_setup() {
 }
 
 function build(blueprint, tileToBuildOn) {
+    var over = Crafty.e("BuildingInfoOverlay, regolithOverlay")
+        .attr({x: tileToBuildOn.x,
+               y: tileToBuildOn.y,
+               z: 999});
     var bldg = blueprint.factory()
         .attr({x: tileToBuildOn.x,
                y: tileToBuildOn.y - tilesize/2,
                z: tileToBuildOn.z+1,
-               tileEntity: tileToBuildOn 
+               tileEntity: tileToBuildOn,
+               overlay: over 
               });
     bldg.onBuild(
         asteroid.getResource(tileToBuildOn.map_x, tileToBuildOn.map_y), 

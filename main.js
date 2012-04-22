@@ -115,6 +115,7 @@ window.onload = function() {
             },
         });
 
+
         resourceOverlays = []; // intentionally global
 
         var cursor = Crafty.e("ResourceOverlay, cursorSprite")
@@ -161,7 +162,7 @@ window.onload = function() {
 
                             // Now can we afford it
                             
-                            if (economy.debit(desired.constructionCost) === true)
+                            if (economy.debit(desired.constructionCost).length == 0)
                             {
                                 // Now build it
                                 var bldg = build(desired, this);

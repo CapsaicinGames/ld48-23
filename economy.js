@@ -26,16 +26,16 @@ var economy_setup = function() {
          *  @returns true iff debit was successful
          */
         debit: function (resourceList) {
-            var success = true;
+            var success = [];
             for (var i = 0; i < resourceList.length; i++) {
                 var res = resourceList[i];
                 if (res.delta < 0) {
                     if (this._resources[res.r] < -res.delta)
-                        success = false;
+                        success.push(res.r);
                 }
             }
 
-            if (success === true) {
+            if (success.length == 0) {
                 for (var i = 0; i < resourceList.length; i++) {
                     var res = resourceList[i];
                     this._resources[res.r] += res.delta;
@@ -47,21 +47,48 @@ var economy_setup = function() {
 
         updateProduction: function() {
             var bldgList = [];
+            // Find out what building is making what.  If it's
+            // not not being operated, mark it as such
             Crafty("Building").each(function() {
                 if (this.isActive() === true)
-                    bldgList.push(this.resourceDeltas);
+                    bldgList.push({ent: this[0], delta: this.resourceDeltas});
+                else
+                    this.showOverlay("inactive");
+                    
             });
+            // Try to perform each building's transaction.
+            // If it fails, record some text saying why for
+            // the building and enable the overlay saying it failed.
+            // Otherwise clear the overlay
             for (var i = 0; i < bldgList.length; ++i) {
-                this.debit(bldgList[i]);
+                var missing = this.debit(bldgList[i].delta);
+                if (missing.length == 0) {
+                    Crafty(bldgList[i].ent).showOverlay("no");
+                    Crafty(bldgList[i].ent).missing = "";
+                } else {
+                    Crafty(bldgList[i].ent).showOverlay("res");
+                    var tmp = "Missing ";
+                    for (var j = 0; j < missing.length; ++j) {
+                        tmp += missing[j] + " ";
+                    }
+                    Crafty(bldgList[i].ent).missing = tmp;
+                }
             }
+
+            // Recalculate the number of colonists
             var totalcol = 0;
             Crafty("Building").each(function() {
                 totalcol += this._colonists;
             });
-            this._totalColonists = totalcol + this._resources["Spare Colonists"];
+            this._totalColonists = totalcol + this._resources["Colonists"];
         },
+        /** Ensure that resources are only stockpiled
+         *  if there is room for them.  The current storage
+         *  is updated.
+         */
         constrainResources: function() {
             var newStorage = {};
+            // Find out how much we can store
             Crafty("Storage").each(function() {
                 for (var i = 0; i < this.storageDeltas.length; ++i) {
                     var res = this.storageDeltas[i];
@@ -74,25 +101,43 @@ var economy_setup = function() {
             });
             this._storage = newStorage;
 
+            // Now if we have more resources than the maximum storage
+            // for that type, remove them
             for (var type in this._resources) {
-                if (type === "Spare Colonists") {
+                if (type === "Colonists") {
+                    // Colonists are a special case as the total
+                    // is used and not the spare resource
                     if (this._totalColonists > newStorage[type]) {
                         var diff = this._totalColonists - newStorage[type];
                         console.log("Removing " + diff + " colonists due to lack of capacity");
                         this.grimReaperStalksTheColony(diff);
                     }                
                 } else {
-                    if (this._resources[type] > newStorage[type]) {
-                        this._resources[type] = newStorage[type];
+                    var max = newStorage[type];
+                    if (max == undefined) {
+                        // It's undefined if there's no storage for
+                        // this type at all yet
+                        max = 0;
+                    }
+                    if (this._resources[type] > max) {
+                        this._resources[type] = max;
                     }
                 }
             }
         },
+        /** THIS FUNCTION KILLS COLONISTS
+         *
+         *  First it kills idle colonists, then it
+         *  picks a building at random and depopulates it.
+         *  @param kill The number to kill
+         *  @returns The number killed.  If these don't match
+         *  then we're out of people
+         */
         grimReaperStalksTheColony: function(kill) {
             var topkill = 0;
             // Kill spare colonists first
-            while (kill > 0 && this._resources["Spare Colonists"] > 0) {
-                this._resources["Spare Colonists"]--;
+            while (kill > 0 && this._resources["Colonists"] > 0) {
+                this._resources["Colonists"]--;
                 kill--;
             }
             var totalcol = 0;
@@ -105,15 +150,18 @@ var economy_setup = function() {
                 }
                 totalcol += this._colonists;
             });
-            this._totalColonists = totalcol + this._resources["Spare Colonists"];
+            this._totalColonists = totalcol + this._resources["Colonists"];
             return topkill;
 
         },
+        /** Make people eat and drink, and kill 'em if there's
+         *  not enough.
+         */
         consumeResources: function() {
             var rescount = Math.ceil(this._totalColonists / colonistNeeds.per);
             var kill = 0;
             for (var i = 0; i < rescount; ++i) {
-                if (!this.debit(colonistNeeds.uses)) {
+                if (this.debit(colonistNeeds.uses).length == 0) {
                     kill++;
                     break;
                  }
@@ -166,7 +214,7 @@ var economy_setup = function() {
                 return false;
             }
 
-            if (this._storage["Spare Colonists"] <= 
+            if (this._storage["Colonists"] <= 
                 this._totalColonists) {
                 breed = false;
                 statusMessages.addMessage("No space for more colonists - build a habitat", -5);
@@ -176,12 +224,13 @@ var economy_setup = function() {
         },
 
         doBreed: function() {
-            this._resources["Spare Colonists"]++;
+            this._resources["Colonists"]++;
             this._totalColonists++;
         }
 
     });
 
+    // Actually create the economy object
     return Crafty.e("Economy")
             .attr({
             days: 0,
@@ -226,7 +275,7 @@ var economy_setup = function() {
                 var okay = false;
                 var newbldgtotal = building._colonists + delta;
                 if (delta > 0 && 
-                    this._resources["Spare Colonists"] >= delta &&
+                    this._resources["Colonists"] >= delta &&
                     newbldgtotal <= building.maxColonists) {
                     okay = true;
                 } else if (delta < 0 && newbldgtotal >= 0) {
@@ -236,7 +285,7 @@ var economy_setup = function() {
                 }
                 if (okay === true) {
                     building._colonists += delta;
-                    this._resources["Spare Colonists"] -= delta;
+                    this._resources["Colonists"] -= delta;
                 }
             },
             updateStatus : function() {
@@ -244,7 +293,15 @@ var economy_setup = function() {
                 var newstatus = "";
 
                 for(var rKey in this._resources) {
-                    newstatus += "<b>" + rKey + "</b>: " + this._resources[rKey].toFixed(1) + "<br/>";
+                    var key = rKey;
+                    var val = this._resources[rKey];
+                    if (rKey === "Colonists") {
+                        key = "Idle " + rKey;
+                        val = this._resources[rKey].toFixed(0);
+                    } else {
+                        val = this._resources[rKey].toFixed(1);
+                    }
+                    newstatus += "<b>" + key + "</b>: " + val + "<br/>";
                 }
                 newstatus += "<b>Colony size</b>: " + this._totalColonists + "<br>";
                 newstatus += "<b>Day</b>: " + this.days + "<br>";

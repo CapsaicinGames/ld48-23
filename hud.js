@@ -245,7 +245,11 @@ var hud_select_building = function() {
         }
         info += "</ul>";
     }
-    info += "Colonists: " + bldg._colonists;
+    info += "Colonists: " + bldg._colonists + "<br>";
+    info += bldg.isActive() ? "Active" : "<b>INACTIVE</b>";
+    if (bldg.missing != "") {
+        info += "<br>" + bldg.missing;
+    }
     Crafty("Selected").each(function () { 
             this.text(info);}); 
     hud_colonists(true, true);
