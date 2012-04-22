@@ -59,6 +59,9 @@ window.onload = function() {
         habitatsprite: [2,0],
         hydroponicssprite: [3,0],
         landersprite: [0,1],
+        icemeltersprite: [1,1],
+        blastfurnacesprite: [2,1],
+        plasticisersprite: [3,1],
     };
 
     var resourceOverlaySprites = {
