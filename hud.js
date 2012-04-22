@@ -194,7 +194,8 @@ var hud_setup = function() {
                 if (topMsg === null) {
                     this.text(" ");
                 } else {
-                    this.text(topMsg.m);
+                    this.textColor(topMsg.s > 0 ? "#ff0000" : "#0000ff");
+                    this.text("<b>" + topMsg.m + "</b>");
                 }
                 statusMessages.wipeAllMessages();
                 console.log(statusMessages);
