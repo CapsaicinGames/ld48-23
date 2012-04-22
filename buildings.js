@@ -13,6 +13,7 @@ function buildings_setup() {
         _colonists: 0,
         maxColonists: 1,
         minActive: 1,
+        missing: "", // human readable string of what's not working
         resourceDeltas: [],
         destroyable: true,
         name: "Unknown",

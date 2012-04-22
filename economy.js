@@ -26,16 +26,16 @@ var economy_setup = function() {
          *  @returns true iff debit was successful
          */
         debit: function (resourceList) {
-            var success = true;
+            var success = [];
             for (var i = 0; i < resourceList.length; i++) {
                 var res = resourceList[i];
                 if (res.delta < 0) {
                     if (this._resources[res.r] < -res.delta)
-                        success = false;
+                        success.push(res.r);
                 }
             }
 
-            if (success === true) {
+            if (success.length == 0) {
                 for (var i = 0; i < resourceList.length; i++) {
                     var res = resourceList[i];
                     this._resources[res.r] += res.delta;
@@ -55,10 +55,17 @@ var economy_setup = function() {
                     
             });
             for (var i = 0; i < bldgList.length; ++i) {
-                if (this.debit(bldgList[i].delta)) {
+                var missing = this.debit(bldgList[i].delta);
+                if (missing.length == 0) {
                     Crafty(bldgList[i].ent).showOverlay("no");
+                    Crafty(bldgList[i].ent).missing = "";
                 } else {
                     Crafty(bldgList[i].ent).showOverlay("res");
+                    var tmp = "Missing ";
+                    for (var j = 0; j < missing.length; ++j) {
+                        tmp += missing[j] + " ";
+                    }
+                    Crafty(bldgList[i].ent).missing = tmp;
                 }
             }
             var totalcol = 0;
@@ -120,7 +127,7 @@ var economy_setup = function() {
             var rescount = Math.ceil(this._totalColonists / colonistNeeds.per);
             var kill = 0;
             for (var i = 0; i < rescount; ++i) {
-                if (!this.debit(colonistNeeds.uses)) {
+                if (this.debit(colonistNeeds.uses).length == 0) {
                     kill++;
                     break;
                  }
