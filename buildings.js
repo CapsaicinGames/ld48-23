@@ -106,8 +106,8 @@ function buildings_setup() {
                     .storageDelta(resourcetypes.ice, 50)
                     //.storageDelta(resourcetypes.energy, 50)
                     .storageDelta(resourcetypes.water, 50)
-                    .storageDelta(resourcetypes.regolith, 50)
-                    .storageDelta(resourcetypes.steelore, 50)
+                    //.storageDelta(resourcetypes.regolith, 50)
+                    //.storageDelta(resourcetypes.steelore, 50)
                     .storageDelta(resourcetypes.plastic, 50)
                     .storageDelta(resourcetypes.steel, 50)
                     //.storageDelta(resourcetypes.preciousore, 10)
@@ -123,14 +123,14 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -3),
                 newResourceDelta(resourcetypes.plastic, -1),
             ],
-            factory: function() { return createMine(-1, 1, "Mine"); }
+            factory: function() { return createMine(-1, 1, 3, "Mine"); }
         },
         "Super Mine": { 
             constructionCost: [
                 newResourceDelta(resourcetypes.steel, -7),
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
-            factory: function() { return createMine(-2, 2, "Super Mine"); }
+            factory: function() { return createMine(-2, 2, 6, "Super Mine"); }
         },
         "Habitat": {
             constructionCost: [
@@ -294,12 +294,13 @@ function build(blueprint, tileToBuildOn) {
     return bldg;
 }
 
-function createMine(powerDrain, resourceProduction, mineName) {
-    return Crafty.e("Building, minesprite")
+function createMine(powerDrain, resourceProduction, storage, mineName) {
+    return Crafty.e("Storage, minesprite")
         .resourceDelta(resourcetypes.energy, powerDrain)
         .attr({name: mineName,
                onBuild: function(tileResource) {
                    this.resourceDelta(tileResource, resourceProduction);
+                   this.storageDelta(tileResource, storage);
                },
               });
 }
