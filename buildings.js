@@ -5,10 +5,10 @@ var buildingBlueprints = {};
 function buildings_setup() {
     Crafty.c("Building", {
         _colonists: 1,
-        resourceDeltas: {},
+        resourceDeltas: [],
         
         init: function() {
-            this.resourceDeltas = {};
+            this.resourceDeltas = [];
             this.requires("WorldEntity");
             this.bind("Click", function() {
                 if (hud_state.mode === hudModes.destroy) {
@@ -18,7 +18,7 @@ function buildings_setup() {
         },
 
         resourceDelta: function(resource, delta) {
-            this.resourceDeltas[resource.name] = delta;
+            this.resourceDeltas.push(newResourceDelta(resource, delta));
             return this;
         },
         isActive: function() {
@@ -29,36 +29,79 @@ function buildings_setup() {
         },
     });
 
-    var newCtorCost = function(resource, cost) {
-        return { r: resource.name, cost: cost };
+    var newResourceDelta = function(resource, cost) {
+        return { r: resource.name, delta: cost };
     }
 
     buildingBlueprints = {
         "Mine": {
             constructionCost: [ 
-                newCtorCost(resourcetypes.steel, 3),
-                newCtorCost(resourcetypes.plastic, 1),
+                newResourceDelta(resourcetypes.steel, -3),
+                newResourceDelta(resourcetypes.plastic, -1),
             ],
             factory: function() { return createMine(-1, 1); }
         },
         "Super Mine": { 
             constructionCost: [
-                newCtorCost(resourcetypes.steel, 7),
-                newCtorCost(resourcetypes.plastic, 2),
+                newResourceDelta(resourcetypes.steel, -7),
+                newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() { return createMine(-2, 2); }
         },
         "Solar Panel": {
             constructionCost: [
-                newCtorCost(resourcetypes.plastic, 2),
+                newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
                 return Crafty.e("Building, grass")
                     .resourceDelta(resourcetypes.energy, 3);
             },
+       },
+         "Hydroponics": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.plastic, -2),
+            ],
+            factory: function() {
+                return Crafty.e("Building, grass")
+                    .resourceDelta(resourcetypes.energy, -1)
+                    .resourceDelta(resourcetypes.water, -1)
+                    .resourceDelta(resourcetypes.food, 1);
+            },
+        },
+         "Ice melter": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.plastic, -2),
+            ],
+            factory: function() {
+                return Crafty.e("Building, grass")
+                    .resourceDelta(resourcetypes.energy, -1)
+                    .resourceDelta(resourcetypes.ice, 1)
+                    .resourceDelta(resourcetypes.water, -1);
+            },
+        },
+         "Blast furnace": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.plastic, -2),
+            ],
+            factory: function() {
+                return Crafty.e("Building, grass")
+                    .resourceDelta(resourcetypes.energy, -3)
+                    .resourceDelta(resourcetypes.steelore, -2)
+                    .resourceDelta(resourcetypes.steel, 2);
+            },
+        },
+         "RegoPlasticiser": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.plastic, -2),
+            ],
+            factory: function() {
+                return Crafty.e("Building, grass")
+                    .resourceDelta(resourcetypes.energy, -2)
+                    .resourceDelta(resourcetypes.regolith, -1)
+                    .resourceDelta(resourcetypes.plastic, 1);
+            },
         },
     }
-
 }
 
 function createMine(powerDrain, resourceProduction) {

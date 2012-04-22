@@ -4,6 +4,7 @@ var resourcetypes = Object.freeze({
     colonists: { name: "Colonists", initialValue: 5 },
     food: { name: "Food", initialValue: 5 },
     ice: { name: "Ice", initialValue: 0 },
+    water: { name: "Water", initialValue: 5 },
     regolith: { name: "Regolith", initialValue: 0 },
     steelore: { name: "Steel ore", initialValue: 0 },
     plastic: { name: "Plastic", initialValue: 20 },

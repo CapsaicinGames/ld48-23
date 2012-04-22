@@ -67,7 +67,7 @@ window.onload = function() {
         _tileSize: 32,
         _canBuild: true,
         init : function() {
-            this.requires("2D, DOM, Mouse");
+            this.requires("2D, Canvas, Mouse");
             this.bind("MouseOver", function() {
                 switchSprite(this, terrainTypes, 1);
                 switchSprite(this, buildingTypes, 1);
