@@ -54,6 +54,22 @@ var economy_setup = function() {
             for (var i = 0; i < bldgList.length; ++i) {
                 this.debit(bldgList[i]);
             }
+            var newStorage = {};
+            Crafty("Storage").each(function() {
+                for (var i = 0; i < this.storageDeltas.length; ++i) {
+                    var res = this.storageDeltas[i];
+                    if (newStorage[res.r] == undefined) {
+                        newStorage[res.r] = res.delta;
+                    } else {
+                        newStorage[res.r] += res.delta;
+                    }
+                }
+            });
+            for (var type in this._resources) {
+                if (this._resources[type] > newStorage[type]) {
+                    this._resources[type] = newStorage[type];
+                }
+            }
         }
     });
 
