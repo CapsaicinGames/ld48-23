@@ -151,7 +151,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, placeholderSprite")
+                return Crafty.e("Building, icemeltersprite")
                     .attr({name: "Ice melter"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .resourceDelta(resourcetypes.ice, -1)
@@ -190,7 +190,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, placeholderSprite")
+                return Crafty.e("Building, blastfurnacesprite")
                     .attr({name: "Blast furnace"})
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steelore, -2)
@@ -202,7 +202,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, placeholderSprite")
+                return Crafty.e("Building, plasticisersprite")
                     .attr({name: "RegoPlasticiser"})
                     .resourceDelta(resourcetypes.energy, -2)
                     .resourceDelta(resourcetypes.regolith, -1)
