@@ -138,7 +138,10 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Storage, habitatsprite")
-                    .attr({name: "Habitat"})
+                    .attr({
+                        name: "Habitat",
+                        minActive: 0,
+                    })
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.colonists, 25);
             },
