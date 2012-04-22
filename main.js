@@ -30,8 +30,11 @@ function mapToIsometricTile(x, y, mapWidth, mapHeight) {
     
     var isometricRow = mapHeight - y + x;
     var isometricCol = Math.floor((x+y) / 2);
-    
-    return [isometricCol,isometricRow];
+    var offset = 0;
+    if (asteroid.width + asteroid.height <= 30) {
+        offset = 3;
+    }
+    return [isometricCol+offset,isometricRow];
 }
 
 
@@ -47,8 +50,9 @@ window.onload = function() {
         Crafty.stop();
     });
     Math.seedrandom();//"seed");
-    asteroid.init(Crafty.math.randomInt(12, 20),
-                Crafty.math.randomInt(12, 20));
+    asteroid.init(Crafty.math.randomInt(12, 19) & ~(1),
+                  Crafty.math.randomInt(12, 19) & ~(1));
+    console.log(asteroid.width + " " + asteroid.height);
 
     Crafty.init();
     buildings_setup();
@@ -221,7 +225,7 @@ window.onload = function() {
                 : null;
                 resourceOverlays[x][y] = overlay;
                 
-                var isometricTileCoord = mapToIsometricTile(x, y, 20, 20);
+                var isometricTileCoord = mapToIsometricTile(x, y, asteroid.width, asteroid.height);
                 newIsometricTiles.push({ coord: isometricTileCoord, e: tile, o: overlay});
             }
         }

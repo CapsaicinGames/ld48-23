@@ -115,14 +115,9 @@ function buildings_setup() {
                     .storageDelta(resourcetypes.colonists, 10)
                     .storageDelta(resourcetypes.food, 100)
                     .storageDelta(resourcetypes.ice, 40)
-                    //.storageDelta(resourcetypes.energy, 50)
                     .storageDelta(resourcetypes.water, 50)
-                    //.storageDelta(resourcetypes.regolith, 50)
-                    //.storageDelta(resourcetypes.steelore, 50)
                     .storageDelta(resourcetypes.plastic, 40)
                     .storageDelta(resourcetypes.steel, 40)
-                    //.storageDelta(resourcetypes.preciousore, 10)
-                    //.storageDelta(resourcetypes.preciousmetal, 10)
                     .resourceDelta(resourcetypes.food, 0.5)
                     .resourceDelta(resourcetypes.water, 0.5)
                     ;
@@ -140,6 +135,7 @@ function buildings_setup() {
             constructionCost: [
                 newResourceDelta(resourcetypes.steel, -7),
                 newResourceDelta(resourcetypes.plastic, -2),
+                newResourceDelta(resourcetypes.widgets, -2),
             ],
             factory: function() { return createMine(-2, 2, 6, "Super Mine"); }
         },
@@ -160,6 +156,7 @@ function buildings_setup() {
         "Capacitor Bank": {
             constructionCost: [
                 newResourceDelta(resourcetypes.steel, -2),
+                newResourceDelta(resourcetypes.widgets, -2),
             ],
             factory: function() {
                 return Crafty.e("Storage, capacitorbanksprite")
@@ -235,6 +232,7 @@ function buildings_setup() {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
                 newResourceDelta(resourcetypes.steel, -3),
+                newResourceDelta(resourcetypes.widgets, -2),
             ],
             factory: function() {
                 return Crafty.e("Storage, precioussmeltersprite")
