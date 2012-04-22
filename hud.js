@@ -32,15 +32,9 @@ var hudModes = Object.freeze({
     manage: {}
 });
 
-var overlayModes = Object.freeze({
-    nothing: {},
-    resources: {},
-});
-
 var hud_state = {
     mode: hudModes.nothing,
     modeArg: "",
-    overlayMode: overlayModes.nothing,
 };
 
 var hud_setup = function() {
@@ -147,6 +141,17 @@ var hud_setup = function() {
         .bind("Click", function() {
             hud_state.mode = hudModes.destroy;
             hud_state.modeArg = "";
+        });
+    Crafty.e("MenuTopLevel")
+        .attr({ y: Crafty.viewport.height - 60, h:15, isOverlayEnabled: false})
+        .text("Resources")
+        .bind("Click", function() {
+            var isOverlayEnabledNow = !this.isOverlayEnabled;
+            console.log("setting visibility " + isOverlayEnabledNow);
+            Crafty("ResourceOverlay").each(function() {
+                this.setVisibility(isOverlayEnabledNow);
+            });
+            this.isOverlayEnabled = isOverlayEnabledNow;
         });
 
 };
