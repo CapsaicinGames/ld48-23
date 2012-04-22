@@ -2,7 +2,7 @@
 convertTileType = function(type) {
     switch (type) {
         case tiletype.flatground:
-            return "grass"
+            return "flatground"
         default:
             return null;
     }
@@ -49,8 +49,16 @@ window.onload = function() {
         solarpanelsprite: [1,0],
     };
 
+    var resourceOverlaySprites = {
+        iceOverlay: [0,0],
+        regolithOverlay: [1,0],
+        steelOverlay: [2,0],
+        preciousOverlay: [3,0],
+    };
+
     Crafty.sprite(tilesize, "image/ground3.png", terrainTypes);
     Crafty.sprite(tilesize, "image/buildings.png", buildingTypes);
+    Crafty.sprite(tilesize, "image/resourceicons.png", resourceOverlaySprites);
 
     // returns success
     var switchSprite = function(entity, sprites, option) {
@@ -100,7 +108,7 @@ window.onload = function() {
                 if (this._canBuild === true) {
                     if (hud_state.mode === hudModes.build) {
                         bldg = buildingBlueprints[hud_state.modeArg].factory()
-                        .attr({x: this.x,y: this.y - 16,z: this.z+1});
+                            .attr({x: this.x,y: this.y - 16,z: this.z+1});
                         bldg.onBuild(asteroid.getResource(this.map_x, this.map_y));
                         this._canBuild = false;
                     }
@@ -116,8 +124,8 @@ window.onload = function() {
     var z = 0;
     for(var x = asteroid.width-1; x >= 0; x--) {
         for(var y = 0; y < asteroid.height; y++) {
-            //var which = convertTileType(asteroid.getTileType(x, y));
-            var which = convertResourceToTileType(asteroid.getResource(x, y));
+            var which = convertTileType(asteroid.getTileType(x, y));
+            //var which = convertResourceToTileType(asteroid.getResource(x, y));
             if (which === null)
                 continue; // don't draw tiles where there should be space
             var tile = Crafty.e("Terrain, " + which)
