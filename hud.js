@@ -32,6 +32,7 @@ var createBuildMenu = function() {
 
 var hudModes = Object.freeze({
     nothing: {},
+    select: {},
     build: {},
     destroy: {},
     placeShip: {},
@@ -51,6 +52,8 @@ var hud_setup = function() {
             this.textFont({size:"10px", family:"sans"});
             this.css({
                 "background-color":"white",
+                "border-radius":"3px",
+                "padding":"1px",
                 });
             this.attr({z: 1000, alpha: 0.8});
             }
@@ -119,7 +122,7 @@ var hud_setup = function() {
                         }
                     });
                 // Clear current hud mode
-                hud_state.mode = hudModes.nothing;
+                hud_state.mode = hudModes.select;
                 if (this.submenu != null)
                 {
                     this.menuCtor();
@@ -137,6 +140,10 @@ var hud_setup = function() {
                 this.requires("HUD, Mouse");
                 }
             });
+    Crafty.e("Selected, HUD")
+        .attr({ y: menu_margin+40, h: 220, w: 100, x: Crafty.viewport.width - (menu_margin + 100)})
+        .text("Nothing selected");
+
 };
 
 var hud_show = function() {
