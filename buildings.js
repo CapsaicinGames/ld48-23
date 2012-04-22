@@ -93,7 +93,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2000000),
             ],
             factory: function() {
-                return Crafty.e("Storage, placeholderSprite")
+                return Crafty.e("Storage, landersprite")
                     .attr({destroyable: false, name: "Colony Ship"})
                     .storageDelta(resourcetypes.colonists, 10)
                     .storageDelta(resourcetypes.food, 100)
