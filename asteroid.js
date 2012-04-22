@@ -86,13 +86,13 @@ var asteroid = {
                 var scalingFactor = 10.0;
                 var noise = PerlinNoise.noise(scalingFactor * columnIndex/this.width, 
                                               scalingFactor * rowIndex/this.height, 
-                                              0.0);
+                                              Crafty.math.randomNumber(0, 1000));
 
                 var resource
-                    = noise > 0.65 ? resourcetypes.steelore
-                    : noise > 0.55 ? resourcetypes.preciousore
-                    : noise > 0.45 ? resourcetypes.ice
-                    : resourcetypes.regolith;
+                    = noise > 0.45 ? resourcetypes.regolith
+                    : noise > 0.35 ? resourcetypes.steelore
+                    : noise > 0.30 ? resourcetypes.ice
+                    : resourcetypes.preciousore;
                 //console.log("tile (" + columnIndex + "," + rowIndex + "): " + resource.name + " with noise " + noise);
                 this._tiles[columnIndex][rowIndex].resource = resource;
             }
@@ -100,7 +100,5 @@ var asteroid = {
 
     }
 };
-
-asteroid.init(20, 20);
 
 
