@@ -1,10 +1,17 @@
 
-convertTileType = function(type) {
+convertTileType = function(type, x, y, resource) {
     switch (type) {
-        case tiletype.flatground:
-            return "flatground"
-        default:
-            return null;
+    case tiletype.flatground:
+        if (resource == resourcetypes.ice) {
+            return "groundIce";
+        }
+        else {
+            var varientIndex = Crafty.math.randomInt(0, 2);
+            console.log("p " + x + "," + y + ": " + varientIndex);
+            return "groundVarient" + (varientIndex + 1);
+        }
+    default:
+        return null;
     }
 }
 
@@ -31,6 +38,7 @@ function mapToIsometricTile(x, y, mapWidth, mapHeight) {
 
 
 window.onload = function() {
+    Math.seedrandom("seed");
     Crafty.init();
     hud_setup();
     buildings_setup();
@@ -38,10 +46,10 @@ window.onload = function() {
     //economy.newStep();
     var tilesize = 32;
     var terrainTypes = {
-        grass: [0,0],
-        iceground: [1,0],
-        preciousground: [2,0],
-        flatground: [3,0],
+        groundVarient1: [0,0],
+        groundIce: [1,0],
+        groundVarient2: [2,0],
+        groundVarient3: [3,0],
     };
 
     var buildingTypes = {
@@ -160,10 +168,11 @@ window.onload = function() {
     var z = 0;
     for(var x = asteroid.width-1; x >= 0; x--) {
         for(var y = 0; y < asteroid.height; y++) {
-            var which = convertTileType(asteroid.getTileType(x, y));
+            var which = convertTileType(asteroid.getTileType(x, y), x, y, asteroid.getResource(x, y));
             if (which === null)
                 continue; // don't draw tiles where there should be space
-
+            console.log("w: " + which);
+            
             var tile = Crafty.e("Terrain, " + which)
                 .attr({z:(x+1) * (y+1), map_x: x, map_y: y})
                 .tileSize(tilesize)
