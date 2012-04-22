@@ -47,6 +47,8 @@ var economy_setup = function() {
 
         updateProduction: function() {
             var bldgList = [];
+            // Find out what building is making what.  If it's
+            // not not being operated, mark it as such
             Crafty("Building").each(function() {
                 if (this.isActive() === true)
                     bldgList.push({ent: this[0], delta: this.resourceDeltas});
@@ -54,6 +56,10 @@ var economy_setup = function() {
                     this.showOverlay("inactive");
                     
             });
+            // Try to perform each building's transaction.
+            // If it fails, record some text saying why for
+            // the building and enable the overlay saying it failed.
+            // Otherwise clear the overlay
             for (var i = 0; i < bldgList.length; ++i) {
                 var missing = this.debit(bldgList[i].delta);
                 if (missing.length == 0) {
@@ -68,14 +74,21 @@ var economy_setup = function() {
                     Crafty(bldgList[i].ent).missing = tmp;
                 }
             }
+
+            // Recalculate the number of colonists
             var totalcol = 0;
             Crafty("Building").each(function() {
                 totalcol += this._colonists;
             });
             this._totalColonists = totalcol + this._resources["Colonists"];
         },
+        /** Ensure that resources are only stockpiled
+         *  if there is room for them.  The current storage
+         *  is updated.
+         */
         constrainResources: function() {
             var newStorage = {};
+            // Find out how much we can store
             Crafty("Storage").each(function() {
                 for (var i = 0; i < this.storageDeltas.length; ++i) {
                     var res = this.storageDeltas[i];
@@ -88,20 +101,38 @@ var economy_setup = function() {
             });
             this._storage = newStorage;
 
+            // Now if we have more resources than the maximum storage
+            // for that type, remove them
             for (var type in this._resources) {
                 if (type === "Colonists") {
+                    // Colonists are a special case as the total
+                    // is used and not the spare resource
                     if (this._totalColonists > newStorage[type]) {
                         var diff = this._totalColonists - newStorage[type];
                         console.log("Removing " + diff + " colonists due to lack of capacity");
                         this.grimReaperStalksTheColony(diff);
                     }                
                 } else {
-                    if (this._resources[type] > newStorage[type]) {
-                        this._resources[type] = newStorage[type];
+                    var max = newStorage[type];
+                    if (max == undefined) {
+                        // It's undefined if there's no storage for
+                        // this type at all yet
+                        max = 0;
+                    }
+                    if (this._resources[type] > max) {
+                        this._resources[type] = max;
                     }
                 }
             }
         },
+        /** THIS FUNCTION KILLS COLONISTS
+         *
+         *  First it kills idle colonists, then it
+         *  picks a building at random and depopulates it.
+         *  @param kill The number to kill
+         *  @returns The number killed.  If these don't match
+         *  then we're out of people
+         */
         grimReaperStalksTheColony: function(kill) {
             var topkill = 0;
             // Kill spare colonists first
@@ -123,6 +154,9 @@ var economy_setup = function() {
             return topkill;
 
         },
+        /** Make people eat and drink, and kill 'em if there's
+         *  not enough.
+         */
         consumeResources: function() {
             var rescount = Math.ceil(this._totalColonists / colonistNeeds.per);
             var kill = 0;
@@ -141,6 +175,7 @@ var economy_setup = function() {
         },
     });
 
+    // Actually create the economy object
     return Crafty.e("Economy")
             .attr({
             days: 0,
