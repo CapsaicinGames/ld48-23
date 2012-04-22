@@ -135,7 +135,9 @@ var hud_setup = function() {
                 this.requires("HUD, Mouse");
                 }
             });
+};
 
+var hud_show = function() {
     Crafty.e("MenuTopLevel")
         .attr({y: Crafty.viewport.height - 30, h:15, menuCtor: createBuildMenu, submenu: "BuildMenu"})
         .text("Build");
@@ -145,6 +147,17 @@ var hud_setup = function() {
         .bind("Click", function() {
             hud_state.mode = hudModes.destroy;
             hud_state.modeArg = "";
+        });
+    Crafty.e("MenuTopLevel")
+        .attr({ y: Crafty.viewport.height - 60, h:15, isOverlayEnabled: false})
+        .text("Resources")
+        .bind("Click", function() {
+            var isOverlayEnabledNow = !this.isOverlayEnabled;
+            console.log("setting visibility " + isOverlayEnabledNow);
+            Crafty("ResourceOverlay").each(function() {
+                this.setVisibility(isOverlayEnabledNow);
+            });
+            this.isOverlayEnabled = isOverlayEnabledNow;
         });
 
 };
