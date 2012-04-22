@@ -48,22 +48,26 @@ function buildings_setup() {
         onTick: function() {
             // intentionally blank
         },
-        showOverlay: function(overType) {
+        showOverlay: function(overType, param) {
             if (overType !== this.overlayType) {
                 switch (overType) {
-                    case "no":
-                        this.overlay.visible = false;
-                        break;
-
-                    case "res":
-                        this.overlay.visible = true;
+                case "no":
+                    this.overlay.visible = false;
+                    break;
+                    
+                case "res":
+                    this.overlay.visible = true;
+                    if (param.indexOf(resourcetypes.energy.name) >= 0) {
+                        this.overlay.sprite(0,1);
+                    } else {
                         this.overlay.sprite(1,0);
-                        break;
-
-                    case "inactive":
-                        this.overlay.visible = true;
-                        this.overlay.sprite(0,0);
-                        break;
+                    }
+                    break;
+                    
+                case "inactive":
+                    this.overlay.visible = true;
+                    this.overlay.sprite(0,0);
+                    break;
                 }
                 this.overlayType = overType;
             }
@@ -134,7 +138,10 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Storage, habitatsprite")
-                    .attr({name: "Habitat"})
+                    .attr({
+                        name: "Habitat",
+                        minActive: 0,
+                    })
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.colonists, 25);
             },
@@ -266,7 +273,7 @@ function buildings_setup() {
 }
 
 function build(blueprint, tileToBuildOn) {
-    var over = Crafty.e("BuildingInfoOverlay, regolithOverlay")
+    var over = Crafty.e("BuildingInfoOverlay, outOfPowerOverlay")
         .attr({x: tileToBuildOn.x,
                y: tileToBuildOn.y - tilesize/4,
                z: tileToBuildOn.z+2});

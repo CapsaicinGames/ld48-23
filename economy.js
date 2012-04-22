@@ -94,7 +94,7 @@ var economy_setup = function() {
                     Crafty(bldgList[i].ent).showOverlay("no");
                     Crafty(bldgList[i].ent).missing = "";
                 } else {
-                    Crafty(bldgList[i].ent).showOverlay("res");
+                    Crafty(bldgList[i].ent).showOverlay("res", missing);
                     var tmp = "Missing ";
                     for (var j = 0; j < missing.length; ++j) {
                         tmp += missing[j] + " ";
@@ -219,13 +219,13 @@ var economy_setup = function() {
                     breed = false;
 
                     var resourceMsg 
-                        = diff < 0.0 ? "Losing " + diff.toFixed(1) + " " + res.r + " per day. "
+                        = diff < -0.001 ? "Losing " + diff.toFixed(2) + " " + res.r + " per day. "
                         : this._resources[res.r] < 0.001 ? "Out of " + res.r + "!"
 //                        : isEveryoneAlive ? "Need more " + res.r + "!"
-                        : "Gaining " + diff.toFixed(1) + " " + res.r + " per day, need " 
+                        : "Gaining " + Math.abs(diff.toFixed(1)) + " " + res.r + " per day, need " 
                             + res.delta + " for more colonists. ";
                     
-                    var isResourceLow = this._resources[res.r] < 10;
+                    var isResourceLow = this._resources[res.r] <= 9.5;
 
                     resourceMsg = (isResourceLow ? res.r + " is very low! " : "") 
                         + resourceMsg;
@@ -300,6 +300,11 @@ var economy_setup = function() {
                 this.timeout(function() {this.newStep();}, this.timePerStep);
             },
             populate: function(building, delta) {
+                if (building.minActive == 0) { 
+                    // doesn't need any colonists
+                    return;
+                }
+
                 var okay = false;
                 var newbldgtotal = building._colonists + delta;
                 if (delta > 0 && 
