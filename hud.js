@@ -232,7 +232,9 @@ var hud_show = function() {
             hud_state.modeArg = "";
         });
     cur_y -= menu_height;
-    Crafty.e("MenuTopLevel")
+
+    resourceOverlayView = null; // intentionally global
+    resourceOverlayView = Crafty.e("MenuTopLevel")
         .attr({ y: cur_y, h: menu_height -2, isOverlayEnabled: false})
         .text("Resources")
         .bind("Click", function() {
@@ -241,6 +243,10 @@ var hud_show = function() {
         });
 
 };
+
+var refreshResources = function() {
+    showResources(resourceOverlayView.isOverlayEnabled);
+}
 
 var showResources = function(isShown) {
     Crafty("ResourceOverlay").each(function() {
