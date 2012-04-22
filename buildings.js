@@ -256,7 +256,12 @@ function createMine(powerDrain, resourceProduction, mineName) {
 }
 
 function analyseAsteroid() {
-    
+    var unanalysedTiles = Crafty("UnanalysedResource");
+    var tileIndexToAnalyse = Crafty.math.randomInt(0, unanalysedTiles.length-1);
+    var overlayToAnalyseID = unanalysedTiles[tileIndexToAnalyse];
+    var overlayEntityToAnalyse = Crafty(overlayToAnalyseID);
+    overlayEntityToAnalyse.removeComponent("UnanalysedResource");
+    refreshResources();
 }
 
 function onLanderBuild(tileResource, mapX, mapY) {
