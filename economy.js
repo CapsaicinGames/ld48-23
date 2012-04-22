@@ -193,7 +193,7 @@ var economy_setup = function() {
                     var resourceMsg 
                         = diff < 0.0 ? "Losing " + diff.toFixed(1) + " " + res.r + " per day. "
                         : this._resources[res.r] < 0.001 ? "Out of " + res.r + "!"
-                        : isEveryoneAlive ? "Need more " + res.r + "!"
+//                        : isEveryoneAlive ? "Need more " + res.r + "!"
                         : "Gaining " + diff.toFixed(1) + " " + res.r + " per day, need " 
                             + res.delta + " for more colonists. ";
                     
