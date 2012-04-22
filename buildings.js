@@ -56,7 +56,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2000000),
             ],
             factory: function() {
-                return Crafty.e("Storage, placeholderSprite")
+                return Crafty.e("Storage, landersprite")
                     .attr({destroyable: false, name: "Colony Ship"})
                     .storageDelta(resourcetypes.colonists, 10)
                     .storageDelta(resourcetypes.food, 100)
@@ -148,7 +148,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, placeholderSprite")
+                return Crafty.e("Building, icemeltersprite")
                     .attr({name: "Ice melter"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .resourceDelta(resourcetypes.ice, -1)
@@ -166,7 +166,7 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steel, -1)
                     .resourceDelta(resourcetypes.plastic, -2)
-                    .resourceDelta(resourcetypes.widget, 2);
+                    .resourceDelta(resourcetypes.widgets, 2);
             },
         },
          "Smelter": {
@@ -176,6 +176,7 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Building, placeholderSprite")
+                    .attr({name: "Smelter"})
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.preciousore, -1)
                     .resourceDelta(resourcetypes.preciousmetal, 1);
@@ -186,7 +187,8 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, placeholderSprite")
+                return Crafty.e("Building, blastfurnacesprite")
+                    .attr({name: "Blast furnace"})
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steelore, -2)
                     .resourceDelta(resourcetypes.steel, 2);
@@ -197,7 +199,8 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, placeholderSprite")
+                return Crafty.e("Building, plasticisersprite")
+                    .attr({name: "RegoPlasticiser"})
                     .resourceDelta(resourcetypes.energy, -2)
                     .resourceDelta(resourcetypes.regolith, -1)
                     .resourceDelta(resourcetypes.plastic, 1);
