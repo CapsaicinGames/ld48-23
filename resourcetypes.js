@@ -15,7 +15,10 @@ var resourcetypes = Object.freeze({
 
 });
 var newResourceDelta = function(resource, cost) {
-    return { r: resource.name, delta: cost };
+    return { 
+        r: typeof resource === "string" ? resource : resource.name, 
+        delta: cost 
+    };
 }
 
 var colonistNeeds = Object.freeze({
