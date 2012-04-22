@@ -110,7 +110,12 @@ var economy_setup = function() {
                 Crafty.scene("GameOver");
             }*/
             return topkill;
-        }
+        },
+        tickBuildings: function() {
+            Crafty("Building").each(function() {
+                this.onTick(); 
+            });
+        },
     });
 
     return Crafty.e("Economy")
@@ -124,9 +129,10 @@ var economy_setup = function() {
                 var oldres = Crafty.clone(this._resources);
                 var killed = 0;
                 this.updateProduction();
+                this.tickBuildings();
                 if (!(this.days % colonistNeeds.every)) {
                     killed += this.consumeResources();
-                    console.log(killed + " died, now " + this._totalColonists);
+                    //console.log(killed + " died, now " + this._totalColonists);
                 }
                 if (killed == 0) {
                     // no deaths, there were enough resources
@@ -144,7 +150,7 @@ var economy_setup = function() {
                     if (breed) {
                         this._resources["Spare Colonists"]++;
                         this._totalColonists++;
-                        console.log("Bred to " + this._totalColonists);
+                        //console.log("Bred to " + this._totalColonists);
                     }
                 }
                 this.constrainResources();

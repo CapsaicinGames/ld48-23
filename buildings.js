@@ -34,6 +34,9 @@ function buildings_setup() {
         onBuild: function(tileResource) {
             // intentionally blank
         },
+        onTick: function() {
+            // intentionally blank
+        },
     });
 
     Crafty.c("PowerGenerator", { init : function() { this.requires("Building"); } });
@@ -102,7 +105,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2),
             ],
             factory: function() {
-                return Crafty.e("Storage, placeholderSprite")
+                return Crafty.e("Storage, capacitorbanksprite")
                     .attr({name: "Capacitor Bank"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.energy, 100);
@@ -113,7 +116,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -2),
             ],
             factory: function() {
-                return Crafty.e("Storage, placeholderSprite")
+                return Crafty.e("Storage, orelockersprite")
                     .attr({name: "Ore locker"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.steelore, 100)
@@ -131,7 +134,7 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.energy, 3);
             },
        },
-         "Hydroponics": {
+        "Hydroponics": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
@@ -143,7 +146,7 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.food, 1);
             },
         },
-         "Ice melter": {
+        "Ice melter": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
@@ -155,13 +158,13 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.water, 1);
             },
         },
-         "Widget factory": {
+        "Widget factory": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
                 newResourceDelta(resourcetypes.steel, -2),
             ],
             factory: function() {
-                return Crafty.e("Building, placeholderSprite")
+                return Crafty.e("Building, widgetfactorysprite")
                     .attr({name: "Widget factory"})
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steel, -1)
@@ -169,20 +172,20 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.widgets, 2);
             },
         },
-         "Smelter": {
+        "Smelter": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
                 newResourceDelta(resourcetypes.steel, -3),
             ],
             factory: function() {
-                return Crafty.e("Building, placeholderSprite")
+                return Crafty.e("Building, precioussmeltersprite")
                     .attr({name: "Smelter"})
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.preciousore, -1)
                     .resourceDelta(resourcetypes.preciousmetal, 1);
             },
         },
-         "Blast furnace": {
+        "Blast furnace": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
@@ -194,7 +197,7 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.steel, 2);
             },
         },
-         "RegoPlasticiser": {
+        "RegoPlasticiser": {
             constructionCost: [
                 newResourceDelta(resourcetypes.plastic, -2),
             ],
@@ -206,6 +209,20 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.plastic, 1);
             },
         },
+        "Astro Analyser": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.plastic, -1),
+            ],
+            factory: function() {
+                return Crafty.e("Building, placeholderSprite")
+                    .attr({
+                        name: "Astro Analyser", 
+                        maxColonists: 9999,
+                        onTick: analyseAsteroid,
+                    })
+                    .resourceDelta(resourcetypes.energy, -1);
+            },
+        },          
     }
 }
 
@@ -216,5 +233,9 @@ function createMine(powerDrain, resourceProduction, mineName) {
             onBuild: function(tileResource) {
             this.resourceDelta(tileResource, resourceProduction);
         }});
+}
+
+function analyseAsteroid() {
+    console.log("tick analyser!");
 }
 
