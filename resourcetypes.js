@@ -9,13 +9,17 @@ var resourcetypes = Object.freeze({
     steelore: { name: "Steel ore", initialValue: 0 },
     plastic: { name: "Plastic", initialValue: 20 },
     steel: { name: "Steel", initialValue: 20 },
+    widgets: { name: "Widgets", initialValue: 0 },
     preciousore: { name: "Rare earth ore", initialValue: 0 },
     preciousmetal: { name: "Rare earth", initialValue: 0 },
-    widgets: { name: "Widgets", initialValue: 0 },
+    points: { name: "Points", initialValue: 0 },
 
 });
 var newResourceDelta = function(resource, cost) {
-    return { r: resource.name, delta: cost };
+    return { 
+        r: typeof resource === "string" ? resource : resource.name, 
+        delta: cost 
+    };
 }
 
 var colonistNeeds = Object.freeze({

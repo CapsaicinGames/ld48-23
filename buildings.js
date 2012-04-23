@@ -27,6 +27,19 @@ function buildings_setup() {
                     hud_select_building();
                 } else if (hud_state.mode === hudModes.destroy 
                            && this.destroyable === true) {
+                    
+                    var refundRatio = 0.5;
+                    var ctorCosts = buildingBlueprints[this.name].constructionCost;
+                    var refund = [];
+                    for(var costIndex = 0; costIndex < ctorCosts.length; ++costIndex) {
+                        refund.push(newResourceDelta(
+                            ctorCosts[costIndex].r,
+                            ctorCosts[costIndex].delta * -1.0 * refundRatio
+                        ));
+                    }
+
+                    economy.debit(refund);
+
                     this.tileEntity._canBuild = true;
                     this.destroy();
                     economy.populate(this, -this._colonists);
@@ -91,7 +104,7 @@ function buildings_setup() {
 
 
     buildingBlueprints = {
-        "LandedShip": {
+        "Colony Ship": {
             constructionCost: [
                 newResourceDelta(resourcetypes.steel, -2000000),
             ],
@@ -273,13 +286,13 @@ function buildings_setup() {
                     .storageDelta(resourcetypes.widgets, 100);
             },
         },
-        "Precious Store": {
+        "Rare earth store": {
             constructionCost: [
                 newResourceDelta(resourcetypes.steel, -5),
             ],
             factory: function() {
                 return Crafty.e("Storage, orelockersprite")
-                    .attr({name: "Rare earth strore"})
+                    .attr({name: "Rare earth store"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.preciousmetal, 100);
             },
@@ -298,6 +311,24 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.energy, -1);
             },
         },          
+        "Freight Depot": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.widgets, -1),
+                newResourceDelta(resourcetypes.steel, -2),
+                newResourceDelta(resourcetypes.plastic, -2),
+            ],
+            factory: function() {
+                return Crafty.e("Building, placeholderSprite")
+                    .attr({
+                        name: "Freight Depot",
+                        minActive: 1,
+                    })
+                    .resourceDelta(resourcetypes.energy, -4)
+                    .resourceDelta(resourcetypes.preciousmetal, -3)
+                    .resourceDelta(resourcetypes.points, 25)
+                ;
+            },
+        },
     }
 }
 
