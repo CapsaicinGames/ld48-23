@@ -104,7 +104,8 @@ var economy_setup = function() {
                             break;
                         }
                     }
-                    this.energyDelta += cur_energy;                    
+                    this.energyDelta += cur_energy;
+                    var bldg = Crafty(bldgList[i].ent);
                     bldg.showOverlay("no");
                     bldg.missing = "";
                 } else {

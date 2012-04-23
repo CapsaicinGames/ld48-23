@@ -49,6 +49,10 @@ function buildings_setup() {
             });
         },
 
+        numWorkers: function(min, max) {
+            return this.attr({minActive: min, maxColonists: max});
+        },
+
         resourceDelta: function(resource, delta) {
             this.resourceDeltas.push(newResourceDelta(resource, delta));
             return this;
@@ -109,11 +113,11 @@ function buildings_setup() {
             factory: function() {
                 return Crafty.e("Storage, landersprite")
                     .attr({
-                        minActive: 0,
                         destroyable: false, 
                         name: "Colony Ship",
                         onBuild: onLanderBuild,
                     })
+                    .numWorkers(0,0)
                     .storageDelta(resourcetypes.colonists, 10)
                     .storageDelta(resourcetypes.food, 100)
                     .storageDelta(resourcetypes.ice, 40)
@@ -149,8 +153,8 @@ function buildings_setup() {
                 return Crafty.e("Storage, habitatsprite")
                     .attr({
                         name: "Habitat",
-                        minActive: 0,
                     })
+                    .numWorkers(0,0)
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.colonists, 25);
             },
@@ -222,6 +226,7 @@ function buildings_setup() {
             factory: function() {
                 return Crafty.e("Storage, widgetfactorysprite")
                     .attr({name: "Widget factory"})
+                    .numWorkers(3,3)
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steel, -0.2)
                     .resourceDelta(resourcetypes.plastic, -0.2)
@@ -239,6 +244,7 @@ function buildings_setup() {
             factory: function() {
                 return Crafty.e("Storage, precioussmeltersprite")
                     .attr({name: "Smelter"})
+                    .numWorkers(3,3)
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.preciousore, -0.1)
                     .resourceDelta(resourcetypes.preciousmetal, 0.1)
@@ -253,6 +259,7 @@ function buildings_setup() {
             factory: function() {
                 return Crafty.e("Building, blastfurnacesprite")
                     .attr({name: "Steel Refinery"})
+                    .numWorkers(2,2)
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steelore, -0.2)
                     .resourceDelta(resourcetypes.steel, 0.2);
@@ -300,9 +307,9 @@ function buildings_setup() {
                 return Crafty.e("Building, placeholderSprite")
                     .attr({
                         name: "Astro Analyser", 
-                        maxColonists: 9999,
                         onTick: function() { analyseAsteroid(this._colonists); },
                     })
+                    .numWorkers(1,20)
                     .resourceDelta(resourcetypes.energy, -1);
             },
         },          
