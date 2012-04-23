@@ -78,6 +78,7 @@ function buildings_setup() {
                 this.overlay.visible = true;
                 if (param.indexOf(resourcetypes.energy.name) >= 0) {
                     this.overlay.sprite(0,1);
+                    
                 } else {
                     this.overlay.sprite(1,1);
                 }
@@ -340,7 +341,7 @@ function buildings_setup() {
                         onTick: function() {
                             // Increase ever more slowly to 3 blocks per turn
                             var amt = Math.pow(this._colonists, 0.5);
-                            }
+                            
                             this.canScanBlocks += amt;
                             var willScan = Math.floor(this.canScanBlocks);
 
