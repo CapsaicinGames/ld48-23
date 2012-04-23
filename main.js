@@ -179,6 +179,7 @@ window.onload = function() {
                             Crafty.audio.play("build");
                             var bldg = build(buildingBlueprints["Colony Ship"], this);
                             hud_state.mode = hudModes.select;
+                            tutorial.onEvent("onLanderPlaced");
                             economy.newStep();
                             hud_show();
                         } else {
@@ -244,6 +245,8 @@ window.onload = function() {
         }
 
         iso.place(newIsometricTiles[0].coord[0], newIsometricTiles[0].coord[1], 0, cursor);
+
+        tutorial.init();
 
     });
 

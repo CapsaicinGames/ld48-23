@@ -149,6 +149,7 @@ function buildings_setup() {
             factory: function() { return createMine(-2, 3, 8, "Super Mine"); }
         },
         "Habitat": {
+            desc: "Provides space for more colonists to live and sleep",
             constructionCost: [
                 newResourceDelta(resourcetypes.steel, -2),
             ],
@@ -156,7 +157,6 @@ function buildings_setup() {
                 return Crafty.e("Storage, habitatsprite")
                     .attr({
                         name: "Habitat",
-                        desc: "Provides space for more colonists to live and sleep",
                     })
                     .numWorkers(0,0)
                     .resourceDelta(resourcetypes.energy, -1)

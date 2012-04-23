@@ -7,7 +7,12 @@
 // than this.  The viewport is also shifted slightly down
 // and to the right for some reason, can't work out why
 var menuMargin = 25;
-var selectedMenu = "#e0ffe0";
+var bgCol = "#002b36"; // base03
+var textCol = "#839496"; // base0
+var goodTextCol = "#268bd2"; // blue (because green is a bit yellow)
+var errorTextCol = "#dc322f"; // red
+var selectedMenu = "#073642"; // base02
+//var selectedMenu = "#e0ffe0";
 
 function horizontalMenuCreator(menuWidth, menuHeight, menuPadding, itemCount) {
     this.menuWidth = menuWidth;
@@ -136,7 +141,7 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
             
             Crafty.audio.play("mainmenu");
             Crafty("BuildMenu").each(function () {
-                this.css({"background-color": "white"});
+                this.css({"background-color": bgCol});
             });
             this.css({"background-color": selectedMenu});
             hud_state.mode = hudModes.build;
@@ -166,14 +171,14 @@ var hud_setup = function() {
     Crafty.c("HUD", {
         init: function () {
             this.addComponent("2D, DOM, Text"); 
-            this.textColor("#0000ff");
+            this.textColor(textCol);
             this.textFont({size:"10px", family:"sans"});
             this.css({
-                "background-color":"white",
+                "background-color":bgCol,
                 "border-radius":"3px",
                 "padding":"1px",
                 });
-            this.attr({z: 1000, alpha: 0.8});
+            this.attr({z: 1000, alpha: 1.0});
             }
         });
 
@@ -233,7 +238,7 @@ var hud_setup = function() {
             onClick : function() {
                 // Ensure all other menus are closed
                 Crafty("MenuTopLevel").each(function() {
-                    this.css({"background-color":"white"});
+                    this.css({"background-color":bgCol});
                     if (this.submenu != null) {
                         // Delete the menu
                         Crafty(this.submenu).each(function() {
@@ -285,24 +290,25 @@ var hud_setup = function() {
             y: Crafty.viewport.height - menuMargin - 15,
             w: (Crafty.viewport.width - (menuMargin*2)) * 0.7,
             h: 15,
-            onTick: function() {
-                var topMsg = statusMessages.calculateTopMessage();
-                if (topMsg === null) {
-                    this.text(" ");
-                } else {
-                    this.textColor(topMsg.s > 0 ? "#ff0000" : "#0000ff");
-                    this.text("<b>" + topMsg.m + "</b>");
-                }
-                statusMessages.wipeAllMessages();
-                //console.log(statusMessages);
-            },
         })
-        .text("here is a status message")
+        .text(" ")
     ;
 
-    statusMessages.addMessage("Choose a tile on the asteroid to place your lander");
-    statusBar.onTick();
+};
 
+var refreshStatusBar = function() {
+    var topMsg = statusMessages.calculateTopMessage();
+    var newText = topMsg == null ? " " : topMsg.m;
+    console.log("setting status bar string " + newText);
+    Crafty("StatusBar").each(function() {
+        this.textColor(topMsg.s > 0 ? errorTextCol : textCol);
+        this.text(newText);
+    });
+};
+
+var updateStatusBar = function() {
+    refreshStatusBar();
+    statusMessages.wipeAllMessages();
 };
 
 var buildingDescription = function(bldg) {
@@ -356,7 +362,7 @@ var hud_select_building = function() {
     info += buildingDescription(bldg);
     info += bldg.isActive() ? "Active" : "<b>INACTIVE</b>";
     if (bldg.missing != "") {
-        info += "<br>" + bldg.missing;
+        info += "<br/><font color=\"" + errorTextCol + "\">" + bldg.missing + "</font>";
     }
     Crafty("Selected").each(function () { 
             this.text(info);}); 
@@ -437,9 +443,9 @@ var hud_show = function() {
             Crafty.audio.play("mainmenu");
             this.isOverlayEnabled = !this.isOverlayEnabled;
             if (this.isOverlayEnabled) {
-                    this.css({"background-color":"#ffe0e0"});
+                    this.css({"background-color":selectedMenu});
             } else {
-                    this.css({"background-color":"white"});
+                    this.css({"background-color":bgCol});
             }
             showResources(this.isOverlayEnabled);
         });
