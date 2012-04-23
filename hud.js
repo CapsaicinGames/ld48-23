@@ -1,6 +1,11 @@
-
+// colors from the solarized pallete http://ethanschoonover.com/solarized
 var menuMargin = 25;
-var selectedMenu = "#e0ffe0";
+var bgCol = "#002b36"; // base03
+var textCol = "#839496"; // base0
+var goodTextCol = "#268bd2"; // blue (because green is a bit yellow)
+var errorTextCol = "#dc322f"; // red
+var selectedMenu = "#073642"; // base02
+//var selectedMenu = "#e0ffe0";
 
 function horizontalMenuCreator(menuWidth, menuHeight, menuPadding, itemCount) {
     this.menuWidth = menuWidth;
@@ -128,7 +133,7 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
         .bind("Click", function() {
             
             Crafty("BuildMenu").each(function () {
-                this.css({"background-color": "white"});
+                this.css({"background-color": bgCol});
             });
             this.css({"background-color": selectedMenu});
             hud_state.mode = hudModes.build;
@@ -158,14 +163,14 @@ var hud_setup = function() {
     Crafty.c("HUD", {
         init: function () {
             this.addComponent("2D, DOM, Text"); 
-            this.textColor("#0000ff");
+            this.textColor(textCol);
             this.textFont({size:"10px", family:"sans"});
             this.css({
-                "background-color":"white",
+                "background-color":bgCol,
                 "border-radius":"3px",
                 "padding":"1px",
                 });
-            this.attr({z: 1000, alpha: 0.8});
+            this.attr({z: 1000, alpha: 1.0});
             }
         });
 
@@ -225,7 +230,7 @@ var hud_setup = function() {
             onClick : function() {
                 // Ensure all other menus are closed
                 Crafty("MenuTopLevel").each(function() {
-                    this.css({"background-color":"white"});
+                    this.css({"background-color":bgCol});
                     if (this.submenu != null) {
                         // Delete the menu
                         Crafty(this.submenu).each(function() {
@@ -285,7 +290,7 @@ var refreshStatusBar = function() {
     var newText = topMsg == null ? " " : topMsg.m;
     console.log("setting status bar string " + newText);
     Crafty("StatusBar").each(function() {
-        this.textColor(topMsg.s > 0 ? "#ff0000" : "#0000ff");
+        this.textColor(topMsg.s > 0 ? errorTextCol : textCol);
         this.text(newText);
     });
 };
@@ -346,7 +351,7 @@ var hud_select_building = function() {
     info += buildingDescription(bldg);
     info += bldg.isActive() ? "Active" : "<b>INACTIVE</b>";
     if (bldg.missing != "") {
-        info += "<br>" + bldg.missing;
+        info += "<br/><font color=\"" + errorTextCol + "\">" + bldg.missing + "</font>";
     }
     Crafty("Selected").each(function () { 
             this.text(info);}); 
@@ -425,9 +430,9 @@ var hud_show = function() {
         .bind("MouseDown", function() {
             this.isOverlayEnabled = !this.isOverlayEnabled;
             if (this.isOverlayEnabled) {
-                    this.css({"background-color":"#ffe0e0"});
+                    this.css({"background-color":selectedMenu});
             } else {
-                    this.css({"background-color":"white"});
+                    this.css({"background-color":bgCol});
             }
             showResources(this.isOverlayEnabled);
         });
