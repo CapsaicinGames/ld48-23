@@ -12,51 +12,73 @@ var describeNonExistentBuilding = function(name) {
 var createBuildMenu = function() {
     var menu_width = 95;
     var menu_height = 16;
-    var cur_x = Crafty.viewport.width - 200;
-    var cur_y = Crafty.viewport.height - (menu_margin + menu_height);
-    for (var name in buildingBlueprints)
+    var menu_padding = 5;
+ 
+    var buildingNames = Object.keys(buildingBlueprints);
+    buildingNames.sort();
+
+    var buildingCount = buildingNames.length;
+
+    var itemsPerColumn = (Crafty.viewport.height - menu_margin) 
+        / (menu_height + menu_padding);
+
+    var cur_x = Crafty.viewport.width - 250;
+    var cur_y = menu_margin 
+        + (buildingCount < itemsPerColumn 
+           ? (itemsPerColumn - buildingCount) * (menu_height + menu_padding) 
+           : 0 
+          );
+
+    for (var buildingIndex in buildingNames)
     {
+        name = buildingNames[buildingIndex];
+
         if (buildingBlueprints[name].buildable != false)
         {
-            var txt = "<b>" + name + "</b><br>";
-            txt += "Costs:<ul class='reslist'>";
-            for (var i = 0; 
-                i < buildingBlueprints[name].constructionCost.length; 
-                ++i) {
-                var res = buildingBlueprints[name].constructionCost[i];
-                txt += "<li>" + (-res.delta) + " " + res.r + "</li>";
-            }
-
-            txt += "</ul>";
-            Crafty.e("BuildMenu")
-                .text(name)
-                .attr({x : cur_x, 
-                       y : cur_y,
-                       w: menu_width-1,
-                       h: menu_height-2,
-                       printText: txt})
-                .bind("Click", function() {
-                    
-                    Crafty("BuildMenu").each(function () {
-                        this.css({"background-color": "white"});
-                    });
-                    this.css({"background-color": selectedMenu});
-                    hud_state.mode = hudModes.build;
-                    hud_state.modeArg = this._text;
-                    var tmp = this.printText;
-                    Crafty("Selected").each(function() {
-                        this.text(tmp);
-                        });
-                });
-            cur_x -= menu_width + 5;
-            if (cur_x < menu_margin) {
-                cur_y -= (menu_height + 5);
-                cur_x = Crafty.viewport.width - 205 - menu_width;
+            _addBuildMenuItem(cur_x, cur_y, menu_width, menu_height);
+            
+            cur_y += menu_height + menu_padding;
+            if (cur_y > Crafty.viewport.height - menu_margin) {
+                cur_y = menu_margin;
+                cur_x -= (menu_padding + menu_width);
             }
         }
 
     }
 };
+
+function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight) {
+    var txt = "<b>" + name + "</b><br>";
+    txt += "Costs:<ul class='reslist'>";
+    for (var i = 0; 
+         i < buildingBlueprints[name].constructionCost.length; 
+         ++i) {
+        var res = buildingBlueprints[name].constructionCost[i];
+        txt += "<li>" + (-res.delta) + " " + res.r + "</li>";
+    }
+
+    txt += "</ul>";
+    Crafty.e("BuildMenu")
+        .text(name)
+        .attr({x : menuX, 
+               y : menuY,
+               w: menuWidth-1,
+               h: menuHeight-2,
+               printText: txt})
+        .bind("Click", function() {
+            
+            Crafty("BuildMenu").each(function () {
+                this.css({"background-color": "white"});
+            });
+            this.css({"background-color": selectedMenu});
+            hud_state.mode = hudModes.build;
+            hud_state.modeArg = this._text;
+            var tmp = this.printText;
+            Crafty("Selected").each(function() {
+                this.text(tmp);
+            });
+        });
+}
 
 var hudModes = Object.freeze({
     nothing: {},

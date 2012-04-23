@@ -41,6 +41,8 @@ function buildings_setup() {
                     economy.debit(refund);
 
                     this.tileEntity._canBuild = true;
+                    this.overlay.visible = false;
+                    this.overlay.destroy();
                     this.destroy();
                     economy.populate(this, -this._colonists);
                 }
