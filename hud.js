@@ -7,8 +7,14 @@ var createBuildMenu = function() {
     var menu_height = 16;
     var cur_x = Crafty.viewport.width - 200;
     var cur_y = Crafty.viewport.height - (menu_margin + menu_height);
-    for (var name in buildingBlueprints)
+
+    var buildingNames = Object.keys(buildingBlueprints);
+    buildingNames.sort();
+
+    for (var buildingIndex in buildingNames)
     {
+        name = buildingNames[buildingIndex];
+
         if (buildingBlueprints[name].buildable != false)
         {
             var txt = "<b>" + name + "</b><br>";
