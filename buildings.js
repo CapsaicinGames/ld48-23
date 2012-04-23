@@ -315,7 +315,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -5),
             ],
             factory: function() {
-                return Crafty.e("Storage, orelockersprite")
+                return Crafty.e("Storage, widgetstoresprite")
                     .attr({name: "Widget store"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.widgets, 100);
@@ -327,7 +327,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.steel, -5),
             ],
             factory: function() {
-                return Crafty.e("Storage, orelockersprite")
+                return Crafty.e("Storage, preciousstoresprite")
                     .attr({
                         name: "Rare earth store",
                     })
