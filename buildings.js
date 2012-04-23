@@ -100,7 +100,7 @@ function buildings_setup() {
 
 
     buildingBlueprints = {
-        "LandedShip": {
+        "Colony Ship": {
             constructionCost: [
                 newResourceDelta(resourcetypes.steel, -2000000),
             ],
@@ -279,13 +279,13 @@ function buildings_setup() {
                     .storageDelta(resourcetypes.widgets, 100);
             },
         },
-        "Precious Store": {
+        "Rare earth store": {
             constructionCost: [
                 newResourceDelta(resourcetypes.steel, -5),
             ],
             factory: function() {
                 return Crafty.e("Storage, orelockersprite")
-                    .attr({name: "Rare earth strore"})
+                    .attr({name: "Rare earth store"})
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.preciousmetal, 100);
             },
@@ -304,6 +304,24 @@ function buildings_setup() {
                     .resourceDelta(resourcetypes.energy, -1);
             },
         },          
+        "Freight Depot": {
+            constructionCost: [
+                newResourceDelta(resourcetypes.widgets, -1),
+                newResourceDelta(resourcetypes.steel, -2),
+                newResourceDelta(resourcetypes.plastic, -2),
+            ],
+            factory: function() {
+                return Crafty.e("Building, placeholderSprite")
+                    .attr({
+                        name: "Freight Depot",
+                        minActive: 1,
+                    })
+                    .resourceDelta(resourcetypes.energy, -4)
+                    .resourceDelta(resourcetypes.preciousmetal, -3)
+                    .resourceDelta(resourcetypes.points, 25)
+                ;
+            },
+        },
     }
 }
 

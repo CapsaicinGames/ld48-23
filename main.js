@@ -182,7 +182,7 @@ window.onload = function() {
                                 console.log("Cannot afford to build " + hud_state.modeArg);
                             }
                         } else if (hud_state.mode === hudModes.placeShip) {
-                            var bldg = build(buildingBlueprints["LandedShip"], this);
+                            var bldg = build(buildingBlueprints["Colony Ship"], this);
                             hud_state.mode = hudModes.select;
                             economy.newStep();
                             hud_show();
