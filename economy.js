@@ -231,7 +231,7 @@ var economy_setup = function() {
             for (var i = 0; i < colonistBreeding.neededDelta.length; ++i) {
                 var res = colonistBreeding.neededDelta[i];
                 var diff = this._resources[res.r] - oldres[res.r];
-                if (diff < res.delta) {
+                if (diff < (res.delta - 0.0001)) {
                     breed = false;
 
                     var resourceMsg 

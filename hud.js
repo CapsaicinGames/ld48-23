@@ -130,12 +130,25 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
                y : menuY,
                w: menuWidth-1,
                h: menuHeight-2,
+               savedText: null,
                printText: txt})
         .bind("MouseOver", function() {
             var tmp = this.printText;
+            var save;
             Crafty("Selected").each(function() {
+                save = this.text();
                 this.text(tmp);
             });
+            this.savedText = save;
+        })
+        .bind("MouseOut", function() {
+            if (this.savedText != null) {
+                var send = this.savedText;
+                Crafty("Selected").each(function () {
+                    this.text(send);
+                });
+                this.savedText = null;
+            }
         })
         .bind("Click", function() {
             
@@ -150,6 +163,7 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
             Crafty("Selected").each(function() {
                 this.text(tmp);
             });
+            this.savedText = null;
         });
 }
 

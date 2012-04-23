@@ -219,7 +219,7 @@ function buildings_setup() {
                     })
                     .resourceDelta(resourcetypes.energy, -1)
                     .resourceDelta(resourcetypes.water, -1)
-                    .resourceDelta(resourcetypes.food, 1);
+                    .resourceDelta(resourcetypes.food, 1.5);
             },
         },
         "Ice melter": {
