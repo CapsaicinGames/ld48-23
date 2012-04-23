@@ -166,22 +166,26 @@ window.onload = function() {
                             
                             if (economy.debit(desired.constructionCost).length == 0)
                             {
+                                Crafty.audio.play("build");
                                 // Now build it
                                 var bldg = build(desired, this);
                                 economy.populate(bldg, bldg.minActive);
                                 // Update the HUD
                                 economy.updateStatus();
                             } else {
-                                // can't alert, breaks mousedown
-                                console.log("Cannot afford to build " + hud_state.modeArg);
+                                Crafty.audio.play("error");
                             }
                         } else if (hud_state.mode === hudModes.placeShip) {
+                            Crafty.audio.play("build");
                             var bldg = build(buildingBlueprints["Colony Ship"], this);
                             hud_state.mode = hudModes.select;
                             economy.newStep();
                             hud_show();
                         } else {
                         }
+                    } else {
+                        // Can't build here
+                        Crafty.audio.play("error");
                     }
                 });
             }
@@ -244,5 +248,6 @@ window.onload = function() {
     });
 
     //Crafty.scene("main");
+    audioInit();
     assetLoad(); // starts main on load
 }

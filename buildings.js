@@ -28,6 +28,7 @@ function buildings_setup() {
                 } else if (hud_state.mode === hudModes.destroy 
                            && this.destroyable === true) {
                     
+                    Crafty.audio.play("destroy");
                     var refundRatio = 0.5;
                     var ctorCosts = buildingBlueprints[this.name].constructionCost;
                     var refund = [];
