@@ -141,6 +141,7 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
             });
             this.savedText = save;
         })
+        .css({"cursor":"pointer"})
         .bind("MouseOut", function() {
             if (this.savedText != null) {
                 var send = this.savedText;
@@ -238,6 +239,8 @@ var hud_setup = function() {
                     Crafty.audio.play("mainmenu");
                     this.onClick();
                 });
+                this.css({"cursor":"pointer",
+                        "text-align":"center"});
             }
         });
     Crafty.c("ColonistMenu", {
@@ -338,6 +341,7 @@ var hud_colonists = function(showplus, showminus) {
             Crafty.e("ColInc, ColonistMenu")
                 .attr({x: Crafty.viewport.width - (menuMargin + 15), y: menuMargin, w: 15, h: 15})
                 .text("+")
+                .css({"cursor":"pointer"})
                 .bind("MouseDown", function() {
                     var bldg = Crafty(hud_state.modeArg);
                     tutorial.onEvent("populate", bldg.name);
@@ -353,6 +357,7 @@ var hud_colonists = function(showplus, showminus) {
             Crafty.e("ColDec, ColonistMenu")
                 .attr({x: Crafty.viewport.width - (menuMargin + 100), y: menuMargin, w: 15, h: 15})
                 .text("-")
+                .css({"cursor":"pointer"})
                 .bind("MouseDown", function() {
                         var bldg = Crafty(hud_state.modeArg);
                         economy.populate(bldg, -1);
@@ -380,11 +385,11 @@ var hud_create = function() {
     // more complex it could do with breaking down
     // to separate items
     Crafty.e("Status, HUD")
-        .attr({ x : menuMargin, y : menuMargin+20, w : 110, h : 250} )
+        .attr({ x : menuMargin, y : menuMargin+40, w : 110, h : 250} )
         .text("No colony");
     // Controls the speed of time / economy
     Crafty.e("Time, HUD, Mouse")
-        .attr({ x: menuMargin, y: menuMargin, h: 15, w: 44})
+        .attr({ x: menuMargin, y: menuMargin+20, h: 15, w: 25})
         .text("x1")
         .bind("MouseDown", function() {
             switch (economy.speed)
@@ -407,7 +412,7 @@ var hud_create = function() {
     // The Pause button.  It doesn't like
     // being pressed repeatedly
     Crafty.e("Pause, HUD, Mouse")
-        .attr({x:menuMargin+50, y:menuMargin, h:15, w:50})
+        .attr({x:menuMargin+70, y:menuMargin + 20, h:15, w:40})
         .text("Pause")
         .bind("MouseDown", function() {
             if (economy.speed > 0)
@@ -426,7 +431,7 @@ var hud_create = function() {
     var statusBar = Crafty.e("StatusBar, HUD")
         .attr({
             x: menuMargin,
-            y: Crafty.viewport.height - menuMargin - 15,
+            y: menuMargin,
             w: (Crafty.viewport.width - (menuMargin*2)) * 0.7,
             h: 15,
         })
@@ -436,7 +441,7 @@ var hud_create = function() {
 }
 
 var hud_show = function() {
-    var menu_height = 15;
+    var menu_height = 20;
     var cur_y = Crafty.viewport.height - (menu_height + menuMargin);
     Crafty.e("MenuTopLevel")
         .attr({y: cur_y, h: menu_height - 2, 
@@ -462,6 +467,8 @@ var hud_show = function() {
         .attr({x: Crafty.viewport.width - (60 + menuMargin), y: cur_y,
                 w:60, h: menu_height -2, isOverlayEnabled: false})
         .text("Resources")
+        .css({"cursor":"pointer",
+            "text-align":"center"})
         .bind("MouseDown", function() {
             Crafty.audio.play("mainmenu");
             this.isOverlayEnabled = !this.isOverlayEnabled;
