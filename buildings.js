@@ -371,6 +371,12 @@ function buildings_setup() {
     }
 }
 
+/** Create the new building on a designated tile.
+ *
+ *  This will initialise the building entity, and create
+ *  its associated overlays.  It will also run any building
+ *  specific code.
+ */
 function build(blueprint, tileToBuildOn) {
     var over = Crafty.e("BuildingInfoOverlay, outOfPowerOverlay")
         .attr({x: tileToBuildOn.x,

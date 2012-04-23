@@ -10,6 +10,7 @@ var economy_setup = function() {
         _resources: {},
         _totalColonists: 0,
         _storage: {},
+        energyDelta: 0,
         
         init: function() {
             for(var rKey in resourcetypes) {
