@@ -70,12 +70,12 @@ function initTutorial() {
                         });
 
                         if (isOverlayAlreadyOn) {
-                            tutorial._setState("astroanalyser");
+                            tutorial._setState("buildAstroanalyser");
                         }
                     },
 
                     resourcesViewOpened: function() {
-                        tutorial._setState("astroanalyser");
+                        tutorial._setState("buildAstroanalyser");
                     },
 
                     tick: function() {
@@ -87,12 +87,18 @@ function initTutorial() {
                 },
 
 
-                astroanalyser: {
+                buildAstroanalyser: {
                     showMsg: true,
+
+                    build: function(blueprintName) {
+                        if (blueprintName==="Astro Analyser") {
+                            tutorial._setState("analyserInfo");
+                        }
+                    },
 
                     enter: function() {
                         tutorial.timeout(
-                            function() { tutorial._states.astroanalyser.showMsg = false; },
+                            function() { tutorial._states.buildAstroanalyser.showMsg = false; },
                             8000
                         );
                     },
@@ -106,13 +112,24 @@ function initTutorial() {
                         }
                     },
                 },
+
+                analyserInfo: {
+                    timer: { nextState: "idle", time: 5000 },
+
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "The Analyser will explore one tile every day. To make it explore faster, click Select, then tap on the Analyser...",
+                            magicTutorialPriority
+                        );
+                    },
+                },
                 
                 idle: {
                 },
             },
             _currentState: "gameStart",
 
-            onEvent: function(eventName) {
+            onEvent: function(eventName, param) {
                 var state = this._states[this._currentState];
                 
                 if (state == null) {
@@ -123,7 +140,7 @@ function initTutorial() {
                     return;
                 }
                 
-                state[eventName]();
+                state[eventName](param);
                 refreshStatusBar();
             },
             
