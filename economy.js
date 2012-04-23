@@ -95,13 +95,13 @@ var economy_setup = function() {
                 var missing = this.debit(bldgList[i].delta);
 
                 if (missing.length == 0) {
-                    for (var j = 0; j < bldgList[i].delta.length; ++j) {
+                    /*for (var j = 0; j < bldgList[i].delta.length; ++j) {
                         if (bldgList[i].delta[j].r == resourcetypes.energy.name) {
                             cur_energy = bldgList[i].delta[j].delta;
                             break;
                         }
                     }
-                    this.energyDelta += cur_energy;
+                    this.energyDelta += cur_energy;*/
                     var bldg = Crafty(bldgList[i].ent);
                     bldg.showOverlay("no");
                     bldg.missing = "";

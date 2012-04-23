@@ -176,7 +176,7 @@ window.onload = function() {
                             {
                                 // Now build it
                                 var bldg = build(desired, this);
-                                economy.populate(bldg, 1);
+                                economy.populate(bldg, bldg.minActive);
                             } else {
                                 // can't alert, breaks mousedown
                                 console.log("Cannot afford to build " + hud_state.modeArg);
