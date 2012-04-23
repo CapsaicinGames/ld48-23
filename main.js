@@ -31,7 +31,7 @@ function mapToIsometricTile(x, y, mapWidth, mapHeight) {
     var isometricRow = mapHeight - y + x;
     var isometricCol = Math.floor((x+y) / 2);
     var offset = 4;
-    return [isometricCol+offset,isometricRow];
+    return [isometricCol+offset,isometricRow+2];
 }
 
 var tweetbutton = '<a href="https://twitter.com/intent/tweet?button_hashtag=ld48&text=Just%20played%20%40capsaicingames\'%20SimAsteroid%20and%20got%20CHANGEME%20points%20%23ld48" id="custom-tweet-button" data-related="capsaicingames">Tweet #ld48</a>';//+ '<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>';
