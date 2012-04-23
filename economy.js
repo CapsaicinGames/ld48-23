@@ -231,18 +231,30 @@ var economy_setup = function() {
             for (var i = 0; i < colonistBreeding.neededDelta.length; ++i) {
                 var res = colonistBreeding.neededDelta[i];
                 var diff = this._resources[res.r] - oldres[res.r];
-                if (diff < (res.delta - 0.0001)) {
+                if (diff < (res.delta - EPSILON)) {
                     breed = false;
 
                     var resourceMsg 
-                        = diff < -0.001 ? "Losing " + diff.toFixed(2) + " " + res.r + " per day. "
-                        : this._resources[res.r] < 0.001 ? "Out of " + res.r + "!"
+                        = diff < -EPSILON ? "Losing " + diff.toFixed(2) + " " + res.r + " per day. "
+                        : this._resources[res.r] < EPSILON ? "Out of " + res.r + "!"
 //                        : isEveryoneAlive ? "Need more " + res.r + "!"
                         : "Gaining " + Math.abs(diff.toFixed(1)) + " " + res.r + " per day, need " 
                             + res.delta + " for more colonists. ";
                     
+                    statusMessages.addMessage(msgPrefix + resourceMsg,
+                                              isEveryoneAlive === false && diff <= 0.0 ? 10 
+                                              : -3);
+
+                }
+            }
+
+            for (var i = 0; i < colonistBreeding.neededMin.length; ++i) {
+                var res = colonistBreeding.neededMin[i];
+                if (this._resources[res.r] < (res.delta - EPSILON)) {
+                    breed = false;
                     var isResourceLow = this._resources[res.r] <= 9.5;
 
+                    var resourceMsg = "Don't have minimum of " + res.delta + " " + res.r + " for more colonists";
                     resourceMsg = (isResourceLow ? res.r + " is very low! " : "") 
                         + resourceMsg;
 
@@ -250,7 +262,6 @@ var economy_setup = function() {
                                               isEveryoneAlive === false && diff <= 0.0 ? 10 
                                               : isResourceLow ? 5
                                               : -3);
-
                 }
             }
 
@@ -268,6 +279,7 @@ var economy_setup = function() {
         },
 
         doBreed: function() {
+            this.debit(colonistBreeding.breedCost);
             this._resources["Colonists"]++;
             this._totalColonists++;
         }
