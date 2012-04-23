@@ -62,7 +62,10 @@ function initTutorial() {
                 },
 
                 buildMine: {
-                    timer: { nextState: "resourcesView", time: 4000 },
+                    
+                    resourcesViewOpened: function() {
+                        tutorial._setState("astroanalyser");
+                    },
 
                     tick: function() {
                         statusMessages.addMessage(
@@ -72,7 +75,16 @@ function initTutorial() {
                     },
                 },
 
-                resourcesView: {
+
+                astroanalyser: {
+                    timer: { nextState: "idle", time: 4000 },
+
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "Initially you can only see resources around your lander. Place an AstroAnalyser to see more.",
+                            magicTutorialPriority
+                        );
+                    },
                 },
                 
                 idle: {
