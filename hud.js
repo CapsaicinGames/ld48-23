@@ -377,6 +377,7 @@ var buildingDescription = function(bldg) {
 
 var hud_select_building = function() {
     var bldg = Crafty(hud_state.modeArg);
+    tutorial.onEvent("selectBuilding", bldg.name);
     var info = "<b>" + bldg.name + "</b><br>";
     info += buildingDescription(bldg);
     info += bldg.isActive() ? "Active" : "<b>INACTIVE</b>";
