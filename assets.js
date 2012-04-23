@@ -23,7 +23,5 @@ var onError = function(e) {
 };
 
 var assetLoad = function() {
-    var all = assetSounds.concat(assetSprites);
-    Crafty.load(all, loadSuccess, progress, onError);
-    console.log("Finished load?");
+    Crafty.load(assetSprites, loadSuccess, progress, onError);
 }
