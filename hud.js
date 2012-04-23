@@ -123,7 +123,7 @@ var hud_setup = function() {
     // more complex it could do with breaking down
     // to separate items
     Crafty.e("Status, HUD")
-        .attr({ x : menu_margin, y : menu_margin+20, w : 110, h : 220} )
+        .attr({ x : menu_margin, y : menu_margin+20, w : 110, h : 250} )
         .text("No colony");
     // Controls the speed of time / economy
     Crafty.e("Time, HUD, Mouse")
