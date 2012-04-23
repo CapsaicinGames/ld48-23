@@ -340,7 +340,6 @@ function buildings_setup() {
                         onTick: function() {
                             // Increase ever more slowly to 3 blocks per turn
                             var amt = Math.pow(this._colonists, 0.5);
-                            }
                             this.canScanBlocks += amt;
                             var willScan = Math.floor(this.canScanBlocks);
 

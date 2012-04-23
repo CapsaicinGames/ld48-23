@@ -9,7 +9,7 @@ var assetSprites = [
 ];
 
 var loadSuccess = function() { 
-    Crafty.scene("main"); 
+    Crafty.scene("intro"); 
 };
 var progress = function(e) {
     /* progress gets { loaded: j, 

@@ -196,54 +196,6 @@ var hud_setup = function() {
             }
         });
 
-    // Box for the economy object to fill in
-    // with its current state.  As this gets
-    // more complex it could do with breaking down
-    // to separate items
-    Crafty.e("Status, HUD")
-        .attr({ x : menuMargin, y : menuMargin+20, w : 110, h : 250} )
-        .text("No colony");
-    // Controls the speed of time / economy
-    Crafty.e("Time, HUD, Mouse")
-        .attr({ x: menuMargin, y: menuMargin, h: 15, w: 44})
-        .text("x1")
-        .bind("MouseDown", function() {
-            switch (economy.speed)
-            {
-                case 1:
-                    economy.speed = 2;
-                    this.text("x2");
-                    break;
-                case 2:
-                    economy.speed = 5;
-                    this.text("x5");
-                    break;
-                case 5:
-                default:
-                    economy.speed = 1;
-                    this.text("x1");
-                    }
-            });
-
-    // The Pause button.  It doesn't like
-    // being pressed repeatedly
-    Crafty.e("Pause, HUD, Mouse")
-        .attr({x:menuMargin+50, y:menuMargin, h:15, w:50})
-        .text("Pause")
-        .bind("MouseDown", function() {
-            if (economy.speed > 0)
-            {
-                economy.speed = 0;
-                this.text("Play");
-                Crafty("Time").each(function() {this.text("--") });
-            } else {
-                economy.speed = 1;
-                economy.newStep();
-                this.text("Pause");                
-                
-                Crafty("Time").each(function() {this.text("x1") });
-            }
-        });
     
     Crafty.c("MenuTopLevel", {
             label : "Blank",
@@ -298,17 +250,6 @@ var hud_setup = function() {
                 this.requires("HUD, Mouse");
                 }
             });
-    var statusBar = Crafty.e("StatusBar, HUD")
-        .attr({
-            x: menuMargin,
-            y: Crafty.viewport.height - menuMargin - 15,
-            w: (Crafty.viewport.width - (menuMargin*2)) * 0.7,
-            h: 15,
-        })
-        .text(" ")
-        .css({"background-color": selectedMenu});
-    ;
-
 };
 
 var refreshStatusBar = function() {
@@ -430,6 +371,67 @@ var hud_colonists = function(showplus, showminus) {
         Crafty("ColMenu").each(function() {this.destroy();});
     }
 };
+
+var hud_create = function() {
+    // Box for the economy object to fill in
+    // with its current state.  As this gets
+    // more complex it could do with breaking down
+    // to separate items
+    Crafty.e("Status, HUD")
+        .attr({ x : menuMargin, y : menuMargin+20, w : 110, h : 250} )
+        .text("No colony");
+    // Controls the speed of time / economy
+    Crafty.e("Time, HUD, Mouse")
+        .attr({ x: menuMargin, y: menuMargin, h: 15, w: 44})
+        .text("x1")
+        .bind("MouseDown", function() {
+            switch (economy.speed)
+            {
+                case 1:
+                    economy.speed = 2;
+                    this.text("x2");
+                    break;
+                case 2:
+                    economy.speed = 5;
+                    this.text("x5");
+                    break;
+                case 5:
+                default:
+                    economy.speed = 1;
+                    this.text("x1");
+                    }
+            });
+
+    // The Pause button.  It doesn't like
+    // being pressed repeatedly
+    Crafty.e("Pause, HUD, Mouse")
+        .attr({x:menuMargin+50, y:menuMargin, h:15, w:50})
+        .text("Pause")
+        .bind("MouseDown", function() {
+            if (economy.speed > 0)
+            {
+                economy.speed = 0;
+                this.text("Play");
+                Crafty("Time").each(function() {this.text("--") });
+            } else {
+                economy.speed = 1;
+                economy.newStep();
+                this.text("Pause");                
+                
+                Crafty("Time").each(function() {this.text("x1") });
+            }
+        });
+    var statusBar = Crafty.e("StatusBar, HUD")
+        .attr({
+            x: menuMargin,
+            y: Crafty.viewport.height - menuMargin - 15,
+            w: (Crafty.viewport.width - (menuMargin*2)) * 0.7,
+            h: 15,
+        })
+        .text(" ")
+        .css({"background-color": selectedMenu});
+    ;
+}
 
 var hud_show = function() {
     var menu_height = 15;

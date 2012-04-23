@@ -38,13 +38,23 @@ function mapToIsometricTile(x, y, mapWidth, mapHeight) {
 
 window.onload = function() {
     Crafty.scene("GameOver", function() {
-        Crafty.background('#000');
-        Crafty.e("2D, DOM,Text")
-            .attr({x:50, y:50, w:100, h:100})
-            .textColor("#0000ff")
-            .textFont({size:"20px", family:"sans"})
-            .text("Your colonists are dead, GAME OVER");
-        Crafty.stop();
+        Crafty.background("url('image/stars.png')");
+        var txt = "<h2>GAME OVER</h2>";
+
+        if (economy._totalColonists <= 0) {
+            txt += "<p>Sorry, all your colonists died.  You might not be management material after all</p>";
+        } else {
+        }
+        var pts = economy._resources[resourcetypes.points.name];
+        txt += "<p>" + pts + " points</p>";
+        if (pts == 0) {
+         txt += "<p>To score points, start smelting rare earths and ship them home with a freight depot</p>";
+        }
+        Crafty.e("HUD")
+            .attr({ w: 300, h:200, x:150, y:120})
+            .css({"text-align": "center"})
+            .text(txt);
+        //Crafty.stop();
     });
     Math.seedrandom();//"seed");
 
@@ -57,10 +67,23 @@ window.onload = function() {
     buildings_setup();
     economy = economy_setup();
 
+    hud_setup();
+    Crafty.scene("intro", function() {
+        //Crafty.background("rgb(220, 250, 220)");
+        Crafty.background("url('image/stars.png')");
+        Crafty.e("HUD, Mouse").attr({ w: 300, h:200, x:150, y:120})
+            .text("<p>GAME NAME HERE</p>" +
+                  "<p>The world needs more rare earths for making all their electronics.  The Company has seen a brilliant opportunity in asteroid K421 that's passing through our solar system, it's got good deposits of the rare earths and enough iron ore and ice to live off while you're doing it.</p>" +
+                  "<p>Unfortunately it's only within range of the transport ships for a limited time, so you'd better try and extract as much as you can before it's too late.</p>" +
+                  "<br /><p>Click here to continue</p>")
+            .css({"text-align": "center"})
+            .bind("Click", function() { Crafty.scene("main"); });
+    });
+
     Crafty.scene("main", function() {
 
-        hud_setup();
         tilesize = 32;
+        hud_create();
         
         // Sprite maps begin
         var terrainTypes = {

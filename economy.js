@@ -292,6 +292,7 @@ var economy_setup = function() {
             days: 0,
             speed: 1,
             dead: 0,
+            totalDays: 5,
             timePerStep: 2000,
             newStep: function() {
                 this.days++;
@@ -325,7 +326,11 @@ var economy_setup = function() {
                 default:
                     this.timePerStep = 2000;
                 }
-                this.timeout(function() {this.newStep();}, this.timePerStep);
+                if (this.totalDays - this.days <= 0) {
+                    Crafty.scene("GameOver");
+                } else {
+                    this.timeout(function() {this.newStep();}, this.timePerStep);
+                }
                 tutorial.onEvent("tick");
                 updateStatusBar();
                 this.createMessages();
@@ -396,7 +401,7 @@ var economy_setup = function() {
                 var energyProductionCol = colSelect(0.05, this.energyDelta);
                 newstatus += "<tr class='summary'><td>Energy production</td><td style='text-align: right'><font color=\"" + energyProductionCol + "\">" 
                     + this.energyDelta.toFixed(1) + "</font></td></tr>";
-                newstatus += "<tr><td>&nbsp;</td></tr><tr class='summary' id='day'><td>Day</td><td style='text-align: right'>" + this.days + "</td></tr></table>";
+                newstatus += "<tr><td>&nbsp;</td></tr><tr class='summary' id='day'><td>Days Left</td><td style='text-align: right'>" + (this.totalDays - this.days) + "</td></tr></table>";
                 Crafty("Status").each(function() {
                         this.text(newstatus);
                 });
