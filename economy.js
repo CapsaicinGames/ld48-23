@@ -98,12 +98,14 @@ var economy_setup = function() {
                 var bldg = Crafty(bldgList[i].ent);
 
                 if (missing.length == 0) {
+                    bldg.onTick();
                     for (var j = 0; j < bldgList[i].delta.length; ++j) {
                         if (bldgList[i].delta[j].r == resourcetypes.energy.name) {
                             cur_energy = bldgList[i].delta[j].delta;
                             break;
                         }
                     }
+                    
                     this.energyDelta += cur_energy;
                     var bldg = Crafty(bldgList[i].ent);
                     bldg.showOverlay("no");
@@ -211,11 +213,6 @@ var economy_setup = function() {
             }
             this.grimReaperStalksTheColony(kill);
         },
-        tickBuildings: function() {
-            Crafty("Building").each(function() {
-                this.onTick(); 
-            });
-        },
 
         isBreedingPossible: function(oldcolonistscount, oldres) {
 
@@ -285,7 +282,7 @@ var economy_setup = function() {
                 var oldres = Crafty.clone(this._resources);
                 var oldcolonistscount = this._totalColonists;
                 this.updateProduction();
-                this.tickBuildings();
+
                 if (!(this.days % colonistNeeds.every)) {
                     this.consumeResources();
                     //console.log(killed + " died, now " + this._totalColonists);
