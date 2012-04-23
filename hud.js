@@ -274,24 +274,25 @@ var hud_setup = function() {
             y: Crafty.viewport.height - menuMargin - 15,
             w: (Crafty.viewport.width - (menuMargin*2)) * 0.7,
             h: 15,
-            onTick: function() {
-                var topMsg = statusMessages.calculateTopMessage();
-                if (topMsg === null) {
-                    this.text(" ");
-                } else {
-                    this.textColor(topMsg.s > 0 ? "#ff0000" : "#0000ff");
-                    this.text("<b>" + topMsg.m + "</b>");
-                }
-                statusMessages.wipeAllMessages();
-                //console.log(statusMessages);
-            },
         })
-        .text("here is a status message")
+        .text(" ")
     ;
 
-    statusMessages.addMessage("Choose a tile on the asteroid to place your lander");
-    statusBar.onTick();
+};
 
+var refreshStatusBar = function() {
+    var topMsg = statusMessages.calculateTopMessage();
+    var newText = topMsg == null ? " " : topMsg.m;
+    console.log("setting status bar string " + newText);
+    Crafty("StatusBar").each(function() {
+        this.textColor(topMsg.s > 0 ? "#ff0000" : "#0000ff");
+        this.text(newText);
+    });
+};
+
+var updateStatusBar = function() {
+    refreshStatusBar();
+    statusMessages.wipeAllMessages();
 };
 
 var buildingDescription = function(bldg) {

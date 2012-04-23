@@ -311,6 +311,7 @@ var economy_setup = function() {
                 }
                 this.timeout(function() {this.newStep();}, this.timePerStep);
                 tutorial.onEvent("tick");
+                updateStatusBar();
             },
             populate: function(building, delta) {
                 if (building.minActive == 0) { 
@@ -359,7 +360,7 @@ var economy_setup = function() {
                         this.text(newstatus);
                 });
 
-                Crafty("StatusBar").each(function() { this.onTick(); });
+                
             }});
 };
 
