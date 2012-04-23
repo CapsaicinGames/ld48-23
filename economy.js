@@ -351,6 +351,13 @@ var economy_setup = function() {
                     building._colonists += delta;
                     this._resources["Colonists"] -= delta;
                 }
+                else {
+                    statusMessages.addMessage(
+                        "Not enough colonists for new " + building.name 
+                            + ", will start inactive!",
+                        15
+                    );
+                }
             },
 
             createMessages : function() {
