@@ -272,7 +272,7 @@ var economy_setup = function() {
 
     // Actually create the economy object
     return Crafty.e("Economy")
-            .attr({
+        .attr({
             days: 0,
             speed: 1,
             dead: 0,
@@ -282,18 +282,18 @@ var economy_setup = function() {
                 var oldres = Crafty.clone(this._resources);
                 var oldcolonistscount = this._totalColonists;
                 this.updateProduction();
-
+                
                 if (!(this.days % colonistNeeds.every)) {
                     this.consumeResources();
                     //console.log(killed + " died, now " + this._totalColonists);
                 }
-
+                
                 if (this.isBreedingPossible(oldcolonistscount, oldres)) {
                     this.doBreed();
                 }
-
+                
                 this.constrainResources();
-                this.updateStatus();
+                this.updateStatus(oldres);
                 switch(this.speed)
                 {
                 case 5:
@@ -318,7 +318,7 @@ var economy_setup = function() {
                     // doesn't need any colonists
                     return;
                 }
-
+                
                 var okay = false;
                 var newbldgtotal = building._colonists + delta;
                 if (delta > 0 && 
@@ -335,26 +335,39 @@ var economy_setup = function() {
                     this._resources["Colonists"] -= delta;
                 }
             },
-            updateStatus : function() {
-
+            
+            updateStatus : function(oldres) {
+                
                 var newstatus = "<table class='statustable'><tr><th>Resource</th><th>Amt</th></tr>";
 
+                var colSelect = function(oldVal, newVal){
+                    return oldVal > newVal + 0.0001 ? errorTextCol
+                        : oldVal < newVal - 0.0001 ? goodTextCol
+                        : textCol;
+                    };
+                
                 for(var rKey in this._resources) {
                     var key = rKey;
                     var val = this._resources[rKey];
+
+                    var resTextCol = colSelect(oldres[rKey], val);
+
                     if (rKey === "Colonists") {
                         key = "Idle " + rKey;
                         val = this._resources[rKey].toFixed(0);
                     } else {
                         val = this._resources[rKey].toFixed(1);
                     }
+                    
                     var classinfo = key == resourcetypes.points.name ?
                             " class='summary'" : "";
-                    newstatus += "<tr" + classinfo + "><td>" + key + "</td><td style='text-align: right'>" + val + "</td></tr>";
+                    newstatus += "<tr" + classinfo + "><td>" + key + "</td><td style='text-align: right'><font color=\"" + resTextCol + "\">" + val + "</font></td></tr>";
                 }
                 newstatus += "<tr class='summary'><td>Colony size</td><td style='text-align: right'>" + this._totalColonists + "</td></tr>";
-                newstatus += "<tr class='summary'><td>Energy production</td><td style='text-align: right'>" + 
-                    this.energyDelta.toFixed(1) + "</td></tr>";
+
+                var energyProductionCol = colSelect(0.05, this.energyDelta);
+                newstatus += "<tr class='summary'><td>Energy production</td><td style='text-align: right'><font color=\"" + energyProductionCol + "\">" 
+                    + this.energyDelta.toFixed(1) + "</font></td></tr>";
                 newstatus += "<tr><td>&nbsp;</td></tr><tr class='summary' id='day'><td>Day</td><td style='text-align: right'>" + this.days + "</td></tr></table>";
                 Crafty("Status").each(function() {
                         this.text(newstatus);
@@ -363,4 +376,3 @@ var economy_setup = function() {
                 
             }});
 };
-
