@@ -197,7 +197,8 @@ var hud_setup = function() {
             }
         });
 
-    
+    selectedTopLevelMenu = null;
+
     Crafty.c("MenuTopLevel", {
             label : "Blank",
             submenu : null,
@@ -205,7 +206,7 @@ var hud_setup = function() {
             onClick : function() {
                 // Ensure all other menus are closed
                 Crafty("MenuTopLevel").each(function() {
-                    this.css({"background-color":bgCol});
+                    this.css({"background-color": bgCol});
                     if (this.submenu != null) {
                         // Delete the menu
                         Crafty(this.submenu).each(function() {
@@ -228,17 +229,31 @@ var hud_setup = function() {
                 Crafty("StatusBar").each(function () {
                         this.visible = showStatusBar;
                     });
-
                 this.css({"background-color": selectedMenu});
+                selectedTopLevelMenu = this; // intentionally global
             },
             init : function () {
-                this.requires("HUD, Mouse, ButtonHighlight");
+                this.requires("HUD, Mouse");
                 this.w = 100; 
                 this.x = Crafty.viewport.width - (this.w + menuMargin);
                 this.bind("MouseDown", function() {
                     Crafty.audio.play("mainmenu");
                     this.onClick();
                 });
+                this.bind("MouseOver", function() {
+                    this.css({"background-color": selectedMenu});
+                });
+                this.bind("MouseOut", function() {
+                    if (selectedTopLevelMenu === this) {
+                        this.css({"background-color": selectedMenu});
+                    }
+                    else {
+                        this.css({"background-color": bgCol});
+                    }
+                });
+
+                this.css({"cursor":"pointer",
+                          "text-align":"center"});
             }
         });
     Crafty.c("ColonistMenu", {
