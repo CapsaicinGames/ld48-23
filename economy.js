@@ -150,7 +150,9 @@ var economy_setup = function() {
             // Now if we have more resources than the maximum storage
             // for that type, remove them
             for (var type in this._resources) {
-                if (type === "Colonists") {
+                if (type === resourcetypes.points.name) {
+                    // skip, no max points
+                } else if (type === resourcetypes.colonists.name) {
                     // Colonists are a special case as the total
                     // is used and not the spare resource
                     if (this._totalColonists > newStorage[type]) {
