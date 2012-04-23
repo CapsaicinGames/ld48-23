@@ -114,11 +114,35 @@ function initTutorial() {
                 },
 
                 analyserInfo: {
-                    timer: { nextState: "idle", time: 5000 },
+                    showMsg: true,
+
+                    enter: function() {
+                        tutorial.timeout(
+                            function() { tutorial._states.analyserInfo.showMsg = false; },
+                            8000
+                        );
+                    },
+
+                    tick: function() {
+                        if (this.showMsg) {
+                            statusMessages.addMessage(
+                                "The Analyser will explore one tile every day. To make it explore faster, click Select, then tap on the Analyser...",
+                                magicTutorialPriority
+                            );
+                        }
+                    },
+
+                    selectBuilding: function(blueprintName) {
+                        tutorial._setState("explainColonists");
+                    },
+                },
+
+                explainColonists: {
+                    timer: { nextState: "idle", time: 6000 },
 
                     tick: function() {
                         statusMessages.addMessage(
-                            "The Analyser will explore one tile every day. To make it explore faster, click Select, then tap on the Analyser...",
+                            "Most buildings need at least 1 colonist to function. Click the + sign on the right of the screen to add more.",
                             magicTutorialPriority
                         );
                     },
