@@ -356,7 +356,7 @@ var economy_setup = function() {
             createMessages : function() {
                 if (this.energyDelta <= 0.0001) {
                     statusMessages.addMessage(
-                        "No excess energy production. Consider building more power sources.",
+                        "No excess energy production. Build more solar panels!",
                         1);
                 }
             },
