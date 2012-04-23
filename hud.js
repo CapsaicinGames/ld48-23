@@ -1,4 +1,11 @@
+/* In theory all code that displays a nice white box
+ * on the screen is here.  In actuality, it's mixed in with
+ * the game logic a lot.
+ */
 
+// Don't put anything on the screen closer to the edge
+// than this.  The viewport is also shifted slightly down
+// and to the right for some reason, can't work out why
 var menuMargin = 25;
 var selectedMenu = "#e0ffe0";
 
