@@ -2,6 +2,13 @@
 var menu_margin = 30;
 var selectedMenu = "#e0ffe0";
 
+var describeNonExistentBuilding = function(name) {
+    var tmpbldg = buildingBlueprints[name].factory();
+    var txt = buildingDescription(tmpbldg);
+    tmpbldg.destroy();
+    return txt;
+};
+
 var createBuildMenu = function() {
     var menu_width = 95;
     var menu_height = 16;
@@ -209,9 +216,8 @@ var hud_setup = function() {
 
 };
 
-var hud_select_building = function() {
-    var bldg = Crafty(hud_state.modeArg);
-    var info = "<b>" + bldg.name + "</b><br>";
+var buildingDescription = function(bldg) {
+    var info = "";
     var subinfo = "";
     for (var i = 0; i < bldg.resourceDeltas.length; ++i) {
         var res = bldg.resourceDeltas[i];
@@ -252,6 +258,13 @@ var hud_select_building = function() {
         info += "Colonists: " + bldg._colonists + "<br>";
     }
 
+    return info;
+};
+
+var hud_select_building = function() {
+    var bldg = Crafty(hud_state.modeArg);
+    var info = "<b>" + bldg.name + "</b><br>";
+    info += buildingDescription(bldg);
     info += bldg.isActive() ? "Active" : "<b>INACTIVE</b>";
     if (bldg.missing != "") {
         info += "<br>" + bldg.missing;
@@ -259,6 +272,7 @@ var hud_select_building = function() {
     Crafty("Selected").each(function () { 
             this.text(info);}); 
 
+    var bldgNeedsColonists = bldg.minActive > 0;
     hud_colonists(bldgNeedsColonists, bldgNeedsColonists);
    
 };
