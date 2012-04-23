@@ -337,9 +337,20 @@ function buildings_setup() {
                 return Crafty.e("Building, astroanalysersprite")
                     .attr({
                         name: "Astro Analyser", 
-                        onTick: function() { analyseAsteroid(this._colonists); },
+                        onTick: function() {
+                            // Increase ever more slowly to 3 blocks per turn
+                            var amt = Math.pow(this._colonists, 0.5);
+                            }
+                            this.canScanBlocks += amt;
+                            var willScan = Math.floor(this.canScanBlocks);
+
+                            analyseAsteroid(willScan);
+                            // Accumulation gives more fine performance difference
+                            this.canScanBlocks -= willScan; 
+                        },
+                        canScanBlocks: 0,
                     })
-                    .numWorkers(1,20)
+                    .numWorkers(1,9)
                     .resourceDelta(resourcetypes.energy, -1);
             },
         },          
