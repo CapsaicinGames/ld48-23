@@ -22,7 +22,8 @@ function initTutorial() {
                     tick: function() { 
                         statusMessages.addMessage(
                             "Explore the build menu on the right to decide what to build next", 
-                            magicTutorialPriority);
+                            magicTutorialPriority
+                        );
                     },
                     
                     buildMenuOpen: function() {
@@ -32,16 +33,56 @@ function initTutorial() {
                 
                 firstTimeInBuildMenu: {
                     enter: function() {
-                        tutorial.timeout(function() { tutorial._setState("idle"); },
+                        tutorial.timeout(function() { tutorial._setState("waitForPower"); },
                                          5000);
                     },
                     
                     tick: function() {
                         statusMessages.addMessage(
                             "Hover over each building for a detailed description",
-                            magicTutorialPriority);
+                            magicTutorialPriority
+                        );
                     },
                 },  
+                
+                waitForPower: {
+                    tick: function() {
+                        if (economy.energyDelta > 0) {
+                            tutorial._setState("resourceGuide");
+                        }
+                    },
+                },
+
+                resourceGuide: {
+                    enter: function() {
+                        tutorial.timeout(function() { tutorial._setState("buildMine"); },
+                                         4000);
+                    },
+
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "Buildings cost resources. Resources can be mined from the ground and refined...",
+                            magicTutorialPriority
+                        );
+                    },
+                },
+
+                buildMine: {
+                   enter: function() {
+                        tutorial.timeout(function() { tutorial._setState("resourcesView"); },
+                                         4000);
+                    },
+
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "...Click the Resources button on the left toggle to see what resource is under each tile...",
+                            magicTutorialPriority
+                        );
+                    },
+                },
+
+                resourcesView: {
+                },
                 
                 idle: {
                 },
@@ -64,7 +105,7 @@ function initTutorial() {
             },
             
             _setState: function(newStateName) {
-                console.log("switch to tutorial state " + newStateName);
+//                console.log("switch to tutorial state " + newStateName);
                 this._currentState = newStateName;
                 this.onEvent("enter");
                 this.onEvent("tick");
