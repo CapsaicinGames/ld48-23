@@ -172,7 +172,7 @@ var hud_setup = function() {
         init: function () {
             this.addComponent("2D, DOM, Text"); 
             this.textColor(textCol);
-            this.textFont({size:"10px", family:"sans"});
+            this.textFont({size:"10px", family:"sans-serif"});
             this.css({
                 "background-color":bgCol,
                 "border-radius":"3px",
