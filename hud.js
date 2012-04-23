@@ -3,7 +3,9 @@ var menu_margin = 30;
 var selectedMenu = "#e0ffe0";
 
 var describeNonExistentBuilding = function(name) {
+    var fakeResource = {name: "(resource)", mineRate: 1};
     var tmpbldg = buildingBlueprints[name].factory();
+    tmpbldg.onBuild(fakeResource);
     var txt = buildingDescription(tmpbldg);
     tmpbldg.destroy();
     return txt;
@@ -58,6 +60,7 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight) {
     }
 
     txt += "</ul>";
+    txt += describeNonExistentBuilding(name);
     Crafty.e("BuildMenu")
         .text(name)
         .attr({x : menuX, 
