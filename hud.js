@@ -5,11 +5,22 @@ var selectedMenu = "#e0ffe0";
 var createBuildMenu = function() {
     var menu_width = 95;
     var menu_height = 16;
-    var cur_x = Crafty.viewport.width - 200;
-    var cur_y = Crafty.viewport.height - (menu_margin + menu_height);
-
+    var menu_padding = 5;
+ 
     var buildingNames = Object.keys(buildingBlueprints);
     buildingNames.sort();
+
+    var buildingCount = buildingNames.length;
+
+    var itemsPerColumn = (Crafty.viewport.height - menu_margin) 
+        / (menu_height + menu_padding);
+
+    var cur_x = Crafty.viewport.width - 250;
+    var cur_y = menu_margin 
+        + (buildingCount < itemsPerColumn 
+           ? (itemsPerColumn - buildingCount) * (menu_height + menu_padding) 
+           : 0 
+          );
 
     for (var buildingIndex in buildingNames)
     {
@@ -47,10 +58,10 @@ var createBuildMenu = function() {
                         this.text(tmp);
                         });
                 });
-            cur_x -= menu_width + 5;
-            if (cur_x < menu_margin) {
-                cur_y -= (menu_height + 5);
-                cur_x = Crafty.viewport.width - 205 - menu_width;
+            cur_y += menu_height + menu_padding;
+            if (cur_y > Crafty.viewport.height - menu_margin) {
+                cur_y = menu_margin;
+                cur_x -= (menu_padding + menu_width);
             }
         }
 
