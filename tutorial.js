@@ -1,4 +1,6 @@
 
+var magicTutorialPriority = 939393;
+
 function initTutorial() {
 
     tutorial = Crafty.e("Tutorial") // intentionall global
@@ -8,7 +10,7 @@ function initTutorial() {
                     tick: function() { 
                         statusMessages.addMessage(
                             "Pick a tile for your ship to land on", 
-                            0);
+                            magicTutorialPriority);
                     },
                     
                     onLanderPlaced: function() {
@@ -20,7 +22,7 @@ function initTutorial() {
                     tick: function() { 
                         statusMessages.addMessage(
                             "Explore the build menu on the right to decide what to build next", 
-                            0);
+                            magicTutorialPriority);
                     },
                     
                     buildMenuOpen: function() {
@@ -31,18 +33,17 @@ function initTutorial() {
                 firstTimeInBuildMenu: {
                     enter: function() {
                         tutorial.timeout(function() { tutorial._setState("idle"); },
-                                     5000);
+                                         5000);
                     },
                     
                     tick: function() {
                         statusMessages.addMessage(
                             "Hover over each building for a detailed description",
-                            0);
+                            magicTutorialPriority);
                     },
-                },
+                },  
                 
                 idle: {
-                    
                 },
             },
             _currentState: "gameStart",

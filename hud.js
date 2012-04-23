@@ -302,9 +302,10 @@ var refreshStatusBar = function() {
     var newMsgStr = topMsg == null ? -100 : topMsg.s;
 
     Crafty("StatusBar").each(function() {
-        this.textColor(newMsgStr > 0 ? errorTextCol 
-                       : newMsgStr == 0 ? goodTextCol
-                       : textCol);
+        this.textColor( newMsgStr === magicTutorialPriority ? goodTextCol
+                        : newMsgStr > 0 ? errorTextCol 
+                        : newMsgStr === 0 ? goodTextCol
+                        : textCol);
         this.text(newText);
     });
 };
