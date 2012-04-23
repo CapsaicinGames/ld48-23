@@ -292,7 +292,7 @@ var economy_setup = function() {
             days: 0,
             speed: 1,
             dead: 0,
-            totalDays: 5,
+            totalDays: 500,
             timePerStep: 2000,
             newStep: function() {
                 this.days++;
