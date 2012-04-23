@@ -143,7 +143,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -2),
                 newResourceDelta(resourcetypes.widgets, -2),
             ],
-            factory: function() { return createMine(-2, 2, 6, "Super Mine"); }
+            factory: function() { return createMine(-2, 3, 8, "Super Mine"); }
         },
         "Habitat": {
             constructionCost: [
@@ -361,7 +361,7 @@ function createMine(powerDrain, resourceProduction, storage, mineName) {
         .resourceDelta(resourcetypes.energy, powerDrain)
         .attr({name: mineName,
                onBuild: function(tileResource) {
-                   this.resourceDelta(tileResource, resourceProduction);
+                   this.resourceDelta(tileResource, resourceProduction * tileResource.mineRate);
                    this.storageDelta(tileResource, storage);
                },
               });
