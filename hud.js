@@ -68,6 +68,12 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight) {
                w: menuWidth-1,
                h: menuHeight-2,
                printText: txt})
+        .bind("MouseOver", function() {
+            var tmp = this.printText;
+            Crafty("Selected").each(function() {
+                this.text(tmp);
+            });
+        })
         .bind("Click", function() {
             
             Crafty("BuildMenu").each(function () {
@@ -212,7 +218,7 @@ var hud_setup = function() {
                 }
             });
     Crafty.e("Selected, HUD")
-        .attr({ y: menu_margin+40, h: 220, w: 100, x: Crafty.viewport.width - (menu_margin + 100)})
+        .attr({ y: menu_margin+40, h: 200, w: 100, x: Crafty.viewport.width - (menu_margin + 100)})
         .text("Nothing selected");
 
     var statusBar = Crafty.e("StatusBar, HUD")
@@ -341,13 +347,23 @@ var hud_show = function() {
             hud_state.modeArg = "";
         });
     cur_y -= menu_height;
+    Crafty.e("MenuTopLevel")
+        .attr({ y: cur_y, h: menu_height -2})
+        .text("Select");
 
+    cur_y -= menu_height;
     resourceOverlayView = null; // intentionally global
-    resourceOverlayView = Crafty.e("MenuTopLevel")
-        .attr({ y: cur_y, h: menu_height -2, isOverlayEnabled: false})
+    resourceOverlayView = Crafty.e("ResourceMenu, HUD, Mouse")
+        .attr({x: Crafty.viewport.width - (60 + menu_margin), y: cur_y,
+                w:60, h: menu_height -2, isOverlayEnabled: false})
         .text("Resources")
         .bind("MouseDown", function() {
             this.isOverlayEnabled = !this.isOverlayEnabled;
+            if (this.isOverlayEnabled) {
+                    this.css({"background-color":"#ffe0e0"});
+            } else {
+                    this.css({"background-color":"white"});
+            }
             showResources(this.isOverlayEnabled);
         });
 
