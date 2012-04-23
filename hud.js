@@ -28,36 +28,8 @@ var createBuildMenu = function() {
 
         if (buildingBlueprints[name].buildable != false)
         {
-            var txt = "<b>" + name + "</b><br>";
-            txt += "Costs:<ul class='reslist'>";
-            for (var i = 0; 
-                i < buildingBlueprints[name].constructionCost.length; 
-                ++i) {
-                var res = buildingBlueprints[name].constructionCost[i];
-                txt += "<li>" + (-res.delta) + " " + res.r + "</li>";
-            }
-
-            txt += "</ul>";
-            Crafty.e("BuildMenu")
-                .text(name)
-                .attr({x : cur_x, 
-                       y : cur_y,
-                       w: menu_width-1,
-                       h: menu_height-2,
-                       printText: txt})
-                .bind("Click", function() {
-                    
-                    Crafty("BuildMenu").each(function () {
-                        this.css({"background-color": "white"});
-                    });
-                    this.css({"background-color": selectedMenu});
-                    hud_state.mode = hudModes.build;
-                    hud_state.modeArg = this._text;
-                    var tmp = this.printText;
-                    Crafty("Selected").each(function() {
-                        this.text(tmp);
-                        });
-                });
+            _addBuildMenuItem(cur_x, cur_y, menu_width, menu_height);
+            
             cur_y += menu_height + menu_padding;
             if (cur_y > Crafty.viewport.height - menu_margin) {
                 cur_y = menu_margin;
@@ -67,6 +39,39 @@ var createBuildMenu = function() {
 
     }
 };
+
+function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight) {
+    var txt = "<b>" + name + "</b><br>";
+    txt += "Costs:<ul class='reslist'>";
+    for (var i = 0; 
+         i < buildingBlueprints[name].constructionCost.length; 
+         ++i) {
+        var res = buildingBlueprints[name].constructionCost[i];
+        txt += "<li>" + (-res.delta) + " " + res.r + "</li>";
+    }
+
+    txt += "</ul>";
+    Crafty.e("BuildMenu")
+        .text(name)
+        .attr({x : menuX, 
+               y : menuY,
+               w: menuWidth-1,
+               h: menuHeight-2,
+               printText: txt})
+        .bind("Click", function() {
+            
+            Crafty("BuildMenu").each(function () {
+                this.css({"background-color": "white"});
+            });
+            this.css({"background-color": selectedMenu});
+            hud_state.mode = hudModes.build;
+            hud_state.modeArg = this._text;
+            var tmp = this.printText;
+            Crafty("Selected").each(function() {
+                this.text(tmp);
+            });
+        });
+}
 
 var hudModes = Object.freeze({
     nothing: {},
