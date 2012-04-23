@@ -57,9 +57,16 @@ var createBuildMenu = function() {
 
     var buildingCount = buildingNames.length;
 
-    var chosenMenuCreator = Crafty.viewport.width < 700
+    var isNarrowScreen = Crafty.viewport.width < 700;
+
+    var chosenMenuCreator = isNarrowScreen
         ? horizontalMenuCreator
         : verticalMenuCreator;
+
+    if (isNarrowScreen) {
+        buildingNames.reverse();
+    }
+
     var menuBuilder
         = chosenMenuCreator(menu_width, menu_height, menu_padding, buildingCount);
 
