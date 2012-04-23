@@ -3,6 +3,12 @@ body
 background-color: white;
 padding: 0px;
 }
+a#custom-tweet-button {
+    padding: 2px 5px 2px 20px;
+    background: url('http://a4.twimg.com/images/favicon.ico') 1px center no-repeat;
+    border: 1px solid #ccc;
+    text-decoration: none;
+}
 table {
     border-collapse: collapse;
 }

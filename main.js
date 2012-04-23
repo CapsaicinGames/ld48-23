@@ -34,7 +34,7 @@ function mapToIsometricTile(x, y, mapWidth, mapHeight) {
     return [isometricCol+offset,isometricRow];
 }
 
-
+var tweetbutton = '<a href="https://twitter.com/intent/tweet?button_hashtag=ld48&text=Just%20played%20%40capsaicingames\'%20SimAsteroid%20and%20got%20CHANGEME%20points%20%23ld48" id="custom-tweet-button" data-related="capsaicingames">Tweet #ld48</a>';//+ '<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>';
 
 window.onload = function() {
     Crafty.scene("GameOver", function() {
@@ -49,6 +49,8 @@ window.onload = function() {
         txt += "<p>" + pts + " points</p>";
         if (pts == 0) {
          txt += "<p>To score points, start smelting rare earths and ship them home with a freight depot</p>";
+        } else {
+            txt += tweetbutton.replace('CHANGEME', pts);
         }
         Crafty.e("HUD")
             .attr({ w: 300, h:200, x:150, y:120})
