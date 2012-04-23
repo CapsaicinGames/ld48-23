@@ -394,11 +394,6 @@ var hud_colonists = function(showplus, showminus) {
 };
 
 var hud_show = function() {
-    Crafty("Selected").each(function() {this.destroy();});
-    Crafty.e("Selected, HUD")
-        .attr({ y: menuMargin+20, h: 200, w: 100, x: Crafty.viewport.width - (menuMargin + 100)})
-        .text("Nothing selected");
-
     var menu_height = 15;
     var cur_y = Crafty.viewport.height - (menu_height + menuMargin);
     Crafty.e("MenuTopLevel")
@@ -433,6 +428,12 @@ var hud_show = function() {
             }
             showResources(this.isOverlayEnabled);
         });
+    cur_y -= menu_height;
+
+    Crafty("Selected").each(function() {this.destroy();});
+    Crafty.e("Selected, HUD")
+        .attr({ y: menuMargin+20, h: cur_y -(menuMargin + 15), w: 100, x: Crafty.viewport.width - (menuMargin + 100)})
+        .text("Nothing selected");
 
 };
 
