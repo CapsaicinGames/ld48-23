@@ -301,7 +301,7 @@ var refreshStatusBar = function() {
     var newText = topMsg == null ? " " : topMsg.m;
 
     Crafty("StatusBar").each(function() {
-        this.textColor(topMsg.s > 0 ? errorTextCol : textCol);
+        this.textColor(topMsg != null && topMsg.s > 0 ? errorTextCol : textCol);
         this.text(newText);
     });
 };
@@ -473,6 +473,7 @@ var statusMessages = {
     _currentMessages: [],
     
     addMessage: function(newMsg, strength) {
+        assert(newMsg != null, "newMsg should be a string");
         this._currentMessages.push({m:newMsg, s:strength});
     },
 
