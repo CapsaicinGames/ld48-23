@@ -189,9 +189,9 @@ function buildings_setup() {
                         name: "Ore locker",
                     })
                     .resourceDelta(resourcetypes.energy, -1)
-                    .storageDelta(resourcetypes.steelore, 100)
-                    .storageDelta(resourcetypes.regolith, 100)
-                    .storageDelta(resourcetypes.preciousore, 100);
+                    .storageDelta(resourcetypes.steelore, 20)
+                    .storageDelta(resourcetypes.regolith, 20)
+                    .storageDelta(resourcetypes.preciousore, 20);
             },
         },
         "Solar Panel": {
