@@ -1,4 +1,11 @@
-// colors from the solarized pallete http://ethanschoonover.com/solarized
+/* In theory all code that displays a nice white box
+ * on the screen is here.  In actuality, it's mixed in with
+ * the game logic a lot.
+ */
+
+// Don't put anything on the screen closer to the edge
+// than this.  The viewport is also shifted slightly down
+// and to the right for some reason, can't work out why
 var menuMargin = 25;
 var bgCol = "#002b36"; // base03
 var textCol = "#839496"; // base0
@@ -132,6 +139,7 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
         })
         .bind("Click", function() {
             
+            Crafty.audio.play("mainmenu");
             Crafty("BuildMenu").each(function () {
                 this.css({"background-color": bgCol});
             });
@@ -260,7 +268,10 @@ var hud_setup = function() {
                 this.requires("HUD, Mouse");
                 this.w = 60; 
                 this.x = Crafty.viewport.width - (this.w + menuMargin);
-                this.bind("MouseDown", function() {this.onClick();});
+                this.bind("MouseDown", function() {
+                    Crafty.audio.play("mainmenu");
+                    this.onClick();
+                });
             }
         });
     Crafty.c("ColonistMenu", {
@@ -415,6 +426,7 @@ var hud_show = function() {
         .bind("MouseDown", function() {
             hud_state.mode = hudModes.destroy;
             hud_state.modeArg = "";
+            Crafty.audio.play("mainmenu");
         });
     cur_y -= menu_height;
     Crafty.e("MenuTopLevel")
@@ -428,6 +440,7 @@ var hud_show = function() {
                 w:60, h: menu_height -2, isOverlayEnabled: false})
         .text("Resources")
         .bind("MouseDown", function() {
+            Crafty.audio.play("mainmenu");
             this.isOverlayEnabled = !this.isOverlayEnabled;
             if (this.isOverlayEnabled) {
                     this.css({"background-color":selectedMenu});

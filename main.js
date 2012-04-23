@@ -6,8 +6,8 @@ convertTileType = function(type, x, y, resource) {
             return "groundIce";
         }
         else {
-            var varientIndex = Crafty.math.randomInt(0, 2);
-            return "groundVarient" + (varientIndex + 1);
+            var variantIndex = Crafty.math.randomInt(0, 2);
+            return "groundVariant" + (variantIndex + 1);
         }
     default:
         return null;
@@ -47,9 +47,11 @@ window.onload = function() {
         Crafty.stop();
     });
     Math.seedrandom();//"seed");
+
+    // Odd sizes break something
     asteroid.init(Crafty.math.randomInt(12, 19) & ~(1),
                   Crafty.math.randomInt(12, 19) & ~(1));
-    console.log(asteroid.width + " " + asteroid.height);
+    //console.log(asteroid.width + " " + asteroid.height);
 
     Crafty.init();
     buildings_setup();
@@ -59,12 +61,13 @@ window.onload = function() {
 
         hud_setup();
         tilesize = 32;
-
+        
+        // Sprite maps begin
         var terrainTypes = {
-            groundVarient1: [0,0],
+            groundVariant1: [0,0],
             groundIce: [1,0],
-            groundVarient2: [2,0],
-            groundVarient3: [3,0],
+            groundVariant2: [2,0],
+            groundVariant3: [3,0],
             cursorSprite: [0,1],
             placeholderSprite: [1,1],
         };
@@ -93,22 +96,12 @@ window.onload = function() {
             outOfInputOverlay: [1,1],
             outOfColonistsOverlay: [2,1],
         };
+        // Sprite maps end
 
-        Crafty.sprite(tilesize, "image/ground3.png", terrainTypes);
-        Crafty.sprite(tilesize, "image/buildings.png", buildingTypes);
-        Crafty.sprite(tilesize, "image/resourceicons.png", resourceOverlaySprites);
-
-        // returns success
-        var switchSprite = function(entity, sprites, option) {
-            for (var type in sprites) {
-                if (entity.has(type)) {
-                    var sm = sprites[type];
-                    entity.sprite(sm[0], option);
-                    return true;
-                }
-            }
-            return false;
-        };
+        // Sprite loading
+        Crafty.sprite(tilesize, assetSprites[0], terrainTypes);
+        Crafty.sprite(tilesize, assetSprites[1], buildingTypes);
+        Crafty.sprite(tilesize, assetSprites[2], resourceOverlaySprites);
 
         Crafty.c("UnanalysedResource", {});
 
@@ -173,14 +166,17 @@ window.onload = function() {
                             
                             if (economy.debit(desired.constructionCost).length == 0)
                             {
+                                Crafty.audio.play("build");
                                 // Now build it
                                 var bldg = build(desired, this);
                                 economy.populate(bldg, bldg.minActive);
+                                // Update the HUD
+                                economy.updateStatus();
                             } else {
-                                // can't alert, breaks mousedown
-                                console.log("Cannot afford to build " + hud_state.modeArg);
+                                Crafty.audio.play("error");
                             }
                         } else if (hud_state.mode === hudModes.placeShip) {
+                            Crafty.audio.play("build");
                             var bldg = build(buildingBlueprints["Colony Ship"], this);
                             hud_state.mode = hudModes.select;
                             tutorial.onEvent("onLanderPlaced");
@@ -188,6 +184,9 @@ window.onload = function() {
                             hud_show();
                         } else {
                         }
+                    } else {
+                        // Can't build here
+                        Crafty.audio.play("error");
                     }
                 });
             }
@@ -251,6 +250,7 @@ window.onload = function() {
 
     });
 
-    Crafty.scene("main");
-
+    //Crafty.scene("main");
+    audioInit();
+    assetLoad(); // starts main on load
 }

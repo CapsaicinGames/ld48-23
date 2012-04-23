@@ -28,6 +28,7 @@ function buildings_setup() {
                 } else if (hud_state.mode === hudModes.destroy 
                            && this.destroyable === true) {
                     
+                    Crafty.audio.play("destroy");
                     var refundRatio = 0.5;
                     var ctorCosts = buildingBlueprints[this.name].constructionCost;
                     var refund = [];
@@ -371,6 +372,12 @@ function buildings_setup() {
     }
 }
 
+/** Create the new building on a designated tile.
+ *
+ *  This will initialise the building entity, and create
+ *  its associated overlays.  It will also run any building
+ *  specific code.
+ */
 function build(blueprint, tileToBuildOn) {
     var over = Crafty.e("BuildingInfoOverlay, outOfPowerOverlay")
         .attr({x: tileToBuildOn.x,
