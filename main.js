@@ -138,7 +138,9 @@ window.onload = function() {
                     cursor.y = this._y;
                     cursor.h = this._h;
                     cursor.z = this._z + 1;
-                    cursor.setVisibility(true);
+                    // Don't use setVisibility, the cursor is
+                    // not a resource
+                    cursor._visible = true;
                 });
             },
             tileSize: function(size) { 
