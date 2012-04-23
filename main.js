@@ -30,10 +30,7 @@ function mapToIsometricTile(x, y, mapWidth, mapHeight) {
     
     var isometricRow = mapHeight - y + x;
     var isometricCol = Math.floor((x+y) / 2);
-    var offset = 0;
-    if (asteroid.width + asteroid.height <= 30) {
-        offset = 3;
-    }
+    var offset = 4;
     return [isometricCol+offset,isometricRow];
 }
 
