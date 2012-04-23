@@ -432,7 +432,7 @@ var hud_create = function() {
         .attr({
             x: menuMargin,
             y: menuMargin,
-            w: (Crafty.viewport.width - (menuMargin*2)) * 0.7,
+            w: (Crafty.viewport.width - (menuMargin*2)),
             h: 15,
         })
         .text(" ")
