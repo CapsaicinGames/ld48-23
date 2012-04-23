@@ -233,14 +233,12 @@ var hud_setup = function() {
             },
             init : function () {
                 this.requires("HUD, Mouse, ButtonHighlight");
-                this.w = 60; 
+                this.w = 100; 
                 this.x = Crafty.viewport.width - (this.w + menuMargin);
                 this.bind("MouseDown", function() {
                     Crafty.audio.play("mainmenu");
                     this.onClick();
                 });
-                this.css({"cursor":"pointer",
-                        "text-align":"center"});
             }
         });
     Crafty.c("ColonistMenu", {
@@ -379,6 +377,10 @@ var hud_colonists = function(showplus, showminus) {
     }
 };
 
+var boldText = function(t) {
+    return "<strong>"+t+"</strong>";
+}
+
 var hud_create = function() {
 
     Crafty.c("ButtonHighlight", {
@@ -406,23 +408,23 @@ var hud_create = function() {
     // Controls the speed of time / economy
     Crafty.e("Time, HUD, Mouse, ButtonHighlight")
         .attr({ x: menuMargin, y: menuMargin+20, h: 15, w: 25})
-        .text("x1")
+        .text(boldText("x1"))
         .bind("MouseDown", function() {
             switch (economy.speed)
             {
-                case 1:
-                    economy.speed = 2;
-                    this.text("x2");
-                    break;
-                case 2:
-                    economy.speed = 5;
-                    this.text("x5");
-                    break;
-                case 5:
-                default:
-                    economy.speed = 1;
-                    this.text("x1");
-                    }
+            case 1:
+                economy.speed = 2;
+                this.text(boldText("x2"));
+                break;
+            case 2:
+                economy.speed = 5;
+                this.text(boldText("x5"));
+                break;
+            case 5:
+            default:
+                economy.speed = 1;
+                this.text(boldText("x1"));
+            }
             })
     ;
 
@@ -430,19 +432,19 @@ var hud_create = function() {
     // being pressed repeatedly
     Crafty.e("Pause, HUD, Mouse, ButtonHighlight")
         .attr({x:menuMargin+70, y:menuMargin + 20, h:15, w:40})
-        .text("Pause")
+        .text(boldText("Pause"))
         .bind("MouseDown", function() {
             if (economy.speed > 0)
             {
                 economy.speed = 0;
-                this.text("Play");
-                Crafty("Time").each(function() {this.text("--") });
+                this.text(boldText("Play"));
+                Crafty("Time").each(function() {this.text(boldText("--")) });
             } else {
                 economy.speed = 1;
                 economy.newStep();
-                this.text("Pause");                
+                this.text(boldText("Pause"));                
                 
-                Crafty("Time").each(function() {this.text("x1") });
+                Crafty("Time").each(function() {this.text(boldText("x1")) });
             }
         });
     var statusBar = Crafty.e("StatusBar, HUD")
@@ -459,15 +461,16 @@ var hud_create = function() {
 
 var hud_show = function() {
     var menu_height = 20;
+    var menu_width = 100;
     var cur_y = Crafty.viewport.height - (menu_height + menuMargin);
     Crafty.e("MenuTopLevel")
         .attr({y: cur_y, h: menu_height - 2, 
                 menuCtor: createBuildMenu, submenu: "BuildMenu"})
-        .text("Build");
+        .text(boldText("Build"));
     cur_y -= menu_height;
     Crafty.e("MenuTopLevel")
         .attr({ y: cur_y, h: menu_height - 2})
-        .text("Destroy")
+        .text(boldText("Destroy"))
         .bind("MouseDown", function() {
             hud_state.mode = hudModes.destroy;
             hud_state.modeArg = "";
@@ -476,23 +479,23 @@ var hud_show = function() {
     cur_y -= menu_height;
     Crafty.e("MenuTopLevel")
         .attr({ y: cur_y, h: menu_height -2})
-        .text("Select");
+        .text(boldText("Select"));
 
     cur_y -= menu_height;
     resourceOverlayView = null; // intentionally global
-    resourceOverlayView = Crafty.e("ResourceMenu, HUD, Mouse")
-        .attr({x: Crafty.viewport.width - (60 + menuMargin), y: cur_y,
-                w:60, h: menu_height -2, isOverlayEnabled: false})
-        .text("Resources")
+    resourceOverlayView = Crafty.e("ResourceMenu, HUD, Mouse, ButtonHighlight")
+        .attr({x: Crafty.viewport.width - (menu_width + menuMargin), y: cur_y,
+               w:menu_width, h: menu_height -2, isOverlayEnabled: false})
+        .text(boldText("Show Resources"))
         .css({"cursor":"pointer",
             "text-align":"center"})
         .bind("MouseDown", function() {
             Crafty.audio.play("mainmenu");
             this.isOverlayEnabled = !this.isOverlayEnabled;
             if (this.isOverlayEnabled) {
-                    this.css({"background-color":selectedMenu});
+                this.text(boldText("Hide Resources"));
             } else {
-                    this.css({"background-color":bgCol});
+                this.text(boldText("Show Resources"));
             }
             showResources(this.isOverlayEnabled);
         });
