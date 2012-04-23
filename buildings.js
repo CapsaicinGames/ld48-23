@@ -389,7 +389,11 @@ function build(blueprint, tileToBuildOn) {
                z: tileToBuildOn.z+1,
                tileEntity: tileToBuildOn,
                overlay: over 
-              });
+              })
+        .areaMap([tilesize/2,tilesize/2],
+                 [tilesize,3*tilesize/4],
+                 [tilesize/2,tilesize],
+                 [0,3*tilesize/4]);
     bldg.onBuild(
         asteroid.getResource(tileToBuildOn.map_x, tileToBuildOn.map_y), 
         tileToBuildOn.map_x, tileToBuildOn.map_y
