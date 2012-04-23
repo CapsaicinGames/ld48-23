@@ -56,6 +56,10 @@ var describeNonExistentBuilding = function(name) {
     return txt;
 };
 
+var isScreenNarrow = function() {
+    return Crafty.viewport.width < 700;
+};
+
 var createBuildMenu = function() {
     var menu_width = 95;
     var menu_height = 16;
@@ -66,7 +70,7 @@ var createBuildMenu = function() {
 
     var buildingCount = buildingNames.length;
 
-    var isNarrowScreen = Crafty.viewport.width < 700;
+    var isNarrowScreen = isScreenNarrow();
 
     var chosenMenuCreator = isNarrowScreen
         ? horizontalMenuCreator
@@ -237,7 +241,7 @@ var hud_setup = function() {
                     this.menuCtor();
                 }
 
-                var showStatusBar = this.submenu == null;
+                var showStatusBar = this.submenu == null || isScreenNarrow() == false;
                 Crafty("StatusBar").each(function () {
                         this.visible = showStatusBar;
                     });
@@ -269,7 +273,7 @@ var hud_setup = function() {
         .attr({
             x: menu_margin,
             y: Crafty.viewport.height - menu_margin - 15,
-            w: (Crafty.viewport.width - (menu_margin*2)) * 0.75,
+            w: (Crafty.viewport.width - (menu_margin*2)) * 0.7,
             h: 15,
             onTick: function() {
                 var topMsg = statusMessages.calculateTopMessage();
