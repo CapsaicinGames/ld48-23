@@ -11,7 +11,7 @@ var bgCol = "#002b36"; // base03
 var textCol = "#839496"; // base0
 var goodTextCol = "#268bd2"; // blue (because green is a bit yellow)
 var errorTextCol = "#dc322f"; // red
-var selectedMenu = "#073642"; // base02
+var selectedMenu = "#073642"; // base2
 //var selectedMenu = "#e0ffe0";
 
 function horizontalMenuCreator(menuWidth, menuHeight, menuPadding, itemCount) {
@@ -306,6 +306,7 @@ var hud_setup = function() {
             h: 15,
         })
         .text(" ")
+        .css({"background-color": selectedMenu});
     ;
 
 };
@@ -316,10 +317,10 @@ var refreshStatusBar = function() {
     var newMsgStr = topMsg == null ? -100 : topMsg.s;
 
     Crafty("StatusBar").each(function() {
-        this.textColor( newMsgStr === magicTutorialPriority ? goodTextCol
+        this.textColor( newMsgStr === magicTutorialPriority ? textCol
                         : newMsgStr > 0 ? errorTextCol 
-                        : newMsgStr === 0 ? goodTextCol
-                        : textCol);
+                        : newMsgStr === 0 ? textCol
+                        : goodTextCol);
         this.text(newText);
     });
 };
