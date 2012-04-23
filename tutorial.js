@@ -32,6 +32,10 @@ var tutorial = {
             return;
         }
 
+        if (this._states[this._currentState][eventName] == null) {
+            return;
+        }
+
         this._states[this._currentState][eventName]();
     },
 
