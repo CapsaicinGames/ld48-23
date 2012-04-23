@@ -131,6 +131,7 @@ function buildings_setup() {
             buildable: false,
         },
         "Mine": {
+            desc: "Extracts raw materials from the ground beneath. Rates of material extraction differ depending on material.",
             constructionCost: [ 
                 newResourceDelta(resourcetypes.steel, -3),
                 newResourceDelta(resourcetypes.plastic, -1),
@@ -138,6 +139,7 @@ function buildings_setup() {
             factory: function() { return createMine(-1, 1, 3, "Mine"); }
         },
         "Super Mine": { 
+            desc: "A more effective but more costly version of the regular mine",
             constructionCost: [
                 newResourceDelta(resourcetypes.steel, -7),
                 newResourceDelta(resourcetypes.plastic, -2),
