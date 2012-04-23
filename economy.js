@@ -310,6 +310,7 @@ var economy_setup = function() {
                     this.timePerStep = 2000;
                 }
                 this.timeout(function() {this.newStep();}, this.timePerStep);
+                tutorial.onEvent("tick");
             },
             populate: function(building, delta) {
                 if (building.minActive == 0) { 
