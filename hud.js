@@ -467,6 +467,9 @@ var refreshResources = function() {
 }
 
 var showResources = function(isShown) {
+    if (isShown) {
+        tutorial.onEvent("resourcesViewOpened");
+    }
     Crafty("ResourceOverlay").each(function() {
         this.setVisibility(isShown);
     });
