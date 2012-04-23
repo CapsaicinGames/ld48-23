@@ -249,7 +249,7 @@ window.onload = function() {
 
         iso.place(newIsometricTiles[0].coord[0], newIsometricTiles[0].coord[1], 0, cursor);
 
-        tutorial.init();
+        initTutorial();
 
     });
 
