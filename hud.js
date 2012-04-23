@@ -192,6 +192,9 @@ var hud_setup = function() {
                 "background-color":bgCol,
                 "border-radius":"3px",
                 "padding":"1px",
+                "-moz-user-select":"none",
+                "-ms-user-select":"none",
+                "-webkit-user-select":"none"
                 });
             this.attr({z: 1000, alpha: 1.0});
             }
@@ -451,7 +454,7 @@ var hud_create = function() {
         .attr({
             x: menuMargin,
             y: menuMargin,
-            w: (Crafty.viewport.width - (menuMargin*2)),
+            w: (Crafty.viewport.width - (105 + menuMargin*2)),
             h: 15,
         })
         .text(" ")
