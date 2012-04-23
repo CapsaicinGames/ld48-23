@@ -400,6 +400,8 @@ function build(blueprint, tileToBuildOn) {
     );
 
     tileToBuildOn._canBuild = false;
+
+    tutorial.onEvent("build", bldg.name);
     
     return bldg;
 }
