@@ -32,10 +32,7 @@ function initTutorial() {
                 }, 
                 
                 firstTimeInBuildMenu: {
-                    enter: function() {
-                        tutorial.timeout(function() { tutorial._setState("waitForPower"); },
-                                         5000);
-                    },
+                    timer: { nextState: "waitForPower", time: 5000 },
                     
                     tick: function() {
                         statusMessages.addMessage(
@@ -54,10 +51,7 @@ function initTutorial() {
                 },
 
                 resourceGuide: {
-                    enter: function() {
-                        tutorial.timeout(function() { tutorial._setState("buildMine"); },
-                                         4000);
-                    },
+                    timer: { nextState: "buildMine", time: 4000 },
 
                     tick: function() {
                         statusMessages.addMessage(
@@ -68,10 +62,7 @@ function initTutorial() {
                 },
 
                 buildMine: {
-                   enter: function() {
-                        tutorial.timeout(function() { tutorial._setState("resourcesView"); },
-                                         4000);
-                    },
+                    timer: { nextState: "resourcesView", time: 4000 },
 
                     tick: function() {
                         statusMessages.addMessage(
@@ -108,7 +99,18 @@ function initTutorial() {
 //                console.log("switch to tutorial state " + newStateName);
                 this._currentState = newStateName;
                 this.onEvent("enter");
+                this._registerTimer(this._states[this._currentState]);
                 this.onEvent("tick");
+            },
+
+            _registerTimer: function(currentState) {
+                if (currentState == null || currentState.timer == null) {
+                    return;
+                }
+
+                this.timeout(
+                    function() { tutorial._setState(currentState.timer.nextState); }, 
+                    currentState.timer.time);
             },
         });
     
