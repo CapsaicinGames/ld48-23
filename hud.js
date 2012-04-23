@@ -1,5 +1,5 @@
 
-var menuMargin = 30;
+var menuMargin = 25;
 var selectedMenu = "#e0ffe0";
 
 function horizontalMenuCreator(menuWidth, menuHeight, menuPadding, itemCount) {
@@ -350,40 +350,52 @@ var hud_select_building = function() {
     Crafty("Selected").each(function () { 
             this.text(info);}); 
 
-    var bldgNeedsColonists = bldg.minActive > 0;
-    hud_colonists(bldgNeedsColonists, bldgNeedsColonists);
+    hud_colonists(bldg._colonists < bldg.maxColonists, bldg._colonists > 0);
    
 };
 
 var hud_colonists = function(showplus, showminus) {
-    Crafty("ColonistMenu").each(function() {this.destroy();});
     if (showplus === true) {
-        Crafty.e("ColInc, ColonistMenu")
-            .attr({x: Crafty.viewport.width - 50, y: menuMargin, w: 20, h: 15})
-            .text("+")
-            .bind("MouseDown", function() {
-                    economy.populate(Crafty(hud_state.modeArg), 1);
-                    hud_select_building();
-                });
+        if (Crafty("ColInc").length == 0) {
+            Crafty.e("ColInc, ColonistMenu")
+                .attr({x: Crafty.viewport.width - (menuMargin + 15), y: menuMargin, w: 15, h: 15})
+                .text("+")
+                .bind("MouseDown", function() {
+                        var bldg = Crafty(hud_state.modeArg);
+                        economy.populate(bldg, 1);
+                        hud_select_building();
+                    });
+        }
+    } else {
+        Crafty("ColInc").each(function() {this.destroy();});
     }
     if (showminus === true) {
-        Crafty.e("ColDec, ColonistMenu")
-            .attr({x: Crafty.viewport.width - 80, y: menuMargin, w: 20, h: 15})
-            .text("-")
-            .bind("MouseDown", function() {
-                    economy.populate(Crafty(hud_state.modeArg), -1);
-                    hud_select_building();
-                });
+        if (Crafty("ColDec").length == 0) {
+            Crafty.e("ColDec, ColonistMenu")
+                .attr({x: Crafty.viewport.width - (menuMargin + 100), y: menuMargin, w: 15, h: 15})
+                .text("-")
+                .bind("MouseDown", function() {
+                        var bldg = Crafty(hud_state.modeArg);
+                        economy.populate(bldg, -1);
+                        hud_select_building();
+                    });
+        }
     } else {
+        Crafty("ColDec").each(function() {this.destroy();});
+    }
+    if (showplus || showminus) {
+        if (Crafty("ColMenu").length == 0) {
+            Crafty.e("ColMenu, ColonistMenu")
+                .attr({w:60, h: 15, y: menuMargin,
+                        x: Crafty.viewport.width - (menuMargin + 80)})
+                .text("Colonists");
+        }
+    } else {
+        Crafty("ColMenu").each(function() {this.destroy();});
     }
 };
 
 var hud_show = function() {
-    Crafty("Selected").each(function() {this.destroy();});
-    Crafty.e("Selected, HUD")
-        .attr({ y: menuMargin+40, h: 200, w: 100, x: Crafty.viewport.width - (menuMargin + 100)})
-        .text("Nothing selected");
-
     var menu_height = 15;
     var cur_y = Crafty.viewport.height - (menu_height + menuMargin);
     Crafty.e("MenuTopLevel")
@@ -418,6 +430,12 @@ var hud_show = function() {
             }
             showResources(this.isOverlayEnabled);
         });
+    cur_y -= menu_height;
+
+    Crafty("Selected").each(function() {this.destroy();});
+    Crafty.e("Selected, HUD")
+        .attr({ y: menuMargin+20, h: cur_y -(menuMargin + 15), w: 100, x: Crafty.viewport.width - (menuMargin + 100)})
+        .text("Nothing selected");
 
 };
 
