@@ -119,12 +119,12 @@ function buildings_setup() {
                         onBuild: onLanderBuild,
                     })
                     .numWorkers(0,0)
-                    .storageDelta(resourcetypes.colonists, 10)
-                    .storageDelta(resourcetypes.food, 100)
-                    .storageDelta(resourcetypes.ice, 40)
-                    .storageDelta(resourcetypes.water, 50)
-                    .storageDelta(resourcetypes.plastic, 40)
-                    .storageDelta(resourcetypes.steel, 40)
+                    .storageDelta(resourcetypes.colonists, 20)
+                    .storageDelta(resourcetypes.food, 40)
+                    .storageDelta(resourcetypes.ice, 20)
+                    .storageDelta(resourcetypes.water, 20)
+                    .storageDelta(resourcetypes.plastic, 15)
+                    .storageDelta(resourcetypes.steel, 15)
                     .resourceDelta(resourcetypes.food, 0.5)
                     .resourceDelta(resourcetypes.water, 0.5)
                     ;
@@ -139,19 +139,12 @@ function buildings_setup() {
             ],
             factory: function() { return createMine(-1, 1, 3, "Mine"); }
         },
-        "Super Mine": { 
-            desc: "A more effective but more costly version of the regular mine",
-            constructionCost: [
-                newResourceDelta(resourcetypes.steel, -7),
-                newResourceDelta(resourcetypes.plastic, -2),
-                newResourceDelta(resourcetypes.widgets, -2),
-            ],
-            factory: function() { return createMine(-2, 3, 8, "Super Mine"); }
-        },
         "Habitat": {
             desc: "Provides space for more colonists to live and sleep",
             constructionCost: [
                 newResourceDelta(resourcetypes.steel, -2),
+                newResourceDelta(resourcetypes.plastic, -2),
+                newResourceDelta(resourcetypes.widgets, -2),
             ],
             factory: function() {
                 return Crafty.e("Storage, habitatsprite")
@@ -160,7 +153,7 @@ function buildings_setup() {
                     })
                     .numWorkers(0,0)
                     .resourceDelta(resourcetypes.energy, -1)
-                    .storageDelta(resourcetypes.colonists, 25);
+                    .storageDelta(resourcetypes.colonists, 15);
             },
         },
         "Capacitor Bank": {

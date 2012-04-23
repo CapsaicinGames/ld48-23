@@ -10,7 +10,7 @@ var resourcetypes = Object.freeze({
     regolith: { name: "Regolith", 
                 initialValue: 0, 
                 mineRate: 0.5 },
-    steelore: { name: "Steel ore",
+    steelore: { name: "Iron ore",
                 initialValue: 0,
                 mineRate: 0.5 },
     preciousore: { name: "Rare earth ore",
@@ -38,11 +38,18 @@ var colonistNeeds = Object.freeze({
         newResourceDelta(resourcetypes.water, -0.05),
         ]
 });
-
+var EPSILON = 0.001;
 var colonistBreeding = Object.freeze({
     everyNeed: 1,
     neededDelta: [
         newResourceDelta(resourcetypes.food, 0.1),
         newResourceDelta(resourcetypes.water, 0.1),
+        ],
+    neededMin: [ // these are NOT deltas
+        newResourceDelta(resourcetypes.food, 15),
+        newResourceDelta(resourcetypes.water, 15),
+        ],
+    breedCost: [
+        newResourceDelta(resourcetypes.food, -5),
         ]
 });
