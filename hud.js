@@ -124,6 +124,7 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
 
     txt += "</ul>";
     txt += describeNonExistentBuilding(buildingName);
+    selectedBuilding = null; // intentional global
     Crafty.e("BuildMenu")
         .text(buildingName)
         .attr({x : menuX, 
@@ -131,6 +132,7 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
                w: menuWidth-1,
                h: menuHeight-2,
                savedText: null,
+               masterText: buildingName,
                printText: txt})
         .bind("MouseOver", function() {
             var tmp = this.printText;
@@ -140,8 +142,10 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
                 this.text(tmp);
             });
             this.savedText = save;
+            this.css({"background-color": selectedMenu});
         })
-        .css({"cursor":"pointer"})
+        .css({"cursor":"pointer",
+              "text-align":"center"})
         .bind("MouseOut", function() {
             if (this.savedText != null) {
                 var send = this.savedText;
@@ -150,16 +154,22 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
                 });
                 this.savedText = null;
             }
+            if (selectedBuilding != this) {
+                this.css({"background-color": bgCol});
+            }
         })
         .bind("Click", function() {
             
             Crafty.audio.play("mainmenu");
             Crafty("BuildMenu").each(function () {
                 this.css({"background-color": bgCol});
+                this.text(this.masterText);
             });
             this.css({"background-color": selectedMenu});
+            selectedBuilding = this;
             hud_state.mode = hudModes.build;
             hud_state.modeArg = this._text;
+            this.text(boldText(this.masterText));
             var tmp = this.printText;
             Crafty("Selected").each(function() {
                 this.text(tmp);
