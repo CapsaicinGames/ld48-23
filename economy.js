@@ -294,7 +294,7 @@ var economy_setup = function() {
                 }
                 
                 this.constrainResources();
-                this.updateStatus(oldres);
+                this.updateStatus(oldres, oldcolonistscount);
                 switch(this.speed)
                 {
                 case 5:
@@ -337,7 +337,7 @@ var economy_setup = function() {
                 }
             },
             
-            updateStatus : function(oldres) {
+            updateStatus : function(oldres, oldcolonistscount) {
                 
                 var newstatus = "<table class='statustable'><tr><th>Resource</th><th>Amt</th></tr>";
 
@@ -364,7 +364,9 @@ var economy_setup = function() {
                             " class='summary'" : "";
                     newstatus += "<tr" + classinfo + "><td>" + key + "</td><td style='text-align: right'><font color=\"" + resTextCol + "\">" + val + "</font></td></tr>";
                 }
-                newstatus += "<tr class='summary'><td>Colony size</td><td style='text-align: right'>" + this._totalColonists + "</td></tr>";
+                var colonySizeCol = colSelect(oldcolonistscount, this._totalColonists);
+                newstatus += "<tr class='summary'><td>Colony size</td><td style='text-align: right'><font color=\"" + colonySizeCol + "\">" 
+                    + this._totalColonists + "</font></td></tr>";
 
                 var energyProductionCol = colSelect(0.05, this.energyDelta);
                 newstatus += "<tr class='summary'><td>Energy production</td><td style='text-align: right'><font color=\"" + energyProductionCol + "\">" 
