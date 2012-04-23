@@ -342,9 +342,10 @@ var economy_setup = function() {
             updateStatus : function(oldres, oldcolonistscount) {
                 
                 var newstatus = "<table class='statustable'><tr><th>Resource</th><th>Amt</th></tr>";
-
+                var localDays = this.days;
                 var colSelect = function(oldVal, newVal){
-                    return oldVal > newVal + 0.0001 ? errorTextCol
+                    return localDays == 1 ? textCol
+                        : oldVal > newVal + 0.0001 ? errorTextCol
                         : oldVal < newVal - 0.0001 ? goodTextCol
                         : textCol;
                     };
