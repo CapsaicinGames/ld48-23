@@ -356,12 +356,19 @@ var economy_setup = function() {
                     building._colonists += delta;
                     this._resources["Colonists"] -= delta;
                 }
+                else {
+                    statusMessages.addMessage(
+                        "Not enough colonists for new " + building.name 
+                            + ", will start inactive!",
+                        15
+                    );
+                }
             },
 
             createMessages : function() {
                 if (this.energyDelta <= 0.0001) {
                     statusMessages.addMessage(
-                        "No excess energy production. Consider building more power sources.",
+                        "No excess energy production. Build more solar panels!",
                         1);
                 }
             },

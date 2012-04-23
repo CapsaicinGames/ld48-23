@@ -114,11 +114,70 @@ function initTutorial() {
                 },
 
                 analyserInfo: {
+                    showMsg: true,
+
+                    enter: function() {
+                        tutorial.timeout(
+                            function() { tutorial._states.analyserInfo.showMsg = false; },
+                            8000
+                        );
+                    },
+
+                    tick: function() {
+                        if (this.showMsg) {
+                            statusMessages.addMessage(
+                                "The Analyser will explore one tile every day. To make it explore faster, click Select, then tap on the Analyser...",
+                                magicTutorialPriority
+                            );
+                        }
+                    },
+
+                    selectBuilding: function(blueprintName) {
+                        tutorial._setState("explainColonists");
+                    },
+                },
+
+                explainColonists: {
+                    populate: function() {
+                        tutorial._setState("analyserPopulateSuccess");
+                    },
+
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "Most buildings need at least 1 colonist to function. Click the + sign on the right of the screen to add more.",
+                            magicTutorialPriority
+                        );
+                    },
+                },
+
+                analyserPopulateSuccess: {
+                    timer: { nextState: "colonistsDown", time: 4000 },
+                    
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "The Analyser will now reveal resources faster.",
+                            magicTutorialPriority
+                        );
+                    },
+                },
+
+                colonistsDown: {
+                    timer: { nextState: "inactiveBuildings", time: 5000 },
+
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "If you are short of colonists, you can also remove them with the - button...",
+                            magicTutorialPriority
+                        );
+                    },
+                },
+
+                inactiveBuildings: {
                     timer: { nextState: "idle", time: 5000 },
 
                     tick: function() {
                         statusMessages.addMessage(
-                            "The Analyser will explore one tile every day. To make it explore faster, click Select, then tap on the Analyser...",
+                            "...but if you remove all colonists, a building will not function",
                             magicTutorialPriority
                         );
                     },

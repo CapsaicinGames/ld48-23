@@ -72,10 +72,10 @@ window.onload = function() {
         //Crafty.background("rgb(220, 250, 220)");
         Crafty.background("url('image/stars.png')");
         Crafty.e("HUD, Mouse").attr({ w: 300, h:200, x:150, y:120})
-            .text("<p>GAME NAME HERE</p>" +
+            .text("<h2>SimAsteroid</h2>" +
                   "<p>The world needs more rare earths for making all their electronics.  The Company has seen a brilliant opportunity in asteroid K421 that's passing through our solar system, it's got good deposits of the rare earths and enough iron ore and ice to live off while you're doing it.</p>" +
                   "<p>Unfortunately it's only within range of the transport ships for a limited time, so you'd better try and extract as much as you can before it's too late.</p>" +
-                  "<br /><p>Click here to continue</p>")
+                  "<p>Click here to start enhancing shareholder value!</p>")
             .css({"text-align": "center"})
             .bind("Click", function() { Crafty.scene("main"); });
     });

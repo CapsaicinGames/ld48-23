@@ -318,9 +318,10 @@ var buildingDescription = function(bldg) {
 
 var hud_select_building = function() {
     var bldg = Crafty(hud_state.modeArg);
+    tutorial.onEvent("selectBuilding", bldg.name);
     var info = "<b>" + bldg.name + "</b><br>";
     info += buildingDescription(bldg);
-    info += bldg.isActive() ? "Active" : "<b>INACTIVE</b>";
+    info += bldg.isActive() ? "Active" : "<b><font color=\"" + errorTextCol + "\">INACTIVE</font></b>";
     if (bldg.missing != "") {
         info += "<br/><font color=\"" + errorTextCol + "\">" + bldg.missing + "</font>";
     }
@@ -338,10 +339,11 @@ var hud_colonists = function(showplus, showminus) {
                 .attr({x: Crafty.viewport.width - (menuMargin + 15), y: menuMargin, w: 15, h: 15})
                 .text("+")
                 .bind("MouseDown", function() {
-                        var bldg = Crafty(hud_state.modeArg);
-                        economy.populate(bldg, 1);
-                        hud_select_building();
-                    });
+                    var bldg = Crafty(hud_state.modeArg);
+                    tutorial.onEvent("populate", bldg.name);
+                    economy.populate(bldg, 1);
+                    hud_select_building();
+                });
         }
     } else {
         Crafty("ColInc").each(function() {this.destroy();});
