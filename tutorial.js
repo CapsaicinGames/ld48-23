@@ -63,6 +63,17 @@ function initTutorial() {
 
                 buildMine: {
                     
+                    enter: function() {
+                        var isOverlayAlreadyOn = false
+                        Crafty("ResourceMenu").each(function() {
+                            isOverlayAlreadyOn = this.isOverlayEnabled;
+                        });
+
+                        if (isOverlayAlreadyOn) {
+                            tutorial._setState("astroanalyser");
+                        }
+                    },
+
                     resourcesViewOpened: function() {
                         tutorial._setState("astroanalyser");
                     },
@@ -77,13 +88,22 @@ function initTutorial() {
 
 
                 astroanalyser: {
-                    timer: { nextState: "idle", time: 4000 },
+                    showMsg: true,
+
+                    enter: function() {
+                        tutorial.timeout(
+                            function() { tutorial._states.astroanalyser.showMsg = false; },
+                            8000
+                        );
+                    },
 
                     tick: function() {
-                        statusMessages.addMessage(
-                            "Initially you can only see resources around your lander. Place an AstroAnalyser to see more.",
-                            magicTutorialPriority
-                        );
+                        if (this.showMsg) {
+                            statusMessages.addMessage(
+                                "Initially you can only see resources around your lander. Place an AstroAnalyser to see more.",
+                                magicTutorialPriority
+                            );
+                        }
                     },
                 },
                 
