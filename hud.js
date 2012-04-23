@@ -2,6 +2,51 @@
 var menu_margin = 30;
 var selectedMenu = "#e0ffe0";
 
+function horizontalMenuCreator(menuWidth, menuHeight, menuPadding, itemCount) {
+    this.menuWidth = menuWidth;
+    this.menuHeight = menuHeight;
+    this.menuPadding = menuPadding;
+
+    this.curX = Crafty.viewport.width - 200;
+    this.curY = Crafty.viewport.height - (menu_margin + this.menuHeight);
+
+    this.nextMenuItem = function() {
+        this.curX -= this.menuWidth + this.menuPadding;
+        if (this.curX < menu_margin) {
+            this.curY -= (this.menuHeight + this.menuPadding);
+            this.curX = Crafty.viewport.width - 205 - this.menuWidth;
+        }
+    };
+
+    return this;
+}
+
+function verticalMenuCreator(menuWidth, menuHeight, menuPadding, itemCount) {
+    this.menuWidth = menuWidth;
+    this.menuHeight = menuHeight;
+    this.menuPadding = menuPadding;
+
+    var itemsPerColumn = (Crafty.viewport.height - menu_margin) 
+        / (menuHeight + menuPadding);
+
+    this.curX = Crafty.viewport.width - 250;
+    this.curY = menu_margin 
+        + (itemCount < itemsPerColumn 
+           ? (itemsPerColumn - itemCount) * (menuHeight + menuPadding) 
+           : 0 
+          );
+
+    this.nextMenuItem = function() {
+        this.curY += this.menuHeight + this.menuPadding;
+        if (this.curY > Crafty.viewport.height - menu_margin) {
+            this.curY = menu_margin;
+            this.curX -= (this.menuPadding + this.menuWidth);
+        }
+    };
+
+    return this;
+}
+
 var describeNonExistentBuilding = function(name) {
     var fakeResource = {name: "(resource)", mineRate: 1};
     var tmpbldg = buildingBlueprints[name].factory();
@@ -21,48 +66,47 @@ var createBuildMenu = function() {
 
     var buildingCount = buildingNames.length;
 
-    var itemsPerColumn = (Crafty.viewport.height - menu_margin) 
-        / (menu_height + menu_padding);
+    var isNarrowScreen = Crafty.viewport.width < 700;
 
-    var cur_x = Crafty.viewport.width - 250;
-    var cur_y = menu_margin 
-        + (buildingCount < itemsPerColumn 
-           ? (itemsPerColumn - buildingCount) * (menu_height + menu_padding) 
-           : 0 
-          );
+    var chosenMenuCreator = isNarrowScreen
+        ? horizontalMenuCreator
+        : verticalMenuCreator;
+
+    if (isNarrowScreen) {
+        buildingNames.reverse();
+    }
+
+    var menuBuilder
+        = chosenMenuCreator(menu_width, menu_height, menu_padding, buildingCount);
 
     for (var buildingIndex in buildingNames)
     {
-        name = buildingNames[buildingIndex];
+        var name = buildingNames[buildingIndex];
 
         if (buildingBlueprints[name].buildable != false)
         {
-            _addBuildMenuItem(cur_x, cur_y, menu_width, menu_height);
-            
-            cur_y += menu_height + menu_padding;
-            if (cur_y > Crafty.viewport.height - menu_margin) {
-                cur_y = menu_margin;
-                cur_x -= (menu_padding + menu_width);
-            }
+            _addBuildMenuItem(menuBuilder.curX, menuBuilder.curY, 
+                              menu_width, menu_height, name);
+            menuBuilder.nextMenuItem();
         }
 
     }
 };
 
-function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight) {
-    var txt = "<b>" + name + "</b><br>";
+function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
+    var txt = "<b>" + buildingName + "</b><br>";
     txt += "Costs:<ul class='reslist'>";
     for (var i = 0; 
-         i < buildingBlueprints[name].constructionCost.length; 
+         i < buildingBlueprints[buildingName].constructionCost.length; 
          ++i) {
-        var res = buildingBlueprints[name].constructionCost[i];
+        var res = buildingBlueprints[buildingName].constructionCost[i];
         txt += "<li>" + (-res.delta) + " " + res.r + "</li>";
     }
 
     txt += "</ul>";
-    txt += describeNonExistentBuilding(name);
+    txt += describeNonExistentBuilding(buildingName);
     Crafty.e("BuildMenu")
-        .text(name)
+        .text(buildingName)
         .attr({x : menuX, 
                y : menuY,
                w: menuWidth-1,
