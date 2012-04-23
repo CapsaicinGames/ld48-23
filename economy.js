@@ -16,6 +16,7 @@ var economy_setup = function() {
             for(var rKey in resourcetypes) {
                 this._resources[resourcetypes[rKey].name] = resourcetypes[rKey].initialValue;
             }
+            this.oldres = Crafty.clone(this._resources);
         },
         
         getResourceValue: function(resourceType) {
@@ -282,8 +283,8 @@ var economy_setup = function() {
             timePerStep: 2000,
             newStep: function() {
                 this.days++;
-                var oldres = Crafty.clone(this._resources);
-                var oldcolonistscount = this._totalColonists;
+                this.oldres = Crafty.clone(this._resources);
+                this.oldcolonistscount = this._totalColonists;
                 this.updateProduction();
                 
                 if (!(this.days % colonistNeeds.every)) {
@@ -291,12 +292,12 @@ var economy_setup = function() {
                     //console.log(killed + " died, now " + this._totalColonists);
                 }
                 
-                if (this.isBreedingPossible(oldcolonistscount, oldres)) {
+                if (this.isBreedingPossible(this.oldcolonistscount, this.oldres)) {
                     this.doBreed();
                 }
                 
                 this.constrainResources();
-                this.updateStatus(oldres, oldcolonistscount);
+                this.updateStatus();
                 switch(this.speed)
                 {
                 case 5:
@@ -339,7 +340,7 @@ var economy_setup = function() {
                 }
             },
             
-            updateStatus : function(oldres, oldcolonistscount) {
+            updateStatus : function() {
                 
                 var newstatus = "<table class='statustable'><tr><th>Resource</th><th>Amt</th></tr>";
                 var localDays = this.days;
@@ -354,7 +355,7 @@ var economy_setup = function() {
                     var key = rKey;
                     var val = this._resources[rKey];
 
-                    var resTextCol = colSelect(oldres[rKey], val);
+                    var resTextCol = colSelect(this.oldres[rKey], val);
 
                     if (rKey === "Colonists") {
                         key = "Idle " + rKey;
@@ -367,7 +368,7 @@ var economy_setup = function() {
                             " class='summary'" : "";
                     newstatus += "<tr" + classinfo + "><td>" + key + "</td><td style='text-align: right'><font color=\"" + resTextCol + "\">" + val + "</font></td></tr>";
                 }
-                var colonySizeCol = colSelect(oldcolonistscount, this._totalColonists);
+                var colonySizeCol = colSelect(this.oldcolonistscount, this._totalColonists);
                 newstatus += "<tr class='summary'><td>Colony size</td><td style='text-align: right'><font color=\"" + colonySizeCol + "\">" 
                     + this._totalColonists + "</font></td></tr>";
 
