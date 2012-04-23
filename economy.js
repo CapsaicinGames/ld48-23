@@ -336,8 +336,6 @@ var economy_setup = function() {
             updateStatus : function() {
 
                 var newstatus = "<table class='statustable'><tr><th>Resource</th><th>Amt</th></tr>";
-                newstatus += "<tr><td>Energy production</td><td>" + 
-                    this.energyDelta.toFixed(1) + "</td></tr>";
 
                 for(var rKey in this._resources) {
                     var key = rKey;
@@ -348,10 +346,14 @@ var economy_setup = function() {
                     } else {
                         val = this._resources[rKey].toFixed(1);
                     }
-                    newstatus += "<tr><td>" + key + "</td><td>" + val + "</td></tr>";
+                    var classinfo = key == resourcetypes.points.name ?
+                            " class='summary'" : "";
+                    newstatus += "<tr" + classinfo + "><td>" + key + "</td><td style='text-align: right'>" + val + "</td></tr>";
                 }
-                newstatus += "<tr><td>Colony size</td><td>" + this._totalColonists + "</td></tr>";
-                newstatus += "<tr><td>Day</td><td>" + this.days + "</td></tr></table>";
+                newstatus += "<tr class='summary'><td>Colony size</td><td style='text-align: right'>" + this._totalColonists + "</td></tr>";
+                newstatus += "<tr class='summary'><td>Energy production</td><td style='text-align: right'>" + 
+                    this.energyDelta.toFixed(1) + "</td></tr>";
+                newstatus += "<tr><td>&nbsp;</td></tr><tr class='summary' id='day'><td>Day</td><td style='text-align: right'>" + this.days + "</td></tr></table>";
                 Crafty("Status").each(function() {
                         this.text(newstatus);
                 });

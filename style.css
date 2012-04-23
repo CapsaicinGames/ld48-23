@@ -9,6 +9,12 @@ table {
 th, tr, td {
     padding: 0px;
 }
+tr.summary {
+    font-weight: bold;
+}
+tr.summary#day {
+    font-size: 110%;
+}
 div#cr-stage {
     padding-right: 15px;
     margin-right: 15px;

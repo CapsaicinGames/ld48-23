@@ -1,5 +1,5 @@
 
-var menu_margin = 30;
+var menuMargin = 30;
 var selectedMenu = "#e0ffe0";
 
 function horizontalMenuCreator(menuWidth, menuHeight, menuPadding, itemCount) {
@@ -8,11 +8,11 @@ function horizontalMenuCreator(menuWidth, menuHeight, menuPadding, itemCount) {
     this.menuPadding = menuPadding;
 
     this.curX = Crafty.viewport.width - 200;
-    this.curY = Crafty.viewport.height - (menu_margin + this.menuHeight);
+    this.curY = Crafty.viewport.height - (menuMargin + this.menuHeight);
 
     this.nextMenuItem = function() {
         this.curX -= this.menuWidth + this.menuPadding;
-        if (this.curX < menu_margin) {
+        if (this.curX < this.menuWidth) {
             this.curY -= (this.menuHeight + this.menuPadding);
             this.curX = Crafty.viewport.width - 205 - this.menuWidth;
         }
@@ -26,11 +26,11 @@ function verticalMenuCreator(menuWidth, menuHeight, menuPadding, itemCount) {
     this.menuHeight = menuHeight;
     this.menuPadding = menuPadding;
 
-    var itemsPerColumn = (Crafty.viewport.height - menu_margin) 
+    var itemsPerColumn = (Crafty.viewport.height - menuMargin) 
         / (menuHeight + menuPadding);
 
     this.curX = Crafty.viewport.width - 250;
-    this.curY = menu_margin 
+    this.curY = menuMargin 
         + (itemCount < itemsPerColumn 
            ? (itemsPerColumn - itemCount) * (menuHeight + menuPadding) 
            : 0 
@@ -38,8 +38,8 @@ function verticalMenuCreator(menuWidth, menuHeight, menuPadding, itemCount) {
 
     this.nextMenuItem = function() {
         this.curY += this.menuHeight + this.menuPadding;
-        if (this.curY > Crafty.viewport.height - menu_margin) {
-            this.curY = menu_margin;
+        if (this.curY > Crafty.viewport.height - menuMargin) {
+            this.curY = menuMargin;
             this.curX -= (this.menuPadding + this.menuWidth);
         }
     };
@@ -172,11 +172,11 @@ var hud_setup = function() {
     // more complex it could do with breaking down
     // to separate items
     Crafty.e("Status, HUD")
-        .attr({ x : menu_margin, y : menu_margin+20, w : 110, h : 220} )
+        .attr({ x : menuMargin, y : menuMargin+20, w : 110, h : 250} )
         .text("No colony");
     // Controls the speed of time / economy
     Crafty.e("Time, HUD, Mouse")
-        .attr({ x: menu_margin, y: menu_margin, h: 15, w: 44})
+        .attr({ x: menuMargin, y: menuMargin, h: 15, w: 44})
         .text("x1")
         .bind("MouseDown", function() {
             switch (economy.speed)
@@ -199,7 +199,7 @@ var hud_setup = function() {
     // The Pause button.  It doesn't like
     // being pressed repeatedly
     Crafty.e("Pause, HUD, Mouse")
-        .attr({x:menu_margin+50, y:menu_margin, h:15, w:50})
+        .attr({x:menuMargin+50, y:menuMargin, h:15, w:50})
         .text("Pause")
         .bind("MouseDown", function() {
             if (economy.speed > 0)
@@ -252,7 +252,7 @@ var hud_setup = function() {
             init : function () {
                 this.requires("HUD, Mouse");
                 this.w = 60; 
-                this.x = Crafty.viewport.width - (this.w + menu_margin);
+                this.x = Crafty.viewport.width - (this.w + menuMargin);
                 this.bind("MouseDown", function() {this.onClick();});
             }
         });
@@ -266,15 +266,11 @@ var hud_setup = function() {
                 this.requires("HUD, Mouse");
                 }
             });
-    Crafty.e("Selected, HUD")
-        .attr({ y: menu_margin+40, h: 200, w: 100, x: Crafty.viewport.width - (menu_margin + 100)})
-        .text("Nothing selected");
-
     var statusBar = Crafty.e("StatusBar, HUD")
         .attr({
-            x: menu_margin,
-            y: Crafty.viewport.height - menu_margin - 15,
-            w: (Crafty.viewport.width - (menu_margin*2)) * 0.7,
+            x: menuMargin,
+            y: Crafty.viewport.height - menuMargin - 15,
+            w: (Crafty.viewport.width - (menuMargin*2)) * 0.7,
             h: 15,
             onTick: function() {
                 var topMsg = statusMessages.calculateTopMessage();
@@ -361,7 +357,7 @@ var hud_colonists = function(showplus, showminus) {
     Crafty("ColonistMenu").each(function() {this.destroy();});
     if (showplus === true) {
         Crafty.e("ColInc, ColonistMenu")
-            .attr({x: Crafty.viewport.width - 50, y: menu_margin, w: 20, h: 15})
+            .attr({x: Crafty.viewport.width - 50, y: menuMargin, w: 20, h: 15})
             .text("+")
             .bind("MouseDown", function() {
                     economy.populate(Crafty(hud_state.modeArg), 1);
@@ -370,7 +366,7 @@ var hud_colonists = function(showplus, showminus) {
     }
     if (showminus === true) {
         Crafty.e("ColDec, ColonistMenu")
-            .attr({x: Crafty.viewport.width - 80, y: menu_margin, w: 20, h: 15})
+            .attr({x: Crafty.viewport.width - 80, y: menuMargin, w: 20, h: 15})
             .text("-")
             .bind("MouseDown", function() {
                     economy.populate(Crafty(hud_state.modeArg), -1);
@@ -381,8 +377,13 @@ var hud_colonists = function(showplus, showminus) {
 };
 
 var hud_show = function() {
+    Crafty("Selected").each(function() {this.destroy();});
+    Crafty.e("Selected, HUD")
+        .attr({ y: menuMargin+40, h: 200, w: 100, x: Crafty.viewport.width - (menuMargin + 100)})
+        .text("Nothing selected");
+
     var menu_height = 15;
-    var cur_y = Crafty.viewport.height - (menu_height + menu_margin);
+    var cur_y = Crafty.viewport.height - (menu_height + menuMargin);
     Crafty.e("MenuTopLevel")
         .attr({y: cur_y, h: menu_height - 2, 
                 menuCtor: createBuildMenu, submenu: "BuildMenu"})
@@ -403,7 +404,7 @@ var hud_show = function() {
     cur_y -= menu_height;
     resourceOverlayView = null; // intentionally global
     resourceOverlayView = Crafty.e("ResourceMenu, HUD, Mouse")
-        .attr({x: Crafty.viewport.width - (60 + menu_margin), y: cur_y,
+        .attr({x: Crafty.viewport.width - (60 + menuMargin), y: cur_y,
                 w:60, h: menu_height -2, isOverlayEnabled: false})
         .text("Resources")
         .bind("MouseDown", function() {
