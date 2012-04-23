@@ -350,7 +350,7 @@ var hud_select_building = function() {
     tutorial.onEvent("selectBuilding", bldg.name);
     var info = "<b>" + bldg.name + "</b><br>";
     info += buildingDescription(bldg);
-    info += bldg.isActive() ? "Active" : "<b><font color=\"" + errorTextCol + "\">INACTIVE</font></b>";
+    info += bldg.isActive() ? "Active" : "<b><font color=\"" + errorTextCol + "\">INACTIVE - needs colonist</font></b>";
     if (bldg.missing != "") {
         info += "<br/><font color=\"" + errorTextCol + "\">" + bldg.missing + "</font>";
     }
