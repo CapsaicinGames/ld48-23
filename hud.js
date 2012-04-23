@@ -99,6 +99,7 @@ var createBuildMenu = function() {
 
 function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
     var txt = "<b>" + buildingName + "</b><br>";
+    txt += "<i>" + buildingBlueprints[buildingName].desc + "</i><br/>";
     txt += "Costs:<ul class='reslist'>";
     for (var i = 0; 
          i < buildingBlueprints[buildingName].constructionCost.length; 
