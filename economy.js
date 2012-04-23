@@ -90,9 +90,12 @@ var economy_setup = function() {
             // the building and enable the overlay saying it failed.
             // Otherwise clear the overlay
             // Also measure energy production
+
             for (var i = 0; i < bldgList.length; ++i) {
                 var cur_energy = 0;
                 var missing = this.debit(bldgList[i].delta);
+
+                var bldg = Crafty(bldgList[i].ent);
 
                 if (missing.length == 0) {
                     for (var j = 0; j < bldgList[i].delta.length; ++j) {
@@ -101,8 +104,7 @@ var economy_setup = function() {
                             break;
                         }
                     }
-                    this.energyDelta += cur_energy;
-                    var bldg = Crafty(bldgList[i].ent);
+                    this.energyDelta += cur_energy;                    
                     bldg.showOverlay("no");
                     bldg.missing = "";
                 } else {
