@@ -17,6 +17,7 @@ function buildings_setup() {
         resourceDeltas: [],
         destroyable: true,
         name: "Unknown",
+        desc: "",
         
         init: function() {
             this.resourceDeltas = [];
@@ -153,6 +154,7 @@ function buildings_setup() {
                 return Crafty.e("Storage, habitatsprite")
                     .attr({
                         name: "Habitat",
+                        desc: "Provides space for more colonists to live and sleep",
                     })
                     .numWorkers(0,0)
                     .resourceDelta(resourcetypes.energy, -1)
@@ -166,7 +168,10 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Storage, capacitorbanksprite")
-                    .attr({name: "Capacitor Bank"})
+                    .attr({
+                        name: "Capacitor Bank",
+                        desc: "Stores excess energy for future use",
+                    })
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.energy, 100);
             },
@@ -177,7 +182,10 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Storage, orelockersprite")
-                    .attr({name: "Ore locker"})
+                    .attr({
+                        name: "Ore locker",
+                        desc: "Stockpiles raw goods",
+                    })
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.steelore, 100)
                     .storageDelta(resourcetypes.regolith, 100)
@@ -190,7 +198,10 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("PowerGenerator, solarpanelsprite")
-                    .attr({name: "Solar Panel"})
+                    .attr({
+                        name: "Solar Panel",
+                        desc: "Produces energy to power the colony",
+                    })
                     .resourceDelta(resourcetypes.energy, 3);
             },
        },
@@ -200,7 +211,10 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Building, hydroponicssprite")
-                    .attr({name: "Hydroponics"})
+                    .attr({
+                        name: "Hydroponics",
+                        desc: "Uses water to grow food for the colonists. They need food and water to live",
+                    })
                     .resourceDelta(resourcetypes.energy, -1)
                     .resourceDelta(resourcetypes.water, -1)
                     .resourceDelta(resourcetypes.food, 1);
@@ -212,7 +226,10 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Building, icemeltersprite")
-                    .attr({name: "Ice melter"})
+                    .attr({
+                        name: "Ice melter",
+                        desc: "Breaks mined ice down at an industrial scale",
+                    })
                     .resourceDelta(resourcetypes.energy, -1)
                     .resourceDelta(resourcetypes.ice, -1)
                     .resourceDelta(resourcetypes.water, 1);
@@ -225,7 +242,10 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Storage, widgetfactorysprite")
-                    .attr({name: "Widget factory"})
+                    .attr({
+                        name: "Widget factory",
+                        desc: "Creates useful widgets that can build larger constructions",
+                    })
                     .numWorkers(3,3)
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steel, -0.2)
@@ -243,7 +263,10 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Storage, precioussmeltersprite")
-                    .attr({name: "Smelter"})
+                    .attr({
+                        name: "Smelter",
+                        desc: "Extracts the useful resources from raw " + resourcetypes.preciousore.name,
+                    })
                     .numWorkers(3,3)
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.preciousore, -0.1)
@@ -258,7 +281,10 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Building, blastfurnacesprite")
-                    .attr({name: "Steel Refinery"})
+                    .attr({
+                        name: "Steel Refinery",
+                        desc: "Produces strong, durable steel for use in space construction",
+                    })
                     .numWorkers(2,2)
                     .resourceDelta(resourcetypes.energy, -3)
                     .resourceDelta(resourcetypes.steelore, -0.2)
@@ -271,7 +297,10 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Building, plasticisersprite")
-                    .attr({name: "RegoPlasticiser"})
+                    .attr({
+                        name: "RegoPlasticiser",
+                        desc: "Makes useful plastic from raw asteroid dust",
+                    })
                     .resourceDelta(resourcetypes.energy, -2)
                     .resourceDelta(resourcetypes.regolith, -0.1)
                     .resourceDelta(resourcetypes.plastic, 0.1);
@@ -294,7 +323,10 @@ function buildings_setup() {
             ],
             factory: function() {
                 return Crafty.e("Storage, orelockersprite")
-                    .attr({name: "Rare earth store"})
+                    .attr({
+                        name: "Rare earth store",
+                        desc: "A safe place to hold rare earth minerals",
+                    })
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.preciousmetal, 100);
             },
@@ -307,6 +339,7 @@ function buildings_setup() {
                 return Crafty.e("Building, placeholderSprite")
                     .attr({
                         name: "Astro Analyser", 
+                        desc: "Utility building to discover subastroidal resources",
                         onTick: function() { analyseAsteroid(this._colonists); },
                     })
                     .numWorkers(1,20)
@@ -323,6 +356,7 @@ function buildings_setup() {
                 return Crafty.e("Building, placeholderSprite")
                     .attr({
                         name: "Freight Depot",
+                        desc: "Holding pen for shipping rare earth minerals back planetside. Each shipment is worth game points.",
                         minActive: 1,
                     })
                     .resourceDelta(resourcetypes.energy, -4)
