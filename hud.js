@@ -3,8 +3,8 @@ var menu_margin = 30;
 var selectedMenu = "#e0ffe0";
 
 var createBuildMenu = function() {
-    var menu_width = 75;
-    var menu_height = 15;
+    var menu_width = 95;
+    var menu_height = 16;
     var cur_x = Crafty.viewport.width - 200;
     var cur_y = Crafty.viewport.height - (menu_margin + menu_height);
     for (var name in buildingBlueprints)
@@ -41,10 +41,10 @@ var createBuildMenu = function() {
                         this.text(tmp);
                         });
                 });
-            cur_x -= menu_width;
-            if (cur_x < menu_width) {
-                cur_y -= menu_height;
-                cur_x = Crafty.viewport.width - 200 - menu_width;
+            cur_x -= menu_width + 5;
+            if (cur_x < menu_margin) {
+                cur_y -= (menu_height + 5);
+                cur_x = Crafty.viewport.width - 205 - menu_width;
             }
         }
 
