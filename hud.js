@@ -47,6 +47,15 @@ function verticalMenuCreator(menuWidth, menuHeight, menuPadding, itemCount) {
     return this;
 }
 
+var describeNonExistentBuilding = function(name) {
+    var fakeResource = {name: "(resource)", mineRate: 1};
+    var tmpbldg = buildingBlueprints[name].factory();
+    tmpbldg.onBuild(fakeResource);
+    var txt = buildingDescription(tmpbldg);
+    tmpbldg.destroy();
+    return txt;
+};
+
 var createBuildMenu = function() {
     var menu_width = 95;
     var menu_height = 16;
@@ -95,6 +104,7 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
     }
 
     txt += "</ul>";
+    txt += describeNonExistentBuilding(buildingName);
     Crafty.e("BuildMenu")
         .text(buildingName)
         .attr({x : menuX, 
@@ -102,6 +112,12 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
                w: menuWidth-1,
                h: menuHeight-2,
                printText: txt})
+        .bind("MouseOver", function() {
+            var tmp = this.printText;
+            Crafty("Selected").each(function() {
+                this.text(tmp);
+            });
+        })
         .bind("Click", function() {
             
             Crafty("BuildMenu").each(function () {
@@ -246,7 +262,7 @@ var hud_setup = function() {
                 }
             });
     Crafty.e("Selected, HUD")
-        .attr({ y: menu_margin+40, h: 220, w: 100, x: Crafty.viewport.width - (menu_margin + 100)})
+        .attr({ y: menu_margin+40, h: 200, w: 100, x: Crafty.viewport.width - (menu_margin + 100)})
         .text("Nothing selected");
 
     var statusBar = Crafty.e("StatusBar, HUD")
@@ -275,9 +291,8 @@ var hud_setup = function() {
 
 };
 
-var hud_select_building = function() {
-    var bldg = Crafty(hud_state.modeArg);
-    var info = "<b>" + bldg.name + "</b><br>";
+var buildingDescription = function(bldg) {
+    var info = "";
     var subinfo = "";
     for (var i = 0; i < bldg.resourceDeltas.length; ++i) {
         var res = bldg.resourceDeltas[i];
@@ -318,6 +333,13 @@ var hud_select_building = function() {
         info += "Colonists: " + bldg._colonists + "<br>";
     }
 
+    return info;
+};
+
+var hud_select_building = function() {
+    var bldg = Crafty(hud_state.modeArg);
+    var info = "<b>" + bldg.name + "</b><br>";
+    info += buildingDescription(bldg);
     info += bldg.isActive() ? "Active" : "<b>INACTIVE</b>";
     if (bldg.missing != "") {
         info += "<br>" + bldg.missing;
@@ -325,6 +347,7 @@ var hud_select_building = function() {
     Crafty("Selected").each(function () { 
             this.text(info);}); 
 
+    var bldgNeedsColonists = bldg.minActive > 0;
     hud_colonists(bldgNeedsColonists, bldgNeedsColonists);
    
 };
@@ -368,13 +391,23 @@ var hud_show = function() {
             hud_state.modeArg = "";
         });
     cur_y -= menu_height;
+    Crafty.e("MenuTopLevel")
+        .attr({ y: cur_y, h: menu_height -2})
+        .text("Select");
 
+    cur_y -= menu_height;
     resourceOverlayView = null; // intentionally global
-    resourceOverlayView = Crafty.e("MenuTopLevel")
-        .attr({ y: cur_y, h: menu_height -2, isOverlayEnabled: false})
+    resourceOverlayView = Crafty.e("ResourceMenu, HUD, Mouse")
+        .attr({x: Crafty.viewport.width - (60 + menu_margin), y: cur_y,
+                w:60, h: menu_height -2, isOverlayEnabled: false})
         .text("Resources")
         .bind("MouseDown", function() {
             this.isOverlayEnabled = !this.isOverlayEnabled;
+            if (this.isOverlayEnabled) {
+                    this.css({"background-color":"#ffe0e0"});
+            } else {
+                    this.css({"background-color":"white"});
+            }
             showResources(this.isOverlayEnabled);
         });
 
