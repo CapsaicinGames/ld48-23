@@ -85,6 +85,8 @@ window.onload = function() {
             precioussmeltersprite: [2,2],
             orelockersprite: [0,2],
             capacitorbanksprite: [1,2],
+            widgetstoresprite: [0,3],
+            preciousstoresprite: [1,3],
         };
 
         var resourceOverlaySprites = {
