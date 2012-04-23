@@ -87,6 +87,7 @@ window.onload = function() {
             capacitorbanksprite: [1,2],
             widgetstoresprite: [0,3],
             preciousstoresprite: [1,3],
+            astroanalysersprite: [2,3],
         };
 
         var resourceOverlaySprites = {
