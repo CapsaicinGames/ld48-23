@@ -299,9 +299,12 @@ var hud_setup = function() {
 var refreshStatusBar = function() {
     var topMsg = statusMessages.calculateTopMessage();
     var newText = topMsg == null ? " " : topMsg.m;
+    var newMsgStr = topMsg == null ? -100 : topMsg.s;
 
     Crafty("StatusBar").each(function() {
-        this.textColor(topMsg != null && topMsg.s > 0 ? errorTextCol : textCol);
+        this.textColor(newMsgStr > 0 ? errorTextCol 
+                       : newMsgStr == 0 ? goodTextCol
+                       : textCol);
         this.text(newText);
     });
 };
