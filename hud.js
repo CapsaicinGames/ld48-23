@@ -398,10 +398,11 @@ var hud_colonists = function(showplus, showminus) {
                 .attr({x: Crafty.viewport.width - (menuMargin + 15), y: menuMargin, w: 15, h: 15})
                 .text("+")
                 .bind("MouseDown", function() {
-                        var bldg = Crafty(hud_state.modeArg);
-                        economy.populate(bldg, 1);
-                        hud_select_building();
-                    });
+                    var bldg = Crafty(hud_state.modeArg);
+                    tutorial.onEvent("populate", bldg.name);
+                    economy.populate(bldg, 1);
+                    hud_select_building();
+                });
         }
     } else {
         Crafty("ColInc").each(function() {this.destroy();});
