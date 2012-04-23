@@ -75,9 +75,9 @@ var isScreenNarrow = function() {
 var createBuildMenu = function() {
     tutorial.onEvent("buildMenuOpen");
 
-    var menu_width = 95;
-    var menu_height = 16;
-    var menu_padding = 5;
+    var menu_width = 105;
+    var menu_height = 20;
+    var menu_padding = 3;
  
     var buildingNames = Object.keys(buildingBlueprints);
     buildingNames.sort();
