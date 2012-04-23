@@ -232,7 +232,7 @@ var hud_setup = function() {
                 this.css({"background-color": selectedMenu});
             },
             init : function () {
-                this.requires("HUD, Mouse");
+                this.requires("HUD, Mouse, ButtonHighlight");
                 this.w = 60; 
                 this.x = Crafty.viewport.width - (this.w + menuMargin);
                 this.bind("MouseDown", function() {
@@ -380,6 +380,22 @@ var hud_colonists = function(showplus, showminus) {
 };
 
 var hud_create = function() {
+
+    Crafty.c("ButtonHighlight", {
+        init: function(){
+            this.bind("MouseOver", function() {
+                this.css({"background-color":selectedMenu});
+            });
+            this.bind("MouseOut", function() {
+                this.css({"background-color":bgCol});
+            });
+            this.css({
+                "cursor":"pointer",
+                "text-align":"center"
+            });
+        },
+    });
+
     // Box for the economy object to fill in
     // with its current state.  As this gets
     // more complex it could do with breaking down
@@ -388,7 +404,7 @@ var hud_create = function() {
         .attr({ x : menuMargin, y : menuMargin+40, w : 110, h : 250} )
         .text("No colony");
     // Controls the speed of time / economy
-    Crafty.e("Time, HUD, Mouse")
+    Crafty.e("Time, HUD, Mouse, ButtonHighlight")
         .attr({ x: menuMargin, y: menuMargin+20, h: 15, w: 25})
         .text("x1")
         .bind("MouseDown", function() {
@@ -407,11 +423,12 @@ var hud_create = function() {
                     economy.speed = 1;
                     this.text("x1");
                     }
-            });
+            })
+    ;
 
     // The Pause button.  It doesn't like
     // being pressed repeatedly
-    Crafty.e("Pause, HUD, Mouse")
+    Crafty.e("Pause, HUD, Mouse, ButtonHighlight")
         .attr({x:menuMargin+70, y:menuMargin + 20, h:15, w:40})
         .text("Pause")
         .bind("MouseDown", function() {
