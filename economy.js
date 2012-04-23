@@ -157,7 +157,7 @@ var economy_setup = function() {
                     // is used and not the spare resource
                     if (this._totalColonists > newStorage[type]) {
                         var diff = this._totalColonists - newStorage[type];
-                        console.log("Removing " + diff + " colonists due to lack of capacity");
+                        //console.log("Removing " + diff + " colonists due to lack of capacity");
                         this.grimReaperStalksTheColony(diff);
                     }                
                 } else {

@@ -299,7 +299,7 @@ var hud_setup = function() {
 var refreshStatusBar = function() {
     var topMsg = statusMessages.calculateTopMessage();
     var newText = topMsg == null ? " " : topMsg.m;
-    console.log("setting status bar string " + newText);
+
     Crafty("StatusBar").each(function() {
         this.textColor(topMsg.s > 0 ? errorTextCol : textCol);
         this.text(newText);
