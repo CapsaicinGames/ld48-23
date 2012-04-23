@@ -87,6 +87,7 @@ window.onload = function() {
             capacitorbanksprite: [1,2],
             widgetstoresprite: [0,3],
             preciousstoresprite: [1,3],
+            astroanalysersprite: [2,3],
         };
 
         var resourceOverlaySprites = {
@@ -248,7 +249,7 @@ window.onload = function() {
 
         iso.place(newIsometricTiles[0].coord[0], newIsometricTiles[0].coord[1], 0, cursor);
 
-        tutorial.init();
+        initTutorial();
 
     });
 

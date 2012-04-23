@@ -341,7 +341,7 @@ function buildings_setup() {
                 newResourceDelta(resourcetypes.plastic, -1),
             ],
             factory: function() {
-                return Crafty.e("Building, placeholderSprite")
+                return Crafty.e("Building, astroanalysersprite")
                     .attr({
                         name: "Astro Analyser", 
                         onTick: function() { analyseAsteroid(this._colonists); },

@@ -313,9 +313,13 @@ var hud_setup = function() {
 var refreshStatusBar = function() {
     var topMsg = statusMessages.calculateTopMessage();
     var newText = topMsg == null ? " " : topMsg.m;
+    var newMsgStr = topMsg == null ? -100 : topMsg.s;
 
     Crafty("StatusBar").each(function() {
-        this.textColor(topMsg.s > 0 ? errorTextCol : textCol);
+        this.textColor( newMsgStr === magicTutorialPriority ? goodTextCol
+                        : newMsgStr > 0 ? errorTextCol 
+                        : newMsgStr === 0 ? goodTextCol
+                        : textCol);
         this.text(newText);
     });
 };
@@ -487,6 +491,7 @@ var statusMessages = {
     _currentMessages: [],
     
     addMessage: function(newMsg, strength) {
+        assert(newMsg != null, "newMsg should be a string");
         this._currentMessages.push({m:newMsg, s:strength});
     },
 

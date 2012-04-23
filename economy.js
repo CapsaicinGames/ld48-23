@@ -316,6 +316,7 @@ var economy_setup = function() {
                 this.timeout(function() {this.newStep();}, this.timePerStep);
                 tutorial.onEvent("tick");
                 updateStatusBar();
+                this.createMessages();
             },
             populate: function(building, delta) {
                 if (building.minActive == 0) { 
@@ -337,6 +338,14 @@ var economy_setup = function() {
                 if (okay === true) {
                     building._colonists += delta;
                     this._resources["Colonists"] -= delta;
+                }
+            },
+
+            createMessages : function() {
+                if (this.energyDelta <= 0.0001) {
+                    statusMessages.addMessage(
+                        "No excess energy production. Consider building more power sources.",
+                        1);
                 }
             },
             
