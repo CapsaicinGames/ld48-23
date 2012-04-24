@@ -37,6 +37,10 @@ function mapToIsometricTile(x, y, mapWidth, mapHeight) {
 var tweetbutton = '<a href="https://twitter.com/intent/tweet?button_hashtag=ld48&text=Just%20played%20%40capsaicingames\'%20SimAsteroid%20and%20got%20CHANGEME%20points%20%23ld48" id="custom-tweet-button" data-related="capsaicingames">Tweet #ld48</a>';//+ '<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>';
 
 window.onload = function() {
+
+    gameid = "7770";
+    Playtomic.Log.View(gameid, "957dc6eec25744fe", "53c6a71b86de4023b66bc24bcd6208", document.location);
+
     Crafty.scene("GameOver", function() {
         Crafty.background("url('image/stars.png')");
         var txt = "<h2>GAME OVER</h2>";
