@@ -46,14 +46,14 @@ window.onload = function() {
         var txt = "<h2>GAME OVER</h2>";
 
         if (economy._totalColonists <= 0) {
-            Playtomic.Log.LevelAverageMetric("Turns taken at death", 0, economy.days);
+            Playtomic.Log.LevelAverageMetric("Turns taken at death", "simasteroid", economy.days);
             txt += "<p>Sorry, all your colonists died.  You might not be management material after all</p>";
         } else {
         }
         var pts = economy._resources[resourcetypes.points.name];
         txt += "<p>" + pts + " points</p>";
-        Playtomic.Log.LevelAverageMetric("Points at end", 0, pts);
-        Playtomic.Log.LevelAverageMetric("Colonists at death", 0, economy._totalColonists);
+        Playtomic.Log.LevelAverageMetric("Points at end", "simasteroid", pts);
+        Playtomic.Log.LevelAverageMetric("Colonists at death", "simasteroid", economy._totalColonists);
         if (pts == 0) {
          txt += "<p>To score points, start smelting rare earths and ship them home with a freight depot</p>";
         } else {
