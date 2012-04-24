@@ -404,7 +404,7 @@ function build(blueprint, tileToBuildOn) {
         tileToBuildOn.map_x, tileToBuildOn.map_y
     );
 
-    Playtomic.Log.LevelCounterMetric("Built Buildings", bldg.name);
+    Playtomic.Log.LevelCounterMetric("Built " + bldg.name, 0);
 
     tileToBuildOn._canBuild = false;
 
