@@ -46,11 +46,14 @@ window.onload = function() {
         var txt = "<h2>GAME OVER</h2>";
 
         if (economy._totalColonists <= 0) {
+            Playtomic.Log.LevelRangedMetric("Turns taken at death", 0, economy.days);
             txt += "<p>Sorry, all your colonists died.  You might not be management material after all</p>";
         } else {
         }
         var pts = economy._resources[resourcetypes.points.name];
         txt += "<p>" + pts + " points</p>";
+        Playtomic.Log.LevelRangedMetric("Points at end", 0, pts);
+        Playtomic.Log.LevelRangedMetric("Colonists at death", 0, economy._totalColonists);
         if (pts == 0) {
          txt += "<p>To score points, start smelting rare earths and ship them home with a freight depot</p>";
         } else {
@@ -87,6 +90,8 @@ window.onload = function() {
     });
 
     Crafty.scene("main", function() {
+
+        Playtomic.Log.Play();
 
         tilesize = 32;
         hud_create();
