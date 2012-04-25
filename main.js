@@ -1,4 +1,15 @@
 
+
+var roundToNearest = function(a) {
+    var floorA = Math.floor(a);
+    return floorA + 0.5 < a ? floorA + 1 : floorA;
+};
+
+var equalEpsilon = function(a, b, eps) {
+    return a > (b - eps) && a < (b + eps);
+};
+
+
 convertTileType = function(type, x, y, resource) {
     switch (type) {
     case tiletype.flatground:
