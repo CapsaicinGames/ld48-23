@@ -34,8 +34,11 @@ var economy_setup = function() {
             for (var i = 0; i < resourceList.length; i++) {
                 var res = resourceList[i];
                 if (res.delta < 0) {
-                    if (this._resources[res.r] < -res.delta)
+                    
+                    // ... 1.9999999 is presented to the player as 2.0, so need to count that as equal:
+                    if (this._resources[res.r] < (-res.delta - 0.0001)) {
                         success.push(res.r);
+                    }
                 }
             }
 
