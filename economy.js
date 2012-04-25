@@ -141,6 +141,10 @@ var economy_setup = function() {
             var newStorage = {};
             // Find out how much we can store
             Crafty("Storage").each(function() {
+                if (this.isActive() === false) {
+                    return;
+                }
+
                 for (var i = 0; i < this.storageDeltas.length; ++i) {
                     var res = this.storageDeltas[i];
                     if (newStorage[res.r] == undefined) {
