@@ -24,10 +24,11 @@ var economy_setup = function() {
         },
 
         /** Attempt to debit an array of resources
-         *  @param resourceList array of map{r,.delta)
-         *  @returns true iff debit was successful
+         *  @param resourceList array of map{r,delta}
+         *  @param isOnlyTest if true, doesn't actually debit, only tests for success
+         *  @returns array of names of resources we coudn't afford
          */
-        debit: function (resourceList) {
+        debit: function (resourceList, isOnlyTest) {
             var success = [];
             for (var i = 0; i < resourceList.length; i++) {
                 var res = resourceList[i];
@@ -37,11 +38,14 @@ var economy_setup = function() {
                 }
             }
 
-            if (success.length == 0) {
-                for (var i = 0; i < resourceList.length; i++) {
-                    var res = resourceList[i];
-                    this._resources[res.r] += res.delta;
+            if (isOnlyTest == undefined || isOnlyTest === false) {
+                if (success.length == 0) {
+                    for (var i = 0; i < resourceList.length; i++) {
+                        var res = resourceList[i];
+                        this._resources[res.r] += res.delta;
+                    }
                 }
+                updateBuildingMenuAffordability();
             }
 
             return success;
@@ -334,6 +338,7 @@ var economy_setup = function() {
                 tutorial.onEvent("tick");
                 updateStatusBar();
                 this.createMessages();
+                updateBuildingMenuAffordability();
             },
             populate: function(building, delta) {
                 if (building.minActive == 0) { 

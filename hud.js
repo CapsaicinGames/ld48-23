@@ -122,7 +122,12 @@ var createBuildMenu = function() {
     }
 };
 
-function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
+function colouredText(t, col) {
+    return "<font color=\"" + col + "\">" + t + "</font>";
+}
+
+function _createConstructionDescription(buildingName, unaffordableResources) {
+
     var txt = "<b>" + buildingName + "</b><br>";
     txt += "<i>" + buildingBlueprints[buildingName].desc + "</i><br/>";
     txt += "Costs:<ul class='reslist'>";
@@ -130,30 +135,88 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
          i < buildingBlueprints[buildingName].constructionCost.length; 
          ++i) {
         var res = buildingBlueprints[buildingName].constructionCost[i];
-        txt += "<li>" + (-res.delta) + " " + res.r + "</li>";
+
+        var resColor = unaffordableResources.indexOf(res.r) >= 0
+            ? errorTextCol
+            : textCol;
+
+        txt += "<li>" 
+            + colouredText((-res.delta).toString() + " " + res.r, resColor) 
+            + "</li>";
     }
 
     txt += "</ul>";
     txt += describeNonExistentBuilding(buildingName);
+
+    return txt;
+}
+
+function updateBuildingMenuAffordability() {
+    Crafty("BuildMenu").each(function() {
+        this.evaluateAffordability();
+    });
+}
+
+function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
+
+    var unaffordableResources = economy.debit(
+        buildingBlueprints[buildingName].constructionCost, true);
+
+    var txt = _createConstructionDescription(buildingName, unaffordableResources);
+
+    var makeBuildingText = function(buildingName, isAffordable) {
+        var buildingNameCol = isAffordable ? textCol : errorTextCol;
+        return colouredText(buildingName, buildingNameCol);
+    };
+
     selectedBuilding = null; // intentional global
     Crafty.e("BuildMenu")
-        .text(buildingName)
+        .text(makeBuildingText(buildingName, unaffordableResources.length == 0))
         .attr({x : menuX, 
                y : menuY,
                w: menuWidth-1,
                h: menuHeight-2,
                savedText: null,
-               masterText: buildingName,
-               printText: txt})
+               buildingName: buildingName,
+
+               isAffordable: unaffordableResources.length == 0,
+
+               getDisplayName: function() { 
+                   var nameText = makeBuildingText(
+                       this.buildingName, this.isAffordable);
+                   return selectedBuilding == this 
+                       ? boldText(nameText) 
+                       : nameText;
+               },
+
+               evaluateAffordability: function() {
+                   var latestUnaffordableResources = economy.debit(
+                       buildingBlueprints[this.buildingName].constructionCost, true
+                   );
+                   this.isAffordable = latestUnaffordableResources.length == 0;
+                   this.descriptionText = _createConstructionDescription(
+                       this.buildingName,
+                       latestUnaffordableResources
+                   );
+                   
+                   this.text(this.getDisplayName());
+               },
+               
+               descriptionText: txt,
+              })
+
         .bind("MouseOver", function() {
-            var tmp = this.printText;
+            var tmp = this.descriptionText;
             var save;
             Crafty("Selected").each(function() {
                 save = this.text();
                 this.text(tmp);
             });
             this.savedText = save;
-            this.css({"background-color": selectedMenu});
+
+            if (this.isAffordable) {
+                this.css({"background-color": selectedMenu});
+            }
         })
         .css({"cursor":"pointer",
               "text-align":"center"})
@@ -171,17 +234,22 @@ function _addBuildMenuItem(menuX, menuY, menuWidth, menuHeight, buildingName) {
         })
         .bind("Click", function() {
             
+            if (this.isAffordable === false) {
+                return;
+            }
+
             Crafty.audio.play("mainmenu");
+            selectedBuilding = null;
             Crafty("BuildMenu").each(function () {
                 this.css({"background-color": bgCol});
-                this.text(this.masterText);
+                this.text(this.getDisplayName());
             });
             this.css({"background-color": selectedMenu});
             selectedBuilding = this;
             hud_state.mode = hudModes.build;
-            hud_state.modeArg = this._text;
-            this.text(boldText(this.masterText));
-            var tmp = this.printText;
+            hud_state.modeArg = this.buildingName;
+            this.text(this.getDisplayName());
+            var tmp = this.descriptionText;
             Crafty("Selected").each(function() {
                 this.text(tmp);
             });
