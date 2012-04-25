@@ -168,6 +168,7 @@ function buildings_setup() {
                     .attr({
                         name: "Capacitor Bank", 
                     })
+                    .numWorkers(0,0)
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.energy, 100);
             },
@@ -182,6 +183,7 @@ function buildings_setup() {
                     .attr({
                         name: "Ore locker",
                     })
+                    .numWorkers(0,0)
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.steelore, 20)
                     .storageDelta(resourcetypes.regolith, 20)
@@ -311,6 +313,7 @@ function buildings_setup() {
             factory: function() {
                 return Crafty.e("Storage, widgetstoresprite")
                     .attr({name: "Widget store"})
+                    .numWorkers(0,0)
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.widgets, 100);
             },
@@ -325,6 +328,7 @@ function buildings_setup() {
                     .attr({
                         name: "Rare earth store",
                     })
+                    .numWorkers(0,0)
                     .resourceDelta(resourcetypes.energy, -1)
                     .storageDelta(resourcetypes.preciousmetal, 100);
             },
