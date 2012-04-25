@@ -133,6 +133,7 @@ var economy_setup = function() {
             });
             this._totalColonists = totalcol + this._resources["Colonists"];
         },
+
         /** Ensure that resources are only stockpiled
          *  if there is room for them.  The current storage
          *  is updated.
@@ -384,7 +385,7 @@ var economy_setup = function() {
             
             updateStatus : function() {
                 
-                var newstatus = "<table class='statustable'><tr><th>Resource</th><th>Amt</th></tr>";
+                var newstatus = "<table class='statustable'><tr><th>Resource</th><th>Amt/Storage</th></tr>";
                 var localDays = this.days;
                 var colSelect = function(oldVal, newVal){
                     return localDays == 1 ? textCol
@@ -403,12 +404,16 @@ var economy_setup = function() {
                         key = "Idle " + rKey;
                         val = this._resources[rKey].toFixed(0);
                     } else {
-                        val = this._resources[rKey].toFixed(1);
+                        var rawValue = this._resources[rKey];
+
+                        var decimalPoints = equalEpsilon(rawValue, roundToNearest(rawValue), 0.0001) ? 0 : 1;
+                        val = this._resources[rKey].toFixed(decimalPoints);
                     }
                     
                     var classinfo = key == resourcetypes.points.name ?
                             " class='summary'" : "";
-                    newstatus += "<tr" + classinfo + "><td>" + key + "</td><td style='text-align: right'><font color=\"" + resTextCol + "\">" + val + "</font></td></tr>";
+                    var capacityStr = this._storage[rKey] === undefined ? "0" : this._storage[rKey].toFixed(0);
+                    newstatus += "<tr" + classinfo + "><td>" + key + "</td><td style='text-align: right'><font color=\"" + resTextCol + "\">" + val + "</font>/" + capacityStr + "</td></tr>";
                 }
                 var colonySizeCol = colSelect(this.oldcolonistscount, this._totalColonists);
                 newstatus += "<tr class='summary'><td>Colony size</td><td style='text-align: right'><font color=\"" + colonySizeCol + "\">" 

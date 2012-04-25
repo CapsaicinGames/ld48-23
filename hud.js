@@ -516,7 +516,7 @@ var hud_create = function() {
     // more complex it could do with breaking down
     // to separate items
     Crafty.e("Status, HUD")
-        .attr({ x : menuMargin, y : menuMargin+40, w : 110, h : 250} )
+        .attr({ x : menuMargin, y : menuMargin+40, w : 125, h : 250} )
         .text("No colony");
     // Controls the speed of time / economy
     Crafty.e("Time, HUD, Mouse, ButtonHighlight")
@@ -544,7 +544,7 @@ var hud_create = function() {
     // The Pause button.  It doesn't like
     // being pressed repeatedly
     Crafty.e("Pause, HUD, Mouse, ButtonHighlight")
-        .attr({x:menuMargin+70, y:menuMargin + 20, h:15, w:40})
+        .attr({x:menuMargin+85, y:menuMargin + 20, h:15, w:40})
         .text(boldText("Pause"))
         .bind("MouseDown", function() {
             if (economy.speed > 0)
