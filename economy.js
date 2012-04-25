@@ -10,6 +10,7 @@ var economy_setup = function() {
         _resources: {},
         _totalColonists: 0,
         _storage: {},
+        _prevStorage: {},
         energyDelta: 0,
         
         init: function() {
@@ -155,6 +156,7 @@ var economy_setup = function() {
                     }
                 }
             });
+            this._prevStorage = this._storage;
             this._storage = newStorage;
 
             // Now if we have more resources than the maximum storage
@@ -393,6 +395,8 @@ var economy_setup = function() {
                         : oldVal < newVal - 0.0001 ? goodTextCol
                         : textCol;
                     };
+
+                
                 
                 for(var rKey in this._resources) {
                     var key = rKey;
@@ -412,8 +416,17 @@ var economy_setup = function() {
                     
                     var classinfo = key == resourcetypes.points.name ?
                             " class='summary'" : "";
-                    var capacityStr = this._storage[rKey] === undefined ? "0" : this._storage[rKey].toFixed(0);
-                    newstatus += "<tr" + classinfo + "><td>" + key + "</td><td style='text-align: right'><font color=\"" + resTextCol + "\">" + val + "</font>/" + capacityStr + "</td></tr>";
+                    
+                    var prevCapacity = this._prevStorage[rKey] === undefined 
+                        ? 0
+                        : this._prevStorage[rKey];
+                    var capacity = this._storage[rKey] === undefined
+                        ? 0
+                        : this._storage[rKey];
+
+                    var capacityCol = colSelect(prevCapacity, capacity);
+
+                    newstatus += "<tr" + classinfo + "><td>" + key + "</td><td style='text-align: right'><font color=\"" + resTextCol + "\">" + val + "</font>/" + colouredText(capacity.toFixed(0), capacityCol) + "</td></tr>";
                 }
                 var colonySizeCol = colSelect(this.oldcolonistscount, this._totalColonists);
                 newstatus += "<tr class='summary'><td>Colony size</td><td style='text-align: right'><font color=\"" + colonySizeCol + "\">" 
