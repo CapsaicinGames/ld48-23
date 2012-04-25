@@ -63,9 +63,20 @@ var describeNonExistentBuilding = function(name) {
     var fakeResource = {name: "(resource)", mineRate: 1};
     var tmpbldg = buildingBlueprints[name].factory();
     tmpbldg.onBuild(fakeResource);
-    var txt = buildingDescription(tmpbldg);
+    var info = buildingDescription(tmpbldg);
+
+    if (tmpbldg.minActive == tmpbldg.maxColonists) {
+        info += "Required colonists:" + tmpbldg.minActive + "</br>";
+    }
+    else {
+        info += "Colonists:<ul class='reslist'>";
+        info += "<li>Minimum:" + tmpbldg.minActive + "</li>";
+        info += "<li>Maximum:" + tmpbldg.maxColonists + "</li>";
+        info += "</ul>";
+    }
+
     tmpbldg.destroy();
-    return txt;
+    return info;
 };
 
 var isScreenNarrow = function() {
@@ -336,12 +347,6 @@ var buildingDescription = function(bldg) {
         info += "</ul>";
     }
 
-    var bldgNeedsColonists = bldg.minActive > 0;
-
-    if (bldgNeedsColonists) {
-        info += "Colonists: " + bldg._colonists + "<br>";
-    }
-
     return info;
 };
 
@@ -350,6 +355,18 @@ var hud_select_building = function() {
     tutorial.onEvent("selectBuilding", bldg.name);
     var info = "<b>" + bldg.name + "</b><br>";
     info += buildingDescription(bldg);
+
+    info += "<br/>";
+
+    var bldgNeedsColonists = bldg.minActive > 0;
+    if (bldgNeedsColonists) {
+        info += "<font color=\"" + (bldg.isActive() ? goodTextCol : errorTextCol) + "\">";
+        info += "Colonists: " + bldg._colonists + "/" + bldg.minActive + "<br/>";
+        if (bldg.maxColonists > bldg.minActive) {
+            info += "<ul class='reslist'><li>(Max " + bldg.maxColonists + ")</li></ul></font>"
+        }
+    }
+
     info += bldg.isActive() ? "Active" : "<b><font color=\"" + errorTextCol + "\">INACTIVE - needs colonist</font></b>";
     if (bldg.missing != "") {
         info += "<br/><font color=\"" + errorTextCol + "\">" + bldg.missing + "</font>";
