@@ -396,42 +396,87 @@ var economy_setup = function() {
                         : textCol;
                     };
 
+                var resourcesDisplay = [
+                    { },
+                    { 
+                        resource: resourcetypes.colonists, 
+                        prevCapacity: this.oldcolonistscount,
+                        capacity: this._totalColonists,
+                        printName: "Idle Colonists"
+                    },
+                    { resource: resourcetypes.energy },
+                    { }, 
+                    { resource: resourcetypes.regolith },
+                    { resource: resourcetypes.steelore },
+                    { resource: resourcetypes.ice },
+                    { resource: resourcetypes.preciousore },
+                    { },
+                    { resource: resourcetypes.plastic },
+                    { resource: resourcetypes.steel },
+                    { resource: resourcetypes.water },
+                    { },
+                    { resource: resourcetypes.food },
+                    { resource: resourcetypes.widgets },
+                    { },
+                    { resource: resourcetypes.preciousmetal },
+                    { 
+                        resource: resourcetypes.points,
+                        isCapactiyHidden: true
+                    },
+                    { }
+                ];
                 
-                
-                for(var rKey in this._resources) {
-                    var key = rKey;
-                    var val = this._resources[rKey];
-
-                    var resTextCol = colSelect(this.oldres[rKey], val);
-
-                    if (rKey === "Colonists") {
-                        key = "Idle " + rKey;
-                        val = this._resources[rKey].toFixed(0);
-                    } else {
-                        var rawValue = this._resources[rKey];
-
-                        var decimalPoints = equalEpsilon(rawValue, roundToNearest(rawValue), 0.0001) ? 0 : 1;
-                        val = this._resources[rKey].toFixed(decimalPoints);
+                for(var rIndex = 0; rIndex < resourcesDisplay.length; ++rIndex) {
+   
+                    if (resourcesDisplay[rIndex].resource === undefined) {
+                        newstatus += "<tr><td>&nbsp;</td></tr>";
+                        continue;
                     }
+
+                    var resName = resourcesDisplay[rIndex].resource.name;
+                    var val = this._resources[resName];
+
+                    var resTextCol = colSelect(this.oldres[resName], val);
+
+                    var key = resourcesDisplay[rIndex].printName === undefined 
+                        ? resName
+                        : resourcesDisplay[rIndex].printName;
+
+                    var rawValue = this._resources[resName];
+                    
+                    var decimalPoints = equalEpsilon(rawValue, roundToNearest(rawValue), 0.0001) ? 0 : 1;
+                    val = this._resources[resName].toFixed(decimalPoints);
                     
                     var classinfo = key == resourcetypes.points.name ?
                             " class='summary'" : "";
                     
-                    var prevCapacity = this._prevStorage[rKey] === undefined 
-                        ? 0
-                        : this._prevStorage[rKey];
-                    var capacity = this._storage[rKey] === undefined
-                        ? 0
-                        : this._storage[rKey];
+                    var prevCapacity 
+                        = resourcesDisplay[rIndex].prevCapacity != null
+                            ? resourcesDisplay[rIndex].prevCapacity
+                        : this._prevStorage[resName] === undefined 
+                            ? 0
+                        : this._prevStorage[resName];
+
+                    var capacity 
+                        = resourcesDisplay[rIndex].capacity != null
+                            ? resourcesDisplay[rIndex].capacity
+                        : this._storage[resName] === undefined
+                            ? 0
+                        : this._storage[resName];
 
                     var capacityCol = colSelect(prevCapacity, capacity);
 
-                    newstatus += "<tr" + classinfo + "><td>" + key + "</td><td style='text-align: right'><font color=\"" + resTextCol + "\">" + val + "</font>/" + colouredText(capacity.toFixed(0), capacityCol) + "</td></tr>";
-                }
-                var colonySizeCol = colSelect(this.oldcolonistscount, this._totalColonists);
-                newstatus += "<tr class='summary'><td>Colony size</td><td style='text-align: right'><font color=\"" + colonySizeCol + "\">" 
-                    + this._totalColonists + "</font></td></tr>";
+                    newstatus += "<tr" + classinfo + "><td>" + key 
+                        + "</td><td style='text-align: right'><font color=\"" 
+                        + resTextCol + "\">" + val + "</font>"; 
 
+                    if (resourcesDisplay[rIndex].isCapactiyHidden === undefined) {
+                        newstatus += "/" 
+                            + colouredText(capacity.toFixed(0), capacityCol) ;
+                    }
+                    newstatus += "</td></tr>";
+                }
+                
                 var energyProductionCol = colSelect(0.05, this.energyDelta);
                 newstatus += "<tr class='summary'><td>Energy production</td><td style='text-align: right'><font color=\"" + energyProductionCol + "\">" 
                     + this.energyDelta.toFixed(1) + "</font></td></tr>";
