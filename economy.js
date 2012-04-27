@@ -387,7 +387,8 @@ var economy_setup = function() {
             
             updateStatus : function() {
                 
-                var newstatus = "<table class='statustable'><tr><th>Resource</th><th>Amt/Storage</th></tr>";
+                var newstatus = "<table class='statustable'>"
+                    + "<tr><th>Resource</th><th>Amt/Storage</th></tr>";
                 var localDays = this.days;
                 var colSelect = function(oldVal, newVal){
                     return localDays == 1 ? textCol
@@ -406,19 +407,20 @@ var economy_setup = function() {
                     },
                     { resource: resourcetypes.energy },
                     { }, 
-                    { resource: resourcetypes.regolith },
-                    { resource: resourcetypes.steelore },
                     { resource: resourcetypes.ice },
-                    { resource: resourcetypes.preciousore },
-                    { },
-                    { resource: resourcetypes.plastic },
-                    { resource: resourcetypes.steel },
                     { resource: resourcetypes.water },
-                    { },
                     { resource: resourcetypes.food },
+                    { },
+                    { resource: resourcetypes.regolith },
+                    { resource: resourcetypes.plastic },
+                    { resource: resourcetypes.steelore },
+                    { resource: resourcetypes.steel },
                     { resource: resourcetypes.widgets },
                     { },
+                    { resource: resourcetypes.preciousore },
                     { resource: resourcetypes.preciousmetal },
+                    { },
+
                     { 
                         resource: resourcetypes.points,
                         isCapactiyHidden: true
