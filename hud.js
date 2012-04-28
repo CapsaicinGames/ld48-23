@@ -389,7 +389,7 @@ var buildingDescription = function(bldg) {
         }
     }
     if (subinfo.length > 0) {
-        info += "Consumes:<ul class='reslist'>" + 
+        info += "Consumes per day:<ul class='reslist'>" + 
                 subinfo + "</ul>";
         subinfo = "";
     }
@@ -400,7 +400,7 @@ var buildingDescription = function(bldg) {
         }
     }
     if (subinfo.length > 0) {
-        info += "Produces:<ul class='reslist'>";
+        info += "Produces per day:<ul class='reslist'>";
         info += subinfo + "</ul>";
         subinfo = "";
     }
