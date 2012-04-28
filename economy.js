@@ -389,6 +389,8 @@ var economy_setup = function() {
                 
                 var newstatus = "<table class='statustable'>"
                     + "<tr><th>Resource</th><th>Amt/Storage</th></tr>";
+
+               
                 var localDays = this.days;
                 var colSelect = function(oldVal, newVal){
                     return localDays == 1 ? textCol
@@ -396,6 +398,13 @@ var economy_setup = function() {
                         : oldVal < newVal - 0.0001 ? goodTextCol
                         : textCol;
                     };
+
+                newstatus += "<tr><td>&nbsp;</td></tr><tr class='summary' id='day'><td>Days Left</td><td style='text-align: right'>" + (this.totalDays - this.days) + "</td></tr>";
+
+                var energyProductionCol = colSelect(0.05, this.energyDelta);
+                newstatus += "<tr class='summary'><td>Energy production</td><td style='text-align: right'><font color=\"" + energyProductionCol + "\">" 
+                    + this.energyDelta.toFixed(1) + "</font></td></tr>";
+
 
                 var resourcesDisplay = [
                     { },
@@ -479,10 +488,8 @@ var economy_setup = function() {
                     newstatus += "</td></tr>";
                 }
                 
-                var energyProductionCol = colSelect(0.05, this.energyDelta);
-                newstatus += "<tr class='summary'><td>Energy production</td><td style='text-align: right'><font color=\"" + energyProductionCol + "\">" 
-                    + this.energyDelta.toFixed(1) + "</font></td></tr>";
-                newstatus += "<tr><td>&nbsp;</td></tr><tr class='summary' id='day'><td>Days Left</td><td style='text-align: right'>" + (this.totalDays - this.days) + "</td></tr></table>";
+                newstatus += "</table>";
+                
                 Crafty("Status").each(function() {
                         this.text(newstatus);
                 });
