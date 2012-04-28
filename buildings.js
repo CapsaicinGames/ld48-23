@@ -22,7 +22,9 @@ function buildings_setup() {
             this.resourceDeltas = [];
             this.requires("WorldEntity");
             this.bind("Click", function() {
-                if (hud_state.mode === hudModes.select) {
+                if (hud_state.mode === hudModes.select
+                   || hud_state.mode === hudModes.build) {
+                    hud_state.mode = hudModes.select;
                     hud_state.modeArg = this[0];
                     hud_select_building();
                 } else if (hud_state.mode === hudModes.destroy 
