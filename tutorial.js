@@ -102,9 +102,24 @@ function initTutorial() {
 
                     tick: function() {
                         if (economy.energyDelta > 0) {
-                            tutorial._setState("resourceGuide");
+                            tutorial._setState("energyGuide");
                         }
                     },
+                },
+
+                energyGuide: {
+                    enter: function() {
+                        createHighlightEntityByName("Status");
+                    },
+                    
+                    timer: { nextState: "resourceGuide", time: 8000 },
+
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "If not used immediately, excess energy is lost. The Energy Production row shows how much spare energy you have.",
+                            magicTutorialPriority
+                        );
+                    }
                 },
 
                 resourceGuide: {
