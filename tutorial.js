@@ -15,10 +15,17 @@ function createHighlightEntity(hudEntityToHighlight) {
             y: hudEntityToHighlight.y - 3,
             w: hudEntityToHighlight.w + 3,
             h: hudEntityToHighlight.h + 3,
-            z: (hudEntityToHighlight.z + 1)
+            z: (hudEntityToHighlight.z + 1),
+            highlightingEntityID: hudEntityToHighlight[0]
         })
         .css({
             "border": ("medium solid " + errorTextCol)
+        })
+        .bind("EnterFrame", function() {
+            var highlightingEntity = Crafty(this.highlightingEntityID);
+            if (highlightingEntity.length == 0) {
+                this.destroy();
+            }
         })
     ;
 }
@@ -81,6 +88,18 @@ function initTutorial() {
                 },  
                 
                 waitForPower: {
+                    enter: function() {
+                        this.buildMenuOpen();
+                    },
+                 
+                    buildMenuOpen: function() {
+                        Crafty("BuildMenu").each(function() {
+                            if (this.buildingName == "Solar Panel") {
+                                createHighlightEntity(this);
+                            }
+                        });
+                    },   
+
                     tick: function() {
                         if (economy.energyDelta > 0) {
                             tutorial._setState("resourceGuide");
