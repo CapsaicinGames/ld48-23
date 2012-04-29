@@ -129,6 +129,9 @@ function initTutorial() {
                         if (isOverlayAlreadyOn) {
                             tutorial._setState("buildAstroanalyser");
                         }
+                        else {
+                            createHighlightEntity(resourceOverlayView);
+                        }
                     },
 
                     resourcesViewOpened: function() {
