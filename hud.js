@@ -570,13 +570,14 @@ var hud_create = function() {
         .text(" ")
         .css({"background-color": selectedMenu});
     ;
+
 }
 
 var hud_show = function() {
     var menu_height = 20;
     var menu_width = 100;
     var cur_y = Crafty.viewport.height - (menu_height + menuMargin);
-    Crafty.e("MenuTopLevel")
+    Crafty.e("BuildButton, MenuTopLevel")
         .attr({y: cur_y, h: menu_height - 2, 
                 menuCtor: createBuildMenu, submenu: "BuildMenu"})
         .text(boldText("Build"));
