@@ -1,12 +1,38 @@
 
 var magicTutorialPriority = 939393;
 
+function createHighlightEntityByName(entityToHighlightName) {
+    var entities = Crafty(entityToHighlightName);
+    entities.each(function() {
+        createHighlightEntity(this);
+    });
+}
+
+function createHighlightEntity(hudEntityToHighlight) {
+    return Crafty.e("Highlight, 2D, DOM")
+        .attr({
+            x: hudEntityToHighlight.x - 3,
+            y: hudEntityToHighlight.y - 3,
+            w: hudEntityToHighlight.w + 3,
+            h: hudEntityToHighlight.h + 3,
+            z: (hudEntityToHighlight.z + 1)
+        })
+        .css({
+            "border": ("medium solid " + errorTextCol)
+        })
+    ;
+}
+
 function initTutorial() {
 
     tutorial = Crafty.e("Tutorial") // intentionall global
         .attr({
             _states: {
                 gameStart: {
+                    enter: function() {
+                        createHighlightEntityByName("StatusBar");
+                    },
+
                     tick: function() { 
                         statusMessages.addMessage(
                             "Pick a tile for your ship to land on", 
@@ -14,11 +40,23 @@ function initTutorial() {
                     },
                     
                     onLanderPlaced: function() {
-                        tutorial._setState("firstTimeIdle");
+                        tutorial._setState("pauseForHud");
                     },
+                },
+
+                pauseForHud: {
+                    tick: function() {
+                        if (Crafty("MenuTopLevel").length > 0) {
+                            tutorial._setState("firstTimeIdle");
+                        }
+                    }
                 },
                 
                 firstTimeIdle: {
+                    enter: function() {
+                        createHighlightEntityByName("BuildButton");
+                    },
+
                     tick: function() { 
                         statusMessages.addMessage(
                             "Explore the build menu on the right to decide what to build next", 
@@ -205,6 +243,9 @@ function initTutorial() {
             
             _setState: function(newStateName) {
 //                console.log("switch to tutorial state " + newStateName);
+                Crafty("Highlight").each(function() {
+                    this.destroy(); 
+                });
                 this._currentState = newStateName;
                 this.onEvent("enter");
                 this._registerTimer(this._states[this._currentState]);
@@ -222,5 +263,6 @@ function initTutorial() {
             },
         });
     
+    tutorial._setState("gameStart");
     tutorial.onEvent("tick");
 }
