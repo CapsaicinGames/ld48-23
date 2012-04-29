@@ -158,10 +158,21 @@ function initTutorial() {
 
                     enter: function() {
                         tutorial.timeout(
-                            function() { tutorial._states.buildAstroanalyser.showMsg = false; },
+                            function() { 
+                                tutorial._states.buildAstroanalyser.showMsg = false; 
+                            },
                             8000
                         );
+                        this.buildMenuOpen();
                     },
+                 
+                    buildMenuOpen: function() {
+                        Crafty("BuildMenu").each(function() {
+                            if (this.buildingName == "Astro Analyser") {
+                                createHighlightEntity(this);
+                            }
+                        });
+                    },   
 
                     tick: function() {
                         if (this.showMsg) {
@@ -174,37 +185,28 @@ function initTutorial() {
                 },
 
                 analyserInfo: {
-                    showMsg: true,
-
-                    enter: function() {
-                        tutorial.timeout(
-                            function() { tutorial._states.analyserInfo.showMsg = false; },
-                            8000
-                        );
-                    },
+                    timer: { nextState: "explainColonists", time: 3500 },
 
                     tick: function() {
-                        if (this.showMsg) {
-                            statusMessages.addMessage(
-                                "The Analyser will explore one tile every day. To make it explore faster, click Select, then tap on the Analyser...",
-                                magicTutorialPriority
-                            );
-                        }
-                    },
-
-                    selectBuilding: function(blueprintName) {
-                        tutorial._setState("explainColonists");
+                        statusMessages.addMessage(
+                            "The Analyser will explore one tile every day. To make it explore faster, we can assign it more colonists.",
+                            magicTutorialPriority
+                        );
                     },
                 },
 
                 explainColonists: {
+                    enter: function() {
+                        createHighlightEntityByName("ColInc");
+                    },
+
                     populate: function() {
                         tutorial._setState("analyserPopulateSuccess");
                     },
 
                     tick: function() {
                         statusMessages.addMessage(
-                            "Most buildings need at least 1 colonist to function. Click the + sign on the right of the screen to add more.",
+                            "Click the + button to add more colonists. Most buildings need at least 1 colonist to function.",
                             magicTutorialPriority
                         );
                     },
