@@ -84,7 +84,6 @@ var isScreenNarrow = function() {
 };
 
 var createBuildMenu = function() {
-    tutorial.onEvent("buildMenuOpen");
 
     var menu_width = 105;
     var menu_height = 20;
@@ -120,6 +119,8 @@ var createBuildMenu = function() {
         }
 
     }
+
+    tutorial.onEvent("buildMenuOpen");
 };
 
 function colouredText(t, col) {
