@@ -7,11 +7,11 @@ function showResourceLegend() {
             w: 125,
             h: 100
         })
-        .text("Place a mine to extrace each resource</br></br>"
-              + "ICE: Extracts ice</br>"
-              + "I: Extracts iorn ore</br>"
-              + "R: Extracts regolith</br>"
-              + "RE: Extracts rare earth ore</br>"
+        .text("<em>Place a mine to extrace each resource</em></br></br>"
+              + colouredText(boldText("ICE"), goodTextCol) + ": Extracts ice</br>"
+              + colouredText(boldText("I"), goodTextCol) + ": Extracts iorn ore</br>"
+              + colouredText(boldText("R"), goodTextCol) + ": Extracts regolith</br>"
+              + colouredText(boldText("RE"), goodTextCol) + ": Extracts rare earth ore</br>"
              )
     ;
 }
