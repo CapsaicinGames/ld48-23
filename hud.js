@@ -609,8 +609,10 @@ var hud_show = function() {
             this.isOverlayEnabled = !this.isOverlayEnabled;
             if (this.isOverlayEnabled) {
                 this.text(boldText("Hide Resources"));
+                showResourceLegend();
             } else {
                 this.text(boldText("Show Resources"));
+                hideResourceLegend();
             }
             showResources(this.isOverlayEnabled);
         });
