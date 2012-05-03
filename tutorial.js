@@ -16,7 +16,19 @@ function createHighlightEntity(hudEntityToHighlight) {
             w: hudEntityToHighlight.w + 3,
             h: hudEntityToHighlight.h + 3,
             z: (hudEntityToHighlight.z + 1),
-            highlightingEntityID: hudEntityToHighlight[0]
+            highlightingEntityID: hudEntityToHighlight[0],
+            flashCount: 9,
+            flipVisibility: function() {
+                this.visible = !this.visible;
+                --this.flashCount
+                if (this.flashCount > 0 || this.visible === false) {
+                    this.startBlink();
+                }
+            },
+            startBlink: function() {
+                this.timeout(this.flipVisibility, 500);
+                return this;
+            }
         })
         .css({
             "border": ("medium solid " + errorTextCol)
@@ -27,6 +39,7 @@ function createHighlightEntity(hudEntityToHighlight) {
                 this.destroy();
             }
         })
+        .startBlink()
     ;
 }
 
@@ -259,6 +272,12 @@ function initTutorial() {
                         );
                     },
                 },
+
+                // mines
+
+                // refining
+
+                // growth
                 
                 idle: {
                 },
