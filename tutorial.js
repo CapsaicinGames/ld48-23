@@ -136,7 +136,7 @@ function initTutorial() {
                 },
 
                 resourceGuide: {
-                    timer: { nextState: "buildMine", time: 4000 },
+                    timer: { nextState: "resourceOverlay", time: 4000 },
 
                     tick: function() {
                         statusMessages.addMessage(
@@ -146,7 +146,7 @@ function initTutorial() {
                     },
                 },
 
-                buildMine: {
+                resourceOverlay: {
                     
                     enter: function() {
                         var isOverlayAlreadyOn = false
@@ -263,7 +263,7 @@ function initTutorial() {
                 },
 
                 inactiveBuildings: {
-                    timer: { nextState: "idle", time: 5000 },
+                    timer: { nextState: "ores", time: 5000 },
 
                     tick: function() {
                         statusMessages.addMessage(
@@ -273,9 +273,122 @@ function initTutorial() {
                     },
                 },
 
-                // mines
+                ores : {
+                    timer: { nextState: "refinedresources", time: 5000 },
 
-                // refining
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "Your astroanalyser is revlealing the locations of regolith, iron ore, ice and rare earth ore",
+                            magicTutorialPriority
+                        );
+                    },
+                },
+
+                refinedresources: {
+                    timer: { nextState: "mineuse", time: 5000 },
+
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "These are refined to plastic, steel, water and rare earth minerals respectively",
+                            magicTutorialPriority
+                        );
+                    },
+                },
+
+                mineuse: {
+                    timer: { nextState: "buildmine", time: 5000 },
+
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "To extract one of these resources for refinement, you need to build a mine on that tile",
+                            magicTutorialPriority
+                        );
+                    },
+                },
+
+                buildmine: {
+
+                    enter: function() {
+                        this.buildMenuOpen();
+                    },
+                 
+                    buildMenuOpen: function() {
+                        Crafty("BuildMenu").each(function() {
+                            if (this.buildingName == "Mine") {
+                                createHighlightEntity(this);
+                            }
+                        });
+                    },   
+
+                    tick: function() {
+
+                        if(economy._resources[resourcetypes.regolith.name] >
+                           economy.oldres[resourcetypes.regolith.name]) {
+                            tutorial._setState("buildplasticiser");
+                        }
+
+                        statusMessages.addMessage(
+                            "Place a mine on any regolith tile to start increasing your regolith total",
+                            magicTutorialPriority
+                        );
+                    },
+                },
+
+                buildplasticiser: {
+
+                    enter: function() {
+                        this.buildMenuOpen();
+                    },
+                 
+                    buildMenuOpen: function() {
+                        Crafty("BuildMenu").each(function() {
+                            if (this.buildingName == "RegoPlasticiser") {
+                                createHighlightEntity(this);
+                            }
+                        });
+                    },   
+
+                    tick: function() {
+
+                        if(economy._resources[resourcetypes.plastic.name] >
+                           economy.oldres[resourcetypes.plastic.name]) {
+                            tutorial._setState("plasticproduction");
+                        }
+
+                        statusMessages.addMessage(
+                            "To turn the regolith into plastic, build a RegoPlasticiser. anywhere is fine",
+                            magicTutorialPriority
+                        );
+                    },
+                },
+
+                // todo: you may need to build more power
+
+                plasticproduction: {
+                    timer: { nextState: "idle", time: 5000 },
+
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "You are now producing plastic!",
+                            magicTutorialPriority
+                        );
+                    },
+                },
+
+                // to make steel, build a mine on a iron ore tile and build a refinery.
+
+                // these refined resources can be further refined into widgets.
+
+                // can you make some widgets without instruction?
+
+                // to get more colonists, you need to provide food and water for them.
+
+                // first build a mine on an ice tile and turn it into water with a melter.
+                // then build a hydroponics pod to turn that water into food
+
+                // build another mine/melter pair to produce extra water
+
+                // you should now be growing!
 
                 // growth
                 
