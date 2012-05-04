@@ -13,7 +13,7 @@ function createHighlightEntity(hudEntityToHighlight) {
         .attr({
             x: hudEntityToHighlight.x - 3,
             y: hudEntityToHighlight.y + hudEntityToHighlight.h,
-            w: hudEntityToHighlight.w + 3,
+            w: hudEntityToHighlight.w + 2,
             h: 1,
             z: (hudEntityToHighlight.z + 1),
             highlightingEntityID: hudEntityToHighlight[0],
