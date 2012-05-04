@@ -336,16 +336,15 @@ function initTutorial() {
                 },
 
                 buildplasticiser: {
-                    showMsg: true,
 
                     enter: function() {
-                        tutorial.timeout(
-                            function() { 
-                                tutorial._states.buildplasticiser.showMsg = false; 
-                            },
-                            6000
-                        );
                         this.buildMenuOpen();
+                    },
+
+                    build: function(bldgName) {
+                        if (bldgName === "RegoPlasticiser") {
+                            tutorial._setState("waitForPlastic");
+                        }
                     },
                  
                     buildMenuOpen: function() {
@@ -357,19 +356,20 @@ function initTutorial() {
                     },   
 
                     tick: function() {
+                        statusMessages.addMessage(
+                            "To turn the regolith into plastic, build a RegoPlasticiser. anywhere is fine",
+                            magicTutorialPriority
+                        );
+                    },
+                },
 
+                waitForPlastic: {
+                    tick: function() {
                         if(economy._resources[resourcetypes.plastic.name] >
                            economy.oldres[resourcetypes.plastic.name]) {
                             tutorial._setState("plasticproduction");
                         }
-                    
-                        if (this.showMsg) {
-                            statusMessages.addMessage(
-                                "To turn the regolith into plastic, build a RegoPlasticiser. anywhere is fine",
-                                magicTutorialPriority
-                            );
-                        }
-                    },
+                    }
                 },
 
                 // todo: you may need to build more power
