@@ -325,11 +325,38 @@ function initTutorial() {
 
                         if(economy._resources[resourcetypes.regolith.name] >
                            economy.oldres[resourcetypes.regolith.name]) {
-                            tutorial._setState("buildplasticiser");
+                            tutorial._setState("turnOffResourceOverlay");
                         }
 
                         statusMessages.addMessage(
                             "Place a mine on any regolith tile to start increasing your regolith total",
+                            magicTutorialPriority
+                        );
+                    },
+                },
+
+                turnOffResourceOverlay: {
+                    
+                    enter: function() {
+                        var isOverlayAlreadyOn = false
+                        Crafty("ResourceMenu").each(function() {
+                            isOverlayAlreadyOn = this.isOverlayEnabled;
+                        });
+
+                        if (isOverlayAlreadyOn === false) {
+                            tutorial._setState("buildplasticiser");
+                        } else {
+                            createHighlightEntity(resourceOverlayView);
+                        }
+                    },
+
+                    resourcesViewClosed: function() {
+                        tutorial._setState("buildplasticiser");
+                    },
+
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "Close the resources overlay until you need it again",
                             magicTutorialPriority
                         );
                     },
@@ -372,10 +399,12 @@ function initTutorial() {
                     }
                 },
 
-                // todo: you may need to build more power
-
                 plasticproduction: {
-                    timer: { nextState: "idle", time: 5000 },
+                    timer: { nextState: "steelAndRefinery", time: 5000 },
+
+                    enter: function() {
+                        createHighlightEntityByName("Status");
+                    },
 
                     tick: function() {
                         statusMessages.addMessage(
@@ -385,7 +414,46 @@ function initTutorial() {
                     },
                 },
 
-                // to make steel, build a mine on a iron ore tile and build a refinery.
+                steelAndRefinery: {
+                    timer: { nextState: "waitForSteel", time: 6000 },
+
+                    tick: function() {
+
+                        if(economy._resources[resourcetypes.steel.name] >
+                           economy.oldres[resourcetypes.steel.name]) {
+                            tutorial._setState("endTutorial");
+                        } else {
+                            statusMessages.addMessage(
+                                "Place a mine on iron ore, and a new steel refinery, to produce steel.",
+                                magicTutorialPriority
+                            );
+                        }
+                    },
+                },
+
+                waitForSteel: {
+                    tick: function() {
+                        if(economy._resources[resourcetypes.steel.name] >
+                           economy.oldres[resourcetypes.steel.name]) {
+                            tutorial._setState("endTutorial");
+                        } 
+                    }
+                },
+
+                endTutorial: {
+                    timer: { nextState: "idle", time: 8000 },
+
+                    enter: function() {
+                        createHighlightEntityByName("Status");
+                    },
+
+                    tick: function() {
+                        statusMessages.addMessage(
+                            "Now you have a basic economy. Keep building to finally produce rare earth minerals, and ship them home for points.",
+                            magicTutorialPriority
+                        );
+                    },
+                },
 
                 // these refined resources can be further refined into widgets.
 
