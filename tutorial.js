@@ -12,9 +12,9 @@ function createHighlightEntity(hudEntityToHighlight) {
     return Crafty.e("Highlight, 2D, DOM")
         .attr({
             x: hudEntityToHighlight.x - 3,
-            y: hudEntityToHighlight.y - 3,
+            y: hudEntityToHighlight.y + hudEntityToHighlight.h,
             w: hudEntityToHighlight.w + 3,
-            h: hudEntityToHighlight.h + 3,
+            h: 1,
             z: (hudEntityToHighlight.z + 1),
             highlightingEntityID: hudEntityToHighlight[0],
             flashCount: 9,
@@ -31,7 +31,8 @@ function createHighlightEntity(hudEntityToHighlight) {
             }
         })
         .css({
-            "border": ("medium solid " + errorTextCol)
+            "border": ("medium solid " + errorTextCol),
+            "background-color": errorTextCol
         })
         .bind("EnterFrame", function() {
             var highlightingEntity = Crafty(this.highlightingEntityID);
