@@ -80,7 +80,10 @@ function buildings_setup() {
                 this.overlay.visible = true;
                 if (param.indexOf(resourcetypes.energy.name) >= 0) {
                     this.overlay.sprite(0,1);
-                    
+                    statusMessages.addMessage(
+                        "Not enough energy to run " + this.name 
+                            + ". Build more solar panels!",
+                        1);
                 } else {
                     this.overlay.sprite(1,1);
                 }
